@@ -1,0 +1,33 @@
+.modal{
+    margin-top: 10vh;
+    font-family: 'Helvetica Neue';
+}
+
+.modal-content{
+    background: #f8edeb;
+}
+
+.modalHeader{
+    display: flex;
+    margin-top: 0%;
+}
+
+.modalTitle{
+    margin: auto;
+    margin-top: 2%;
+    font-size: calc(10px + 2vmin);
+    font-weight: 800;
+}
+
+.modalCloseButton{
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.modalText {
+    width: 78%;
+    margin: auto;
+    margin-top: 2%;
+    margin-bottom: 3%;
+    text-align: center;
+}
