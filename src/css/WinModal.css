@@ -1,4 +1,4 @@
-.timerText {
+.scoreText {
     width: 78%;
     margin: auto;
     margin-top: 2%;
@@ -8,10 +8,29 @@
     font-weight: 400;
 }
 
+.successBox {
+    display: flex;
+    justify-content: center;
+    gap: 6%;
+}
+.pusheenBox{
+    /* object-fit: contain; */
+    /* width: 70%; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40%;
+}
+
+.pusheenImg{
+    width: 90%;
+}
+
 .buttonBox{
     margin-top: 8%;
     margin-bottom: 10%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     gap: 10px;
 }
@@ -21,6 +40,16 @@
     display: flex;
     align-items: center;
     gap: 3px;
-    font-size: 13pt;
+    font-size: 11pt;
     font-weight: 500;
+}
+
+.shareButton{
+    border-color: #2a9d8f;
+    background-color: #2a9d8f;
+}
+
+.websiteButton{
+    border-color: #0096c7;
+    background-color: #0096c7;
 }

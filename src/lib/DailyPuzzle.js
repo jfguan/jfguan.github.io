@@ -1,16 +1,27 @@
 import { PUZZLES } from './PuzzleList'
+import { getDate } from './Share'
 
-export const getPuzzleOfDay = () => {
-    // Feb 20, 2022 Game Epoch
-    const epochMs = 1645333200000
-    const now = Date.now()
-    const msInDay = 86400000
-    const index = Math.floor((now - epochMs) / msInDay)
+var seedrandom = require('seedrandom');
+const date = getDate()
+seedrandom(date, { global: true });
+// console.log(Math.random())
+// console.log(Math.random())
+// console.log(Math.random())
+// console.log(Math.random())
 
-    return {
-        puzzle: PUZZLES[index],
-        puzzleIndex: index
-    }
+function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
 }
 
-export const { puzzle, puzzleIndex } = getPuzzleOfDay()
+export const getNextPuzzle = () => {
+    // // Feb 20, 2022 Game Epoch
+    // const epochMs = 1645333200000
+    // const now = Date.now()
+    // const msInDay = 86400000
+    // const index = Math.floor((now - epochMs) / msInDay)
+
+    const index = getRandomInt(PUZZLES.length)
+    // console.log(index)
+
+    return PUZZLES[index]
+}

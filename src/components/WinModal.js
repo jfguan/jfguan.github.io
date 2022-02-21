@@ -7,39 +7,48 @@ import '../css/AboutModal.css'
 import '../css/HelpModal.css'
 import '../css/WinModal.css'
 
-export const WinModal = ({ isOpen, handleClose, handleShare, puzzle, completionTimeMs }) => {
+export const WinModal = ({ isOpen, handleClose, handleShare, puzzle, score, completedPuzzles, completionTimes }) => {
   return (
       <Modal show={isOpen} onHide={handleClose} className="modal">
         <Modal.Body>
             <div className='modalHeader'>
                 <div className='modalTitle'>
-                    You solved today's puzzle in:
+                    Time's up! You solved:
                 </div>
                 <IoMdClose 
                     className='modalCloseButton'
                     onClick={handleClose}
                 />
             </div>
-            <div className='timerText'>
-                {(completionTimeMs / 1000).toLocaleString(undefined, { maximumFractionDigits: 2})} seconds!
+            <div className='scoreText'>
+                {score} puzzles
             </div>
-            <div className='buttonBox'>
-                <Button variant="success" className='linkButton' onClick={() => {
-                        shareStatus(puzzle, completionTimeMs)
-                        handleShare()
-                    }}
-                >
-                    Share!
-                    <AiOutlineShareAlt/>
-                </Button>{' '}
-                <Button variant="primary" className='linkButton' onClick={() => {
-                        shareWebsite()
-                        handleShare()
-                    }}
-                >
-                    Website Link
-                    <AiOutlineLink/>
-                </Button>{' '}
+            <div className='successBox'>
+                <div className='pusheenBox'>
+                    <img 
+                        src='https://media.giphy.com/media/04b8NVK7cTY61NIiz7/giphy.gif'
+                        className='pusheenImg'
+                    />
+                </div>
+                <div className='buttonBox'>
+                    <Button variant="success" className='linkButton shareButton' onClick={() => {
+                            shareStatus(puzzle, score, completedPuzzles, completionTimes)
+                            handleShare()
+                        }}
+                    >
+
+                        Share!
+                        <AiOutlineShareAlt/>
+                    </Button>{' '}
+                    <Button variant="primary" className='linkButton websiteButton' onClick={() => {
+                            shareWebsite()
+                            handleShare()
+                        }}
+                    >
+                        Website Link
+                        <AiOutlineLink/>
+                    </Button>{' '}
+                </div>
             </div>
         </Modal.Body>
       </Modal>

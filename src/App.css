@@ -40,6 +40,10 @@
   cursor: pointer;
 }
 
+.mathBox{
+  min-height: 30vh;
+}
+
 .EquationOutput {
   margin-top: 3vh;
   font-size: 28pt;

@@ -5,7 +5,7 @@
 }
 
 .exampleText {
-    width: 78%;
+    width: 90%;
     margin: auto;
     margin-top: 2%;
     margin-bottom: 3%;
@@ -16,8 +16,25 @@
 
 .helpModalText {
     width: 64%;
+    min-width: 300px;
     margin: auto;
     margin-top: 2%;
-    margin-bottom: 3%;
     text-align: center;
 }
+
+.pointList {
+    width: 95%;
+    min-width: 300px;
+    padding-left: 12%;
+    margin-bottom: 8%;
+}
+
+li {
+    display: list-item;
+    list-style-type: disc;
+ }
+
+/* .bulletPoint {
+    display: list-item;
+    list-style-position: circle;
+} */

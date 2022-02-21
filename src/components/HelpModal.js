@@ -20,7 +20,9 @@ export const HelpModal = ({ isOpen, handleClose }) => {
             </div>
             <div className='helpModalText'>
                 Make 24 with only four numbers!
-                <li>
+            </div>
+            <ul className='pointList'>
+                <li className='bulletPoint'>
                     Solve as many puzzles as you can within the time limit!
                 </li>
                 <li>
@@ -35,7 +37,7 @@ export const HelpModal = ({ isOpen, handleClose }) => {
                 <li>
                     Everyone has the same order of puzzles (resets at midnight EST)
                 </li>
-            </div>
+            </ul>
             <div className='gameExample'>
                 <div className='numberKey'> 1 </div>
                 <div className='numberKey'> 4 </div>

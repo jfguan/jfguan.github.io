@@ -1,30 +1,68 @@
 import './App.css';
 import { useState, useEffect } from 'react'
 import {AiOutlineInfoCircle, AiOutlineQuestionCircle} from 'react-icons/ai'
-import InputBox from './InputBox';
 import { evaluate } from 'mathjs';
+import { Alert } from './components/Alert';
+import { GameBox } from './components/GameBox';
+import InputBox from './InputBox';
 import { Keyboard } from './components/Keyboard';
 import { AboutModal } from './components/AboutModal';
 import { HelpModal } from './components/HelpModal';
 import { WinModal } from './components/WinModal';
-import { Alert } from './components/Alert';
-import { puzzle, puzzleIndex} from './lib/DailyPuzzle'
+import { getNextPuzzle } from './lib/DailyPuzzle'
 
 function App() {
+  const timeLimit = 240
+  const [seconds, setSeconds] = useState(timeLimit);
+  const [puzzle, setPuzzle] = useState(getNextPuzzle);
+  const [completedPuzzles, setCompletedPuzzles] = useState([])
   const [startTime, setStartTime] = useState(0)
-  const [completionTimeMs, setCompletionTimeMs] = useState(0)
+  const [completionTimes, setCompletionTimes] = useState([])
+  const [isActive, setIsActive] = useState(false);
+  const [score, setScore] = useState(0);
   const [currentGuess, setCurrentGuess] = useState('')
   const [currentOutput, setCurrentOutput] = useState('0')
   const [isWinModalOpen, setIsWinModalOpen] = useState(false)
   const [isAboutModalOpen, setIsAboutModalOpen] = useState(false)
   const [isHelpModalOpen, setIsHelpModalOpen] = useState(true)
+  const [isPuzzleSolved, setIsPuzzleSolved] = useState(false)
   const [isInvalidEquation, setIsInvalidEquation] = useState(false)
   const [isInvalidCombo, setIsInvalidCombo] = useState(false)
   const [shareComplete, setShareComplete] = useState(false)
 
+  function toggle() {
+    setIsActive(!isActive);
+  }
+
+  function reset() {
+    setSeconds(timeLimit);
+    setIsActive(false);
+  }
+
+  useEffect(() => {
+    let interval = null;
+    if (isActive) {
+      interval = setInterval(() => {
+        if (seconds > 0){
+          setSeconds(seconds => seconds - 1);
+        }
+        else{
+          // game is over
+          setIsWinModalOpen(true)
+          setIsActive(false)
+        }
+      }, 1000);
+    } else if (!isActive && seconds !== 0) {
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [isActive, seconds]);
+
   const closeHelpModal = () =>{
     setIsHelpModalOpen(false)
     setStartTime(Date.now())
+    setSeconds(timeLimit)
+    setIsActive(true)
   }
 
   const onChar = (value) => {
@@ -51,9 +89,24 @@ function App() {
       setCurrentOutput(equationOutput)
 
       if (equationOutput === 24){
-        console.log("Game won!")
-        setCompletionTimeMs(Date.now() - startTime)
-        setIsWinModalOpen(true)
+        console.log("Equation solved!")
+        setScore(score => score + 1)
+        setIsPuzzleSolved(true)
+        setTimeout(() => {
+          setIsPuzzleSolved(false)
+        }, 1000)
+        setCompletedPuzzles(completedPuzzles => [...completedPuzzles, puzzle]);
+
+        const newCompletionTime = Date.now() - startTime
+        console.log(newCompletionTime)
+        setCompletionTimes(completionTimes => [...completionTimes, newCompletionTime]);
+
+        // Reset
+        setStartTime(Date.now())
+        setCurrentGuess('')
+        setCurrentOutput(0)
+
+        setPuzzle(getNextPuzzle())
         return 
       }
     } catch (error) {
@@ -83,7 +136,12 @@ function App() {
       <Alert message="Invalid equation" isOpen={isInvalidEquation} />
       <Alert message="Use each number once" isOpen={isInvalidCombo} />
       <Alert
-        message="Results copied to clipboard!"
+        message="Puzzle solved!"
+        isOpen={isPuzzleSolved}
+        variant="success"
+      />
+      <Alert
+        message="Copied to clipboard!"
         isOpen={shareComplete}
         variant="success"
       />
@@ -100,11 +158,17 @@ function App() {
           />
         </div>
       </div>
-      <InputBox 
-        currentGuess={currentGuess}
+      <GameBox 
+        seconds={seconds}
+        score={score}
       />
-      <div className="EquationOutput">
-        {currentOutput}
+      <div className='mathBox'>
+        <InputBox 
+          currentGuess={currentGuess}
+        />
+        <div className="EquationOutput">
+          {currentOutput}
+        </div>
       </div>
       <Keyboard 
         puzzle={puzzle}
@@ -131,7 +195,9 @@ function App() {
           }, 2000)
         }}
         puzzle={puzzle}
-        completionTimeMs={completionTimeMs}
+        score={score}
+        completedPuzzles={completedPuzzles}
+        completionTimes={completionTimes}
       />
     </div>
   );
