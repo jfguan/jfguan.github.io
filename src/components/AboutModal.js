@@ -17,9 +17,9 @@ export const AboutModal = ({ isOpen, handleClose }) => {
                 />
             </div>
             <div className='modalText'>
-                This is a reactJS version of a favorite childhood game :)
-                Inspired by the game 24 and Wordle, credit to primel for its logic.
-                Thanks for playing!
+                This is a reactJS version of a favorite childhood game :) inspired by the game 24 and Wordle.
+                <br/>
+                Thanks to Primel for a lot of the logic/styling, and 4nums for the puzzle list!
             </div>
         </Modal.Body>
       </Modal>
