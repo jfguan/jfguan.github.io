@@ -25,8 +25,13 @@ export const Keyboard = ({puzzle, onChar, onDelete, onEnter}) => {
             } else if (e.code === 'Backspace') {
                 onDelete()
             } else {
-                const key = e.key.toUpperCase()
-                if (key.length === 1 && (puzzle.includes(key) || operators.has(key))) {
+                const key = e.key
+                const isOperator = operators.has(key)
+                const isNumber = (e.keyCode >= 48 && e.keyCode <= 57) || (e.keyCode >= 96 && e.keyCode <= 105)
+                const inPuzzle = puzzle.includes(parseInt(key))
+                const isValidInput = (isOperator || (isNumber && inPuzzle))
+                // console.log(key)
+                if (key.length === 1 && isValidInput) {
                     onChar(key)
                 }
             }

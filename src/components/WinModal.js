@@ -7,7 +7,7 @@ import '../css/AboutModal.css'
 import '../css/HelpModal.css'
 import '../css/WinModal.css'
 
-export const WinModal = ({ isOpen, handleClose, handleShare, completionTimeMs }) => {
+export const WinModal = ({ isOpen, handleClose, handleShare, puzzle, completionTimeMs }) => {
   return (
       <Modal show={isOpen} onHide={handleClose} className="modal">
         <Modal.Body>
@@ -25,7 +25,7 @@ export const WinModal = ({ isOpen, handleClose, handleShare, completionTimeMs })
             </div>
             <div className='buttonBox'>
                 <Button variant="success" className='linkButton' onClick={() => {
-                        shareStatus(completionTimeMs)
+                        shareStatus(puzzle, completionTimeMs)
                         handleShare()
                     }}
                 >

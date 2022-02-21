@@ -13,3 +13,11 @@
     font-size: 12pt;
     font-weight: 500;
 }
+
+.helpModalText {
+    width: 64%;
+    margin: auto;
+    margin-top: 2%;
+    margin-bottom: 3%;
+    text-align: center;
+}

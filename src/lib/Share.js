@@ -1,4 +1,4 @@
-export const shareStatus = (completionTimeMs) => {
+export const shareStatus = (puzzle, completionTimeMs) => {
     const completionTimeSeconds = (completionTimeMs / 1000).toFixed(2)
 
     var today = new Date();
@@ -9,7 +9,7 @@ export const shareStatus = (completionTimeMs) => {
     today = mm + '/' + dd + '/' + yyyy;
 
     navigator.clipboard.writeText(
-        '24('+today+'): 1 1 1 4\n' +
+        '24('+today+'): ' + puzzle + '\n' +
         completionTimeSeconds + ' seconds 😤'
     )
   }

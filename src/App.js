@@ -19,6 +19,7 @@ function App() {
   const [isAboutModalOpen, setIsAboutModalOpen] = useState(false)
   const [isHelpModalOpen, setIsHelpModalOpen] = useState(true)
   const [isInvalidEquation, setIsInvalidEquation] = useState(false)
+  const [isInvalidCombo, setIsInvalidCombo] = useState(false)
   const [shareComplete, setShareComplete] = useState(false)
 
   const closeHelpModal = () =>{
@@ -37,12 +38,15 @@ function App() {
   }
 
   const onEnter = () => {
+    if (!eachNumberUsedOnce(currentGuess, puzzle)) {
+      setIsInvalidCombo(true)
+      return setTimeout(() => {
+        setIsInvalidCombo(false)
+      }, 2000)
+    }
+
     try {
       const equationOutput = evaluate(currentGuess)
-      const fufillsRequirements = true
-      if (!fufillsRequirements) {
-        throw 'Used too many or not enough numbers.'
-      }
 
       setCurrentOutput(equationOutput)
 
@@ -53,7 +57,7 @@ function App() {
         return 
       }
     } catch (error) {
-      console.log("")
+      console.log(error)
       setIsInvalidEquation(true)
       return setTimeout(() => {
         setIsInvalidEquation(false)
@@ -62,9 +66,22 @@ function App() {
 
   }
 
+  const eachNumberUsedOnce = (currentGuess, puzzle) => {
+    const guessNumbers = sortStr(currentGuess.replace(/\D/g,''));
+    const puzzleNumbers = sortStr(puzzle.join(''));
+
+    return guessNumbers === puzzleNumbers
+  }
+
+  function sortStr(str) {
+    return [...str].sort((a, b) => a.localeCompare(b)).join("");
+  }
+
+
   return (
     <div className="App">
       <Alert message="Invalid equation" isOpen={isInvalidEquation} />
+      <Alert message="Use each number once" isOpen={isInvalidCombo} />
       <Alert
         message="Results copied to clipboard!"
         isOpen={shareComplete}
@@ -113,6 +130,7 @@ function App() {
             setShareComplete(false)
           }, 2000)
         }}
+        puzzle={puzzle}
         completionTimeMs={completionTimeMs}
       />
     </div>
