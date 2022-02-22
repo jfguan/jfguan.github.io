@@ -41,9 +41,9 @@ export const Keyboard = ({puzzle, currentGuess, onChar, onDelete, onEnter}) => {
                 }
             }
         }
-        window.addEventListener('keyup', listener)
+        window.addEventListener('keydown', listener)
         return () => {
-            window.removeEventListener('keyup', listener)
+            window.removeEventListener('keydown', listener)
         }
     }, [onChar, onDelete, onEnter])
 
