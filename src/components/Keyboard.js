@@ -1,6 +1,5 @@
 import '../css/Keyboard.css';
 import { useState, useEffect } from 'react'
-import { evaluate } from 'mathjs'
 import classnames from 'classnames'
 import { Key } from './Key'
 
@@ -28,9 +27,8 @@ export const Keyboard = ({puzzle, onChar, onDelete, onEnter}) => {
                 const key = e.key
                 const isOperator = operators.has(key)
                 const isNumber = (e.keyCode >= 48 && e.keyCode <= 57) || (e.keyCode >= 96 && e.keyCode <= 105)
-                const inPuzzle = puzzle.includes(parseInt(key))
-                const isValidInput = (isOperator || (isNumber && inPuzzle))
-                // console.log(key)
+                const isValidInput = (isOperator || isNumber)
+                console.log(key)
                 if (key.length === 1 && isValidInput) {
                     onChar(key)
                 }
