@@ -29,13 +29,13 @@ export const HelpModal = ({ isOpen, handleClose }) => {
                     Each puzzle has 4 numbers that must <b>be used once each</b>. 
                 </li> 
                 <li>
-                    Operators can be used multiple times
+                    Operators can be used multiple times.
                 </li> 
                 <li>
                     Order of operations applies.
                 </li> 
                 <li>
-                    Everyone has the same order of puzzles (resets at midnight EST)
+                    Everyone has the same order of puzzles, which resets at midnight.
                 </li>
             </ul>
             <div className='gameExample'>

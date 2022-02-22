@@ -21,6 +21,7 @@ function App() {
   const [isActive, setIsActive] = useState(false);
   const [score, setScore] = useState(0);
   const [currentGuess, setCurrentGuess] = useState('')
+  const [currentGuessArr, setCurrentGuessArr] = useState([])
   const [currentOutput, setCurrentOutput] = useState('0')
   const [isWinModalOpen, setIsWinModalOpen] = useState(false)
   const [isAboutModalOpen, setIsAboutModalOpen] = useState(false)
@@ -66,13 +67,16 @@ function App() {
   }
 
   const onChar = (value) => {
-    if (currentGuess.length < 14) {
+    if (currentGuess.length < 15) {
       setCurrentGuess(`${currentGuess}${value}`)
+      setCurrentGuessArr(currentGuessArr => [...currentGuessArr, value]);
     }
   }
 
   const onDelete = () => {
-    setCurrentGuess(currentGuess.slice(0, -1))
+    const cutGuessArr = currentGuessArr.slice(0, -1)
+    setCurrentGuessArr(cutGuessArr)
+    setCurrentGuess(cutGuessArr.join(''))
   }
 
   const onEnter = () => {
@@ -172,6 +176,7 @@ function App() {
       </div>
       <Keyboard 
         puzzle={puzzle}
+        currentGuess={currentGuess}
         onChar={onChar}
         onDelete={onDelete}
         onEnter={onEnter}
