@@ -12,7 +12,7 @@ import { WinModal } from './components/WinModal';
 import { getNextPuzzle } from './lib/DailyPuzzle'
 
 function App() {
-  const timeLimit = 180
+  const timeLimit = 90
   const [seconds, setSeconds] = useState(timeLimit);
   const [puzzle, setPuzzle] = useState(getNextPuzzle);
   const [completedPuzzles, setCompletedPuzzles] = useState([])
@@ -108,6 +108,7 @@ function App() {
         // Reset
         setStartTime(Date.now())
         setCurrentGuess('')
+        setCurrentGuessArr([])
         setCurrentOutput(0)
 
         setPuzzle(getNextPuzzle())
