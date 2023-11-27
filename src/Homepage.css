@@ -1,0 +1,41 @@
+.Homepage {
+    padding-left: 15vw;
+    padding-right: 18vw;
+    padding-top: 9vh;
+    height: 100vh;
+    text-align: left;
+    background-color: #f8edeb;
+
+}
+
+.Homepage-title {
+    margin: auto; 
+    display: flex;
+    align-items: center;
+    font-size: calc(10px + 2vmin);
+    font-weight: 800;
+    font-family: 'Helvetica Neue';
+    color: #22223b;
+}
+
+.Homepage-subtitle {
+    margin: auto; 
+    padding-top: 3vh;
+    display: flex;
+    align-items: center;
+    font-size: calc(10px + 1vmin);
+    font-weight: 800;
+    font-family: 'Helvetica Neue';
+    user-select: none; /* Standard syntax */
+}
+
+.Homepage-body {
+    padding-top: 1vh;
+    display: flex;
+    align-items: center;
+    font-size: calc(8px + 1vmin);
+}
+
+.Homepage-link {
+    color: #22223b;
+}

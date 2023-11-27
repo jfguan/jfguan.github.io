@@ -1,0 +1,113 @@
+.BobaBox {
+    height: 100%;
+    background-color: #F3EEEA;
+    font-family: 'Helvetica Neue';
+    padding-bottom: 10%;
+}
+
+.Homepage-return-button {
+    text-align: left;
+    padding-top: 2vh;
+    padding-left: 2vw;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.BobaBox-title {
+    margin: auto; 
+    padding-top: 4vh;
+    text-align: center;
+    font-size: calc(14px + 3vmin);
+    font-weight: 800;
+    font-family: 'Helvetica Neue';
+    color: #22223b;
+}
+
+.BobaBox-body {
+    text-align: justify;
+    padding-top: 2vh;
+    padding-left: 28vw;
+    padding-right: 28vw;
+    font-size: calc(14px + 1vmin);
+    font-weight: 300;
+}
+
+.BobaBox-link {
+    color: #22223b;
+}
+
+.BobaBox-showdown {
+    padding-top: 3vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.BobaBox-versus-box {
+    font-size: calc(16px + 3vmin);
+    font-weight: 800;
+    font-family: 'Helvetica Neue';
+    color: #22223b;
+}
+
+.BobaBox-contestant {
+    text-align: center;
+    height: 300px;
+    width: 300px;
+    margin: 2%;
+    padding-top: 3%;
+    padding-left: 2%;
+    padding-right: 2%;
+    background-color: #EBE3D5;
+    border-color: #2d2d53;
+    font-family: 'Helvetica Neue';
+    border-radius: 16px;
+}
+
+.BobaBox-elo-rating {
+    padding-top: 4%;
+    font-size: calc(12px + 1vmin);
+    font-weight: 400;
+    font-family: 'Helvetica Neue';
+    color: #22223b;
+}
+
+.BobaBox-skip-section{
+    margin-top: 3vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.BobaBox-skip {
+    height: 6vh;
+    width: 12vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #9fb69e;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.BobaBox-rankings {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 12vh;
+}
+
+.BobaBox-ranking-title {
+    text-align: center;
+    font-size: calc(14px + 3vmin);
+    font-weight: 800;
+    font-family: 'Helvetica Neue';
+    color: #22223b;
+}
+
+.BobaBox-refresh-box {
+    height: 30px;
+    width: 30px;
+    margin-left: 1vw;
+    padding-top: 3px;
+}
