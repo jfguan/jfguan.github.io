@@ -111,3 +111,35 @@
     margin-left: 1vw;
     padding-top: 3px;
 }
+
+.BobaBox-ranking-list {
+    margin-top: 5vh;
+    margin-left: 20vw;
+    margin-right: 20vw;
+}
+
+.BobaBox-list-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.BobaBox-item-picture {
+    height: 120px;
+    width: 120px;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: #EBE3D5;
+    border-color: #2d2d53;
+    border-radius: 16px;
+}
+
+.BobaBox-item-elo {
+    margin-left: 3vw;
+    font-size: calc(10px + 2vmin);
+    font-weight: 500;
+    font-family: 'Helvetica Neue';
+    color: #22223b;
+}
