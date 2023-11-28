@@ -51,6 +51,26 @@ function RateMyBoba() {
                 <img src={require("./refresh.png")} alt="Refresh icon"/>
             </div>
         </div>
+        <div className="BobaBox-ranking-list">
+            <div className="BobaBox-list-item">
+                <div className="BobaBox-item-picture">
+                    <img src={require("./xin_fu_tang.png")} alt="Boba Shop 1"/>
+                </div>
+                <div className="BobaBox-item-elo">
+                    Elo Rating: 1200
+                </div>
+            </div>
+        </div>
+        <div className="BobaBox-ranking-list">
+            <div className="BobaBox-list-item">
+                <div className="BobaBox-item-picture">
+                    <img src={require("./xin_fu_tang.png")} alt="Boba Shop 1"/>
+                </div>
+                <div className="BobaBox-item-elo">
+                    Elo Rating: 1200
+                </div>
+            </div>
+        </div>
     </div>
   );
 }
