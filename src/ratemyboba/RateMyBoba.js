@@ -242,14 +242,6 @@ function RateMyBoba() {
         return () => unregisterAuthObserver(); // Make sure we un-register Firebase observers when the component unmounts.
     }, []);
 
-    const displaySignIn = () => {
-        // if (!isSignedIn) {
-            return (
-                <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
-            );
-        // }
-    }
-
     return (
         <div className="BobaBox">
             <div className="BobaBox-title">
@@ -261,9 +253,8 @@ function RateMyBoba() {
                 elo system. Please press sign in button to vote!
             </div>
                 {!isSignedIn && (
-                    <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
+                    <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} onClick={retrieveElos}/>
                 )}
-                <displaySignIn />
             <div className="BobaBox-showdown">
                 <div className="BobaBox-contestant" onClick={voteForLeftContestant}>
                     <img src={bobaShops[firstContestantID]} alt="Boba Shop 1" className='contestant-image'/>
