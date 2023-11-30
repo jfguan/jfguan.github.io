@@ -12,11 +12,16 @@ import prince_tea_house from './boba_pictures/prince_tea_house.webp'
 import tiger_sugar from './boba_pictures/tiger_sugar.png'
 import wanpo from './boba_pictures/wanpo.svg'
 import yi_fang from './boba_pictures/yi_fang.jpeg'
+import xin_fu_tang from './boba_pictures/xin_fu_tang.png'
 
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { collection, doc, setDoc, getDoc, getDocs } from "firebase/firestore"; 
+
+import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+import * as firebaseui from 'firebaseui'
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -28,8 +33,21 @@ const firebaseConfig = {
   appId: "1:285924454270:web:1ef689687066b04ba3cd2f"
 };
 
+const uiConfig = {
+    // Popup signin flow rather than redirect flow.
+    signInFlow: 'popup',
+    // We will display Google and Facebook as auth providers.
+    signInOptions: [
+        firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
+    ],
+    callbacks: {
+        // Avoid redirects after sign-in.
+        signInSuccessWithAuthResult: () => false,
+    },
+};
+
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+const app = firebase.initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 function RateMyBoba() {
@@ -45,7 +63,8 @@ function RateMyBoba() {
         prince_tea_house,
         tiger_sugar,
         wanpo,
-        yi_fang
+        yi_fang,
+        xin_fu_tang
     ]
 
     const [firstContestantID, setFirstContestantID] = useState(1);
@@ -213,15 +232,35 @@ function RateMyBoba() {
         console.log("Contestants scrambled")
     }
 
+    const [isSignedIn, setIsSignedIn] = useState(false); // Local signed-in state.
+
+    // Listen to the Firebase Auth state and set the local state.
+    useEffect(() => {
+        const unregisterAuthObserver = firebase.auth().onAuthStateChanged(user => {
+        setIsSignedIn(!!user);
+        });
+        return () => unregisterAuthObserver(); // Make sure we un-register Firebase observers when the component unmounts.
+    }, []);
+
+    const displaySignIn = () => {
+        if (!isSignedIn) {
+            return (
+                <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
+            );
+        }
+    }
+
     return (
         <div className="BobaBox">
             <div className="BobaBox-title">
                 Rate My Boba!
             </div>
             <div className="BobaBox-body">
-                Click on the better boba shop in a versus showdown! Each vote will determine the
-                elo of each boba shop, and the leaderboard will be updated accordingly.
+                Click on the better boba shop in a versus showdown! Skip if you can't decide. Each vote will determine the
+                elo of each boba shop, and the leaderboard will be updated accordingly. Higher scores is better, according to the
+                elo system. Please press sign in button to vote!
             </div>
+            <displaySignIn />
             <div className="BobaBox-showdown">
                 <div className="BobaBox-contestant" onClick={voteForLeftContestant}>
                     <img src={bobaShops[firstContestantID]} alt="Boba Shop 1" className='contestant-image'/>

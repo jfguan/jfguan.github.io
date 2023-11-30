@@ -7,5 +7,5 @@ boba proj
         ✅ change functions to functional style
         ✅ fix display on mobile
         ✅ clean console.log
-    ❗ Add auth to website
+    ✅ Add auth to website
     ❗ deploy website
