@@ -55,39 +55,40 @@ function RateMyBoba() {
 
     const resetElos = async () =>{
         try {
-            var id = 0
+            let id = 0
             for (const bobaShop of bobaShops) {
-                await setDoc(doc(db, "boba_brands", String(id)), {
-                    name: bobaShop,
+                const docRef = doc(db, "boba_brands", String(id))
+                const resetValues = {
                     elo: 1500,
-                });
-                id += 1
-
+                }
+                await setDoc(docRef, resetValues);
                 console.log("Document written with ID: ", id);
+                
+                id += 1
             }
         } catch (e) {
-            console.error("Error adding document: ", e);
+            console.error("Error writing document: ", e);
         }
     }
 
     const retrieveElos = async () =>{
-        const new_elos = [...elo_scores]
-
         console.log("Retrieving Elos");
+
+        const new_elos = [...elo_scores]
         const querySnapshot = await getDocs(collection(db, "boba_brands"));
         querySnapshot.forEach((doc) => {
             const data = doc.data()
             new_elos[doc.id] = data.elo
-            console.log(`${doc.id} => ${doc.data().elo}`);
+            // console.log(`${doc.id} => ${doc.data().elo}`);
         });
 
         console.log(new_elos)
         setEloScores(new_elos)
+
         console.log("Done Retrieving Elos");
     }
 
-    async function retrieveElo(id) {
-
+    const retrieveElo = async (id) =>{
         console.log("Retrieving Elo");
         const docRef = doc(db, "boba_brands", String(id));
         const docSnap = await getDoc(docRef);
@@ -106,7 +107,7 @@ function RateMyBoba() {
         });
     }
 
-    async function updateElo(id, elo) {
+    const updateElo = async (id, elo) => {
         console.log(`Updating id${id}, elo ${elo}`);
 
         await setDoc(doc(db, "boba_brands", String(id)), {
@@ -115,21 +116,19 @@ function RateMyBoba() {
     }
 
 
-    function calculateRankingDivs() {
+    const calculateRankingDivs = () =>{
         console.log("Calculating ranking divs")
-        console.log(elo_scores)
 
         const rankings = elo_scores.map((_, index) => index);
         rankings.sort((a, b) => elo_scores[b] - elo_scores[a]);
-        let newRankingDivs = [];
-
+        // console.log(elo_scores)
         // console.log(rankings)
+
+        let newRankingDivs = [];
         for (let i = 0; i < bobaShops.length; i++) {
             const id = rankings[i]
             const src = bobaShops[id]
             const elo = elo_scores[id]
-            // console.log(`source ${src}`)
-            // console.log(`elo ${elo}`)
 
             newRankingDivs.push(
                 <BobaListItem 
@@ -141,7 +140,6 @@ function RateMyBoba() {
         }
 
         rankingDivs = newRankingDivs
-        console.log(newRankingDivs)
     }
 
     useEffect(async () => {
@@ -153,50 +151,35 @@ function RateMyBoba() {
         return () => {
           console.log('Component will unmount!');
         };
-    }, []); // Empty dependency array means this effect runs once after the initial render
+    }, []);
     
-    useEffect(async () => {
-
-        return () => {};
-    }, [elo_scores]); // Empty dependency array means this effect runs once after the initial render
-
     calculateRankingDivs()
 
-    
-
     const voteForLeftContestant = () => {
+        console.log("Voted for left contestant")
         voteForContestant(0)
     }
 
     const voteForRightContestant = () => {
+        console.log("Voted for right contestant")
         voteForContestant(1)
     }
 
-    const voteForContestant = (value) => {
+    const voteForContestant = (winner) => {
         const firstElo = elo_scores[firstContestantID]
         const secondElo = elo_scores[secondContestantID]
 
-        let new_elos = []
-        if (value == 0) {
-            console.log("Voted for left contestant")
-            new_elos = calculateElo(firstElo, secondElo, 0)
-        } else if (value == 1){
-            console.log("Voted for right contestant")
-            new_elos = calculateElo(firstElo, secondElo, 1)
-        } else {
-            console.log("WTF")
-        }
+        const elo_results = calculateElo(firstElo, secondElo, winner)
+        console.log(elo_results)
 
         const new_elo_scores = [...elo_scores]
-        new_elo_scores[firstContestantID] = Math.round(new_elos[0])
-        new_elo_scores[secondContestantID] = Math.round(new_elos[1])
-
-        console.log(new_elos)
-        setEloScores(new_elo_scores)
+        new_elo_scores[firstContestantID] = Math.round(elo_results[0])
+        new_elo_scores[secondContestantID] = Math.round(elo_results[1])
 
         updateElo(firstContestantID, new_elo_scores[firstContestantID])
         updateElo(secondContestantID, new_elo_scores[secondContestantID])
 
+        setEloScores(new_elo_scores)
 
         scrambleContestantIDs()
     }
@@ -214,13 +197,12 @@ function RateMyBoba() {
 
     const scrambleContestantIDs = () => {
         console.log("Scrambling contestants")
+
         var firstID = Math.floor(Math.random() * bobaShops.length)
         var secondID = Math.floor(Math.random() * bobaShops.length)
         if (firstID == secondID) {
             secondID = (secondID + 1) % bobaShops.length
         }
-        // console.log(firstID)
-        // console.log(secondID)
         
         retrieveElo(firstID)
         retrieveElo(secondID)
