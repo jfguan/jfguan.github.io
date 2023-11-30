@@ -237,17 +237,17 @@ function RateMyBoba() {
     // Listen to the Firebase Auth state and set the local state.
     useEffect(() => {
         const unregisterAuthObserver = firebase.auth().onAuthStateChanged(user => {
-        setIsSignedIn(!!user);
+            setIsSignedIn(!!user);
         });
         return () => unregisterAuthObserver(); // Make sure we un-register Firebase observers when the component unmounts.
     }, []);
 
     const displaySignIn = () => {
-        if (!isSignedIn) {
+        // if (!isSignedIn) {
             return (
                 <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
             );
-        }
+        // }
     }
 
     return (
@@ -260,7 +260,10 @@ function RateMyBoba() {
                 elo of each boba shop, and the leaderboard will be updated accordingly. Higher scores is better, according to the
                 elo system. Please press sign in button to vote!
             </div>
-            <displaySignIn />
+                {!isSignedIn && (
+                    <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
+                )}
+                <displaySignIn />
             <div className="BobaBox-showdown">
                 <div className="BobaBox-contestant" onClick={voteForLeftContestant}>
                     <img src={bobaShops[firstContestantID]} alt="Boba Shop 1" className='contestant-image'/>
@@ -314,6 +317,16 @@ const BobaListItem = ({src, elo}) => {
             </div>
         </div>
     )
+}
+
+const displaySignIn = () => {
+    // if (!isSignedIn) {
+        return (
+            <div>
+                <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
+            </div>
+        );
+    // }
 }
 
 export default RateMyBoba;
