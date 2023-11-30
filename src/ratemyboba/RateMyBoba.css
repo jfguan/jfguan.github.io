@@ -74,7 +74,7 @@
 
 .BobaBox-elo-rating {
     padding-top: 4%;
-    font-size: calc(6px + 1vmin);
+    font-size: calc(2px + 2vmin);
     font-weight: 400;
     font-family: 'Helvetica Neue';
     color: #22223b;
@@ -151,7 +151,7 @@
 }
 
 .BobaBox-picture-box {
-    width: 20vw;
+    width: 15vw;
     aspect-ratio : 1 / 1;
     display: flex;
     align-items: center;
@@ -167,7 +167,7 @@
 }
 
 .item-image {
-    height: 80%;
+    height: 90%;
     border-radius: 16px;
 }
 
