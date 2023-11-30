@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/static/css/main.52c0c6ab.css",
+    "main.js": "/static/js/main.31ecf55f.js",
+    "static/media/boba_guys.png": "/static/media/boba_guys.46974a8c68edc102983b.png",
+    "static/media/onezo.webp": "/static/media/onezo.0e5c0b2a02cfd90f9553.webp",
+    "static/media/xin_fu_tang.png": "/static/media/xin_fu_tang.91751e9c32d51bb58d8f.png",
+    "static/media/wanpo.svg": "/static/media/wanpo.bf7147fece304fe5f3f18a504bd07f47.svg",
+    "static/media/prince_tea_house.webp": "/static/media/prince_tea_house.4997b781ce746725527e.webp",
+    "static/media/kung_fu_tea.webp": "/static/media/kung_fu_tea.f75c5f18b32cfee4e2e0.webp",
+    "static/media/coco.jpg": "/static/media/coco.c46f9bd68e39d440db99.jpg",
+    "static/media/debutea.webp": "/static/media/debutea.7d46a80bf71667b195bb.webp",
+    "static/media/gong_cha.png": "/static/media/gong_cha.7397afd7cd9540d8996e.png",
+    "static/media/lazy_sundays.png": "/static/media/lazy_sundays.63435547c127ab0e02c2.png",
+    "static/media/refresh.png": "/static/media/refresh.8304a958dcdf2d47801f.png",
+    "static/media/tiger_sugar.png": "/static/media/tiger_sugar.5cf39e6e4e8f09b7fce5.png",
+    "index.html": "/index.html",
+    "main.52c0c6ab.css.map": "/static/css/main.52c0c6ab.css.map",
+    "main.31ecf55f.js.map": "/static/js/main.31ecf55f.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.52c0c6ab.css",
+    "static/js/main.31ecf55f.js"
+  ]
+}
