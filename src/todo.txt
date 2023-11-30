@@ -3,9 +3,9 @@ boba proj
     ✅ rewrite elo state score properly
     ✅ get rankings to render
         ✅ refresh not working
-    ❗ refactor code
+    ✅ refactor code
         ✅ change functions to functional style
-        ❗ fix display on mobile
+        ✅ fix display on mobile
         ✅ clean console.log
     ❗ Add auth to website
     ❗ deploy website

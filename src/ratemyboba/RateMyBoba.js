@@ -244,9 +244,9 @@ function RateMyBoba() {
                     Skip
                 </div>
             </div>
-            <div className="BobaBox-reset-scores" onClick={resetElos}>
+            {/* <div className="BobaBox-reset-scores" onClick={resetElos}>
                 Reset Elos
-            </div>
+            </div> */}
             <div className="BobaBox-rankings">
                 <div className="BobaBox-ranking-title">
                     Rankings
