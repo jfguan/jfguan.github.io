@@ -33,19 +33,6 @@ const firebaseConfig = {
   appId: "1:285924454270:web:1ef689687066b04ba3cd2f"
 };
 
-const uiConfig = {
-    // Popup signin flow rather than redirect flow.
-    signInFlow: 'popup',
-    // We will display Google and Facebook as auth providers.
-    signInOptions: [
-        firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
-    ],
-    callbacks: {
-        // Avoid redirects after sign-in.
-        signInSuccessWithAuthResult: () => false,
-    },
-};
-
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -242,6 +229,23 @@ function RateMyBoba() {
         return () => unregisterAuthObserver(); // Make sure we un-register Firebase observers when the component unmounts.
     }, []);
 
+    const uiConfig = {
+        // Popup signin flow rather than redirect flow.
+        signInFlow: 'popup',
+        // We will display Google and Facebook as auth providers.
+        signInOptions: [
+            firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
+        ],
+        callbacks: {
+            // Avoid redirects after sign-in.
+            signInSuccessWithAuthResult: () => {
+                retrieveElos()
+                return false
+            }
+        },
+    };
+
+
     return (
         <div className="BobaBox">
             <div className="BobaBox-title">
@@ -253,7 +257,7 @@ function RateMyBoba() {
                 elo system. Please press sign in button to vote!
             </div>
                 {!isSignedIn && (
-                    <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} onClick={retrieveElos}/>
+                    <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
                 )}
             <div className="BobaBox-showdown">
                 <div className="BobaBox-contestant" onClick={voteForLeftContestant}>
@@ -308,16 +312,6 @@ const BobaListItem = ({src, elo}) => {
             </div>
         </div>
     )
-}
-
-const displaySignIn = () => {
-    // if (!isSignedIn) {
-        return (
-            <div>
-                <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
-            </div>
-        );
-    // }
 }
 
 export default RateMyBoba;
