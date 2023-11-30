@@ -1,0 +1,11 @@
+
+boba proj
+    ✅ rewrite elo state score properly
+    ✅ get rankings to render
+        ✅ refresh not working
+    ❗ Add auth to website
+    ❗ refactor code
+        ❗ change functions to functional style
+        ❗ fix display on mobile
+        ❗ clean console.log
+    ❗ deploy website

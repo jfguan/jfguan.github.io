@@ -62,6 +62,14 @@
     border-color: #2d2d53;
     font-family: 'Helvetica Neue';
     border-radius: 16px;
+    cursor: pointer; 
+}
+
+.contestant-image {
+    margin: auto;
+    margin-bottom: 2%;
+    height: 75%;
+    border-radius: 16px;
 }
 
 .BobaBox-elo-rating {
@@ -81,14 +89,30 @@
 
 .BobaBox-skip {
     height: 6vh;
-    width: 12vw;
+    width: 14vw;
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: #9fb69e;
     border-radius: 8px;
     font-weight: 500;
+    cursor: pointer; 
 }
+
+.BobaBox-reset-scores {
+    height: 6vh;
+    width: 14vw;
+    margin: auto;
+    margin-top: 2vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #9fb69e;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer; 
+}
+
 
 .BobaBox-rankings {
     display: flex;
@@ -110,6 +134,7 @@
     width: 30px;
     margin-left: 1vw;
     padding-top: 3px;
+    cursor: pointer; 
 }
 
 .BobaBox-ranking-list {
@@ -122,19 +147,30 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 5%;
 }
 
-.BobaBox-item-picture {
+.BobaBox-picture-box {
     height: 120px;
     width: 120px;
     display: flex;
     align-items: center;
+    justify-content: center;
+    object-fit: contain;
+    padding-top: 10px;
+    padding-bottom: 10px;
     padding-left: 10px;
     padding-right: 10px;
     background-color: #EBE3D5;
     border-color: #2d2d53;
     border-radius: 16px;
 }
+
+.item-image {
+    height: 80%;
+    border-radius: 16px;
+}
+
 
 .BobaBox-item-elo {
     margin-left: 3vw;

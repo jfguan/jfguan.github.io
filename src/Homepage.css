@@ -37,5 +37,9 @@
 }
 
 .Homepage-link {
+    padding-top: 1vh;
+    display: flex;
+    align-items: center;
+    font-size: calc(8px + 1vmin);
     color: #22223b;
 }
