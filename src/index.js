@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import Homepage from './Homepage';
 import RateMyBoba from './ratemyboba/RateMyBoba';
+import HabitGambling from './habit_gambling/HabitGambling';
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
   {
     path: "/RateMyBoba",
     element: <RateMyBoba />,
+  },
+  {
+    path: "/HabitGambling",
+    element: <HabitGambling />,
   }
 ]);
 

@@ -17,7 +17,7 @@ function Homepage() {
         </div>
         <div className="Homepage-subtitle">
             <Link to="/RateMyBoba" className="Homepage-link">
-                Rate My Boba(WIP)
+                Rate My Boba
             </Link>
         </div>
         <div className="Homepage-body">
@@ -25,10 +25,12 @@ function Homepage() {
             in a elo based match structure
         </div>
         <div className="Homepage-subtitle">
-            Habit Gambling(WIP)
+            <Link to="/HabitGambling" className="Homepage-link">
+                Habit Gambling
+            </Link>
         </div>
         <div className="Homepage-body">
-            Earn money by completing your habits, with a random multiplier on each reward
+            Earn money by completing my habits, with a random multiplier on each reward
         </div>
         <div className="Homepage-subtitle">
             <Link to="/24Game" className="Homepage-link">
