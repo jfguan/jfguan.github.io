@@ -13,7 +13,7 @@ function Homepage() {
             Jeff Guan is a software engineer currently in NYC. This website is a simple storage of a few personal projects
         </div>
         <div className="Homepage-subtitle">
-            <Link to="/RateMyBoba" className="Homepage-link">
+            <Link to="/ratemyboba" className="Homepage-link">
                 Rate My Boba
             </Link>
         </div>
@@ -22,7 +22,7 @@ function Homepage() {
             in a elo based match structure
         </div>
         <div className="Homepage-subtitle">
-            <Link to="/HabitGambling" className="Homepage-link">
+            <Link to="/habitgambling" className="Homepage-link">
                 Habit Gambling
             </Link>
         </div>
@@ -30,7 +30,7 @@ function Homepage() {
             Earn money by completing my habits, with a random multiplier on each reward
         </div>
         <div className="Homepage-subtitle">
-            <Link to="/24Game" className="Homepage-link">
+            <Link to="/24game" className="Homepage-link">
                 24 Game
             </Link>
         </div>
@@ -42,7 +42,7 @@ function Homepage() {
             Earn money by completing my habits, with a random multiplier on each reward
         </div>
         <div className="Homepage-subtitle">
-            <Link to="/Resolutions" className="Homepage-link">
+            <Link to="/resolutions" className="Homepage-link">
                 Resolutions
             </Link>
         </div>

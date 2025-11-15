@@ -1,14 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import Game from './Game';
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
 import Homepage from './Homepage';
 import RateMyBoba from './ratemyboba/RateMyBoba';
+import Game from './Game';
 import HabitGambling from './habit_gambling/HabitGambling';
+import Resolutions from './resolutions/Resolutions';
 
 const router = createBrowserRouter([
   {
@@ -16,16 +17,20 @@ const router = createBrowserRouter([
     element: <Homepage />,
   },
   {
-    path: "/24Game",
+    path: "/24game",
     element: <Game />,
   },
   {
-    path: "/RateMyBoba",
+    path: "/ratemyboba",
     element: <RateMyBoba />,
   },
   {
-    path: "/HabitGambling",
+    path: "/habitgambling",
     element: <HabitGambling />,
+  },
+  {
+    path: "/resolutions",
+    element: <Resolutions />,
   }
 ]);
 
