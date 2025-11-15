@@ -21,9 +21,15 @@ const firebaseConfig = {
     appId: "1:60788841107:web:8affc98f8c54619fd40b66"
 };
 
-// Initialize Firebase
+// Initialize Firebase outside component
+let app;
+if (!firebase.apps.length) {
+    app = firebase.initializeApp(firebaseConfig);
+} else {
+    app = firebase.app();
+}
+
 const HabitGambling = () => {
-    const app = firebase.initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
     const [totalAmount, setTotalAmount] = useState(0.00);
