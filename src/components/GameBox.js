@@ -1,20 +1,5 @@
 import '../css/GameBox.css'
 
-const calculateTimeLeft = () => {
-    let year = new Date().getFullYear();
-
-    const difference = +new Date(`10/01/${year}`) - +new Date();
-    let timeLeft = {};
-
-    if (difference > 0) {
-        timeLeft = {
-            minutes: Math.floor((difference / 1000 / 60) % 60),
-            seconds: Math.floor((difference / 1000) % 60)
-        };
-    }
-    return timeLeft;
-};
-
 export const GameBox = ({seconds, score}) => {
     return(
         <div className='gameBox'>

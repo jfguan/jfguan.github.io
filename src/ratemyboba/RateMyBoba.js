@@ -60,24 +60,6 @@ function RateMyBoba() {
     const [elo_scores, setEloScores] = useState(new Array(bobaShops.length).fill(1500));
     let rankingDivs = [];
 
-    const resetElos = async () =>{
-        try {
-            let id = 0
-            for (const bobaShop of bobaShops) {
-                const docRef = doc(db, "boba_brands", String(id))
-                const resetValues = {
-                    elo: 1500,
-                }
-                await setDoc(docRef, resetValues);
-                console.log("Document written with ID: ", id);
-                
-                id += 1
-            }
-        } catch (e) {
-            console.error("Error writing document: ", e);
-        }
-    }
-
     const retrieveElos = async () =>{
         console.log("Retrieving Elos");
 
@@ -86,7 +68,6 @@ function RateMyBoba() {
         querySnapshot.forEach((doc) => {
             const data = doc.data()
             new_elos[doc.id] = data.elo
-            // console.log(`${doc.id} => ${doc.data().elo}`);
         });
 
         console.log(new_elos)
@@ -195,7 +176,7 @@ function RateMyBoba() {
         const k = 32
         const expectedElo1 = 1 / (1 + Math.pow(10, (elo2 - elo1) / 400))
         const expectedElo2 = 1 / (1 + Math.pow(10, (elo1 - elo2) / 400))
-        if (winner == 0) {
+        if (winner === 0) {
             return [elo1 + k * (1 - expectedElo1), elo2 + k * (0 - expectedElo2)]
         } else {
             return [elo1 + k * (0 - expectedElo1), elo2 + k * (1 - expectedElo2)]
@@ -207,7 +188,7 @@ function RateMyBoba() {
 
         var firstID = Math.floor(Math.random() * bobaShops.length)
         var secondID = Math.floor(Math.random() * bobaShops.length)
-        if (firstID == secondID) {
+        if (firstID === secondID) {
             secondID = (secondID + 1) % bobaShops.length
         }
         

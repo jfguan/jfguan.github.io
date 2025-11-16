@@ -28,6 +28,7 @@ export const WinModal = ({ isOpen, handleClose, handleShare, puzzle, score, comp
                     <img 
                         src='https://media.giphy.com/media/04b8NVK7cTY61NIiz7/giphy.gif'
                         className='pusheenImg'
+                        alt='cat'
                     />
                 </div>
                 <div className='buttonBox'>

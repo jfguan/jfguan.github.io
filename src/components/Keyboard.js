@@ -1,5 +1,5 @@
 import '../css/Keyboard.css';
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import classnames from 'classnames'
 import { Key } from './Key'
 

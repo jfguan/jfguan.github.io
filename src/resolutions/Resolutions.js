@@ -13,12 +13,10 @@ const Resolutions = () => {
         >
             <div className="topNav">
                 <div className="brand">
-                    <p className="logo">
-                        resolutions
-                    </p>
-                    <p className="logoText">
+                    <span className="logo">resolutions</span>
+                    <span className="logoText">
                         - an opinionated and minimalist habit tracker
-                    </p>
+                    </span>
                 </div>
                 <div className="navOptions">
                 </div>

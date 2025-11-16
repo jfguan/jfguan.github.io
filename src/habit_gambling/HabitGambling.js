@@ -7,7 +7,6 @@ import { getFirestore } from "firebase/firestore";
 import { doc, setDoc, getDoc} from "firebase/firestore"; 
 
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-import * as firebaseui from 'firebaseui'
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 
