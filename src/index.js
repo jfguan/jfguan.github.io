@@ -1,10 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Homepage from './Homepage';
 import RateMyBoba from './ratemyboba/RateMyBoba';
 import Game from './Game';
@@ -13,25 +10,25 @@ import Resolutions from './resolutions/Resolutions';
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <Homepage />,
   },
   {
-    path: "/24game",
+    path: '/24game',
     element: <Game />,
   },
   {
-    path: "/ratemyboba",
+    path: '/ratemyboba',
     element: <RateMyBoba />,
   },
   {
-    path: "/habitgambling",
+    path: '/habitgambling',
     element: <HabitGambling />,
   },
   {
-    path: "/resolutions",
+    path: '/resolutions',
     element: <Resolutions />,
-  }
+  },
 ]);
 
 ReactDOM.render(

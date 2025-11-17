@@ -1,37 +1,37 @@
-.gameBox{
-    margin-top: 3vh;
-    display: flex;
-    justify-content: center;
-    gap: 5%;
+.gameBox {
+  margin-top: 3vh;
+  display: flex;
+  justify-content: center;
+  gap: 5%;
 }
 
-.genBox{
-    width: 160px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    border-radius: 5px;
-    border: 3px solid #023e8a;
-    color: #023e8a;
-    font-size: 12pt;
-    font-weight: 500;
+.genBox {
+  width: 160px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-radius: 5px;
+  border: 3px solid #023e8a;
+  color: #023e8a;
+  font-size: 12pt;
+  font-weight: 500;
 }
 
-.numberKeyboard{
-    display: flex;
+.numberKeyboard {
+  display: flex;
 }
 
 .numberKey {
-    margin-left: 1vw;
-    margin-left: 1vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    font-weight: 500;
-    color: #22223b;
-    height: 57px;
-    width: 57px;
-    border-radius: 5px;
-    border: 3px solid #22223b;
-    cursor: pointer;
+  margin-left: 1vw;
+  margin-left: 1vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 500;
+  color: #22223b;
+  height: 57px;
+  width: 57px;
+  border-radius: 5px;
+  border: 3px solid #22223b;
+  cursor: pointer;
 }

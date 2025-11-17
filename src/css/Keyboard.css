@@ -1,87 +1,87 @@
 .keyboard {
-    margin-top: 18vh;
+  margin-top: 18vh;
 }
 
-.numberKeyboard{
-    display: flex;
-    justify-content: center;
+.numberKeyboard {
+  display: flex;
+  justify-content: center;
 }
 
 .numberKey {
-    margin-left: 1vw;
-    margin-left: 1vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    font-weight: 500;
-    color: #22223b;
-    height: 57px;
-    width: 57px;
-    border-radius: 5px;
-    border: 3px solid #22223b;
-    cursor: pointer;
+  margin-left: 1vw;
+  margin-left: 1vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 500;
+  color: #22223b;
+  height: 57px;
+  width: 57px;
+  border-radius: 5px;
+  border: 3px solid #22223b;
+  cursor: pointer;
 }
 
-.operatorKeyboard{
-    margin-top: 2vh;
-    display: flex;
-    justify-content: center;
+.operatorKeyboard {
+  margin-top: 2vh;
+  display: flex;
+  justify-content: center;
 }
 
 .operatorKey {
-    margin-left: 1vw;
-    margin-left: 1vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    font-weight: 500;
-    color: #f8edeb;
-    height: 56px;
-    width: 50px;
-    border-radius: 5px;
-    cursor: pointer;
+  margin-left: 1vw;
+  margin-left: 1vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 500;
+  color: #f8edeb;
+  height: 56px;
+  width: 50px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .num1 {
-    background-color: #e07a5f;
+  background-color: #e07a5f;
 }
 
 .num2 {
-    background-color: #3d405b;
+  background-color: #3d405b;
 }
 
 .num3 {
-    background-color: #81b29a;
+  background-color: #81b29a;
 }
 
 .num4 {
-    background-color: #f2cc8f;
+  background-color: #f2cc8f;
 }
 
 .num5 {
-    background-color: #4895ef;
+  background-color: #4895ef;
 }
 
-.modifierKeys{
-    margin-top: 2vh;
-    display: flex;
-    justify-content: center;
+.modifierKeys {
+  margin-top: 2vh;
+  display: flex;
+  justify-content: center;
 }
 
 .modifierKey {
-    margin-left: 1vw;
-    margin-left: 1vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14pt;
-    font-weight: 500;
-    color: #f8edeb;
-    height: 60px;
-    width: 114px;
-    border-radius: 5px;
-    background-color: #22223b;
-    cursor: pointer;
+  margin-left: 1vw;
+  margin-left: 1vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14pt;
+  font-weight: 500;
+  color: #f8edeb;
+  height: 60px;
+  width: 114px;
+  border-radius: 5px;
+  background-color: #22223b;
+  cursor: pointer;
 }
