@@ -152,9 +152,34 @@ const HabitsCreation = () => {
   return (
     <div className="creation">
       <div className="section">
-        <div className="habits-image-container">
+        <div className="habits-image-container-creation">
           <img src={flowers} className="habits-image-creation"></img>
-          <div className="creation-guide-lines">
+          <div className="suggestions-box">
+            <div className="suggestions-title"> 
+              guidelines
+            </div>
+            <div className="suggestions-subtitle"> 
+              life is limited
+            </div>
+            <ul className="suggestions-list">
+              <li>enough time and energy?</li>
+              <li>sustainable with current commitments?</li>
+              <li>willing to trade off other commitments?</li>
+              <li>will I do this for many years</li>
+            </ul>
+            <div className="suggestions-subtitle"> 
+              minimally difficult (for now)
+            </div>
+            <ul className="suggestions-list">
+              <li>[optional] under 3 minutes</li>
+              <li>can be made any easier without feeling like a waste of time?</li>
+            </ul>
+            <div className="suggestions-subtitle"> 
+              commitment duration is correct
+            </div>
+            <ul className="suggestions-list">
+              <li>new habits take 18 - 254 days to internalize</li>
+            </ul>
           </div>
         </div>
         <div className="habit-box">

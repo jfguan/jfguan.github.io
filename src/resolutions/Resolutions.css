@@ -127,11 +127,6 @@ body {
   max-width: auto;
 }
 
-.habits-image-creation {
-  opacity: .9;
-  filter: brightness(.25);
-}
-
 .habit-box {
   /* border: 1px solid var(--black); */
   display: flex;
@@ -185,6 +180,52 @@ body {
   text-decoration: underline;
 }
 
+/* HabitsCreation */
+.habits-image-container-creation {
+  width: 30vw;
+  position: relative;
+}
+
+.habits-image-creation {
+  opacity: .9;
+  filter: brightness(.1);
+}
+
+.suggestions-box {
+  /* Layout */
+  position: absolute;
+  top: 0px;
+  padding-top: 20px;
+  padding-left: 25px;
+  padding-right: 20px;
+  z-index: 2;
+
+  /* Appearance */
+  color: var(--cream);
+}
+
+.suggestions-title {
+  /* Layout */
+  margin-bottom: 16px;
+
+  /* Typography */
+  font-family: 'Roboto Serif';
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.suggestions-subtitle {
+  /* Typography */
+  font-size: 14px;
+  line-height: 4.0;
+  font-weight: 600;
+}
+
+.suggestions-list {
+  margin-bottom: 3vh;
+  font-size: 14px;
+}
+
 /* Mobile */
 @media (max-width: 768px) {
   .resolutions-app {
@@ -233,6 +274,33 @@ body {
 
   .habits-image-container {
     /* Layout */
+    width: 100%;
+  }
+
+  .suggestions-box {
+    /* Layout */
+    position: absolute;
+    top: 0px;
+    z-index: 2;
+  }
+
+  .suggestions-title {
+    /* Typography */
+    font-size: 18px;
+  }
+
+  .suggestions-subtitle {
+    /* Typography */
+    font-size: 10px;
+    font-weight: bold;
+  }
+
+  .suggestions-list {
+    /* Typography */
+    font-size: 10px;
+  }
+
+  .habits-image-container-creation {
     width: 100%;
   }
 
