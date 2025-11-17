@@ -196,8 +196,8 @@ body {
   position: absolute;
   top: 0px;
   padding-top: 20px;
-  padding-left: 25px;
-  padding-right: 20px;
+  padding-left: 8%;
+  padding-right: 6%;
   z-index: 2;
 
   /* Appearance */
@@ -222,7 +222,6 @@ body {
 }
 
 .suggestions-list {
-  margin-bottom: 3vh;
   font-size: 14px;
 }
 
@@ -275,13 +274,6 @@ body {
   .habits-image-container {
     /* Layout */
     width: 100%;
-  }
-
-  .suggestions-box {
-    /* Layout */
-    position: absolute;
-    top: 0px;
-    z-index: 2;
   }
 
   .suggestions-title {
