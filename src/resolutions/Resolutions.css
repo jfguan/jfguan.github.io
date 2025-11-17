@@ -1,0 +1,266 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap');
+
+:root {
+  --black: #191b15;
+  --cream: #e7dfc6;
+}
+
+body {
+  /* Appearance */
+  background-color: var(--cream);
+  color: var(--black);
+  font-family: 'IBM Plex Mono', monospace;
+  padding-bottom: 3vh;
+}
+
+.resolutionsApp {
+  /* Layout */
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+  padding: 8px 16px 0px 16px;
+  min-height: 100vh;
+}
+
+.topNav {
+  /* Layout */
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand {
+  /* Layout */
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  /* Typography */
+  font-family: 'Roboto Serif';
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 1;
+
+  /* Interaction */
+  cursor: pointer;
+}
+
+.logoText {
+  /* Typography */
+  font-weight: 100;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.infoOptions {
+  /* Layout */
+  display: flex;
+  align-items: center;
+
+  /* Typography */
+  font-size: 12px;
+}
+
+.infoOption {
+  /* Layout */
+  display: inline-block;
+  margin-left: 12px;
+
+  /* Appearance */
+  border-bottom: 1px solid var(--black);
+
+  /* Interaction */
+  cursor: pointer;
+}
+
+.infoOption:last-child {
+  /* Appearance */
+  border-right: none;
+  padding-right: 0;
+}
+
+.sideBar {
+  /* Layout */
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  padding-top: 24vh;
+  gap: 12vh;
+}
+
+.sideBarIcon {
+  /* Layout */
+  width: 20px;
+  height: 20px;
+
+  /* Interaction */
+  cursor: pointer;
+}
+
+.appBody {
+  /* Layout */
+  margin-left: 5vw;
+  padding-top: 4vh;
+  padding-left: 16vw;
+  padding-right: 16vw;
+}
+
+.sectionTitle {
+  /* Appearance */
+  font-family: 'Roboto Serif';
+  font-size: 24px;
+}
+
+.section {
+  display: grid;
+  grid-template-columns: 0.5fr 0.5fr;
+}
+
+.habitsImageContainer {
+  width: 30vw;
+}
+
+.habitsImage {
+  /* border: 1px solid var(--black); */
+  max-width: auto;
+}
+
+.habitBox {
+  /* border: 1px solid var(--black); */
+  display: flex;
+  flex-direction: column;
+  padding-left: 2vw;
+  padding-right: 4vw;
+}
+
+.quoteBox {
+  /* border: 1px solid var(--black); */
+  /* Layout */
+  padding-bottom: 2vh;
+
+  /* Appearance */
+  font-size: 12px;
+  font-weight: 300;
+  font-style: italic;
+  opacity: 75%;
+
+  border-bottom: 1px solid var(--black);
+}
+
+.questionBox {
+  /* border: 1px solid var(--black); */
+  padding-top: 2vh;
+
+  font-size: 16px;
+}
+
+.questionSection {
+  padding-bottom: 3vh;
+}
+
+.questionSection:last-child {
+  padding-bottom: 0vh;
+}
+
+.continueButton {
+  /* border: 1px solid var(--black); */
+  margin-top: auto;
+  align-self: flex-end;
+  padding-right: 10px;
+  padding-bottom: 10px;
+
+  font-size: 16px;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .resolutionsApp {
+    /* top right bottom left */
+    padding: 8px 10px 0px 10px;
+  }
+
+  .logo {
+    font-size: 12px;
+  }
+
+  .logoText {
+    font-size: 8px;
+  }
+
+  .infoOptions {
+    font-size: 8px;
+  }
+
+  .infoOption {
+    margin-left: 6px;
+  }
+
+  .sideBarIcon {
+    /* Layout */
+    height: 12px;
+    width: 12px;
+
+    cursor: pointer;
+  }
+
+  .appBody {
+    padding-left: 2vw;
+    padding-right: 2vw;
+  }
+
+  .sectionTitle {
+    /* Appearance */
+    font-size: 20px;
+  }
+
+  .section {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .habitsImageContainer {
+    /* display: flex; */
+    /* align-items: flex-start; */
+
+    /* Layout */
+    /* height: 75vh; */
+    width: 100%;
+  }
+
+  .habitBox {
+    /* Layout */
+    padding-top: 3vh;
+    padding-left: 1vw;
+    padding-right: 1vw;
+  }
+
+  .quoteBox {
+    /* Layout */
+    padding-bottom: 1vh;
+
+    /* Appearance */
+    font-size: 10px;
+  }
+
+  .questionBox {
+    padding-top: 1vh;
+
+    font-size: 12px;
+  }
+
+  .questionSection {
+    padding-bottom: 1vh;
+  }
+
+  .continueButton {
+    /* border: 1px solid var(--black); */
+    padding-top: 3vh;
+    font-size: 12px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+  }
+}
