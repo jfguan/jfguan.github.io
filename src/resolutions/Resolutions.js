@@ -1,8 +1,23 @@
 import './Resolutions.css';
 import { motion } from "framer-motion"
-import { fadeIn } from './animations'; 
+import { fadeIn } from './animations';
+
+const hoverFadeOpacity = .4;
+const hoverFadeDuration = .3;
+
+const InfoOption = ({ text }) => (
+    <motion.div
+        className="infoOption"
+        whileHover={{ opacity: hoverFadeOpacity }}
+        transition={{ duration: hoverFadeDuration }}
+    >
+        {text}
+    </motion.div>
+);
 
 const Resolutions = () => {
+    const infoItems = ['read this', 'guide', 'account'];
+
     return (
         <motion.div
             variants={fadeIn}
@@ -13,12 +28,21 @@ const Resolutions = () => {
         >
             <div className="topNav">
                 <div className="brand">
-                    <span className="logo">resolutions</span>
-                    <span className="logoText">
-                        - an opinionated and minimalist habit tracker
-                    </span>
+                    <motion.div
+                        className="logo"
+                        whileHover={{ opacity: hoverFadeOpacity }}
+                        transition={{ duration: hoverFadeDuration }}
+                    >
+                        resolutions
+                    </motion.div>
+                    <div className="logoText">
+                        &nbsp;- minimalist habit tracker
+                    </div>
                 </div>
-                <div className="navOptions">
+                <div className="infoOptions">
+                    {infoItems.map((item) => (
+                        <InfoOption key={item} text={item} />
+                    ))}
                 </div>
             </div>
             <div className="appBody">
