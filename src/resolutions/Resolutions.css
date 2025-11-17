@@ -187,8 +187,8 @@ body {
 }
 
 .habits-image-creation {
-  opacity: .9;
-  filter: brightness(.1);
+  opacity: 0.9;
+  filter: brightness(0.1);
 }
 
 .suggestions-box {
@@ -217,7 +217,7 @@ body {
 .suggestions-subtitle {
   /* Typography */
   font-size: 14px;
-  line-height: 4.0;
+  line-height: 4;
   font-weight: 600;
 }
 

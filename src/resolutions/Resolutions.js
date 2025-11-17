@@ -81,7 +81,7 @@ const Resolutions = () => {
         animate="visible"
         transition={{ delay: 1.0, duration: 2.0 }}
       >
-      <HabitsModule />
+        <HabitsModule />
       </motion.div>
     </motion.div>
   );
@@ -90,12 +90,12 @@ const Resolutions = () => {
 const HabitsModule = () => {
   return (
     <div className="habits-module">
-        <div className="section-title">habits</div>
-        <HabitsIntro />
-        <HabitsCreation />
+      <div className="section-title">habits</div>
+      <HabitsIntro />
+      <HabitsCreation />
     </div>
-  )
-}
+  );
+};
 
 const HabitsIntro = () => {
   return (
@@ -155,26 +155,24 @@ const HabitsCreation = () => {
         <div className="habits-image-container-creation">
           <img src={flowers} className="habits-image-creation"></img>
           <div className="suggestions-box">
-            <div className="suggestions-title"> 
-              guidelines
-            </div>
-            <div className="suggestions-subtitle"> 
-              life is limited
-            </div>
+            <div className="suggestions-title">guidelines</div>
+            <div className="suggestions-subtitle">life is limited</div>
             <ul className="suggestions-list">
               <li>enough time and energy?</li>
               <li>sustainable with current commitments?</li>
               <li>willing to trade off other commitments?</li>
               <li>will I do this for many years</li>
             </ul>
-            <div className="suggestions-subtitle"> 
+            <div className="suggestions-subtitle">
               minimally difficult (for now)
             </div>
             <ul className="suggestions-list">
               <li>[optional] under 3 minutes</li>
-              <li>can be made any easier without feeling like a waste of time?</li>
+              <li>
+                can be made any easier without feeling like a waste of time?
+              </li>
             </ul>
-            <div className="suggestions-subtitle"> 
+            <div className="suggestions-subtitle">
               commitment duration is correct
             </div>
             <ul className="suggestions-list">
@@ -184,9 +182,9 @@ const HabitsCreation = () => {
         </div>
         <div className="habit-box">
           <div className="quote-box">
-            "I have the happiness to know, that it is a rising and not a setting sun."
-            <br />
-            - Benjamin Franklin
+            "I have the happiness to know, that it is a rising and not a setting
+            sun."
+            <br />- Benjamin Franklin
           </div>
           <div className="question-box">
             <p className="question-section">are you running too fast?</p>
