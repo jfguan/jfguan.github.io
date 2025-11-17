@@ -13,7 +13,7 @@ body {
   padding-bottom: 3vh;
 }
 
-.resolutionsApp {
+.resolutions-app {
   /* Layout */
   display: grid;
   grid-template-columns: 1fr;
@@ -22,7 +22,7 @@ body {
   min-height: 100vh;
 }
 
-.topNav {
+.top-nav {
   /* Layout */
   grid-column: 1 / -1;
   display: flex;
@@ -47,14 +47,14 @@ body {
   cursor: pointer;
 }
 
-.logoText {
+.logo-text {
   /* Typography */
   font-weight: 100;
   font-size: 12px;
   line-height: 1;
 }
 
-.infoOptions {
+.info-options {
   /* Layout */
   display: flex;
   align-items: center;
@@ -63,7 +63,7 @@ body {
   font-size: 12px;
 }
 
-.infoOption {
+.info-option {
   /* Layout */
   display: inline-block;
   margin-left: 12px;
@@ -75,13 +75,13 @@ body {
   cursor: pointer;
 }
 
-.infoOption:last-child {
+.info-option:last-child {
   /* Appearance */
   border-right: none;
   padding-right: 0;
 }
 
-.sideBar {
+.side-bar {
   /* Layout */
   position: fixed;
   display: flex;
@@ -90,7 +90,7 @@ body {
   gap: 12vh;
 }
 
-.sideBarIcon {
+.side-bar-icon {
   /* Layout */
   width: 20px;
   height: 20px;
@@ -99,7 +99,7 @@ body {
   cursor: pointer;
 }
 
-.appBody {
+.app-body {
   /* Layout */
   margin-left: 5vw;
   padding-top: 4vh;
@@ -107,7 +107,7 @@ body {
   padding-right: 16vw;
 }
 
-.sectionTitle {
+.section-title {
   /* Appearance */
   font-family: 'Roboto Serif';
   font-size: 24px;
@@ -118,16 +118,21 @@ body {
   grid-template-columns: 0.5fr 0.5fr;
 }
 
-.habitsImageContainer {
+.habits-image-container {
   width: 30vw;
 }
 
-.habitsImage {
+.habits-image {
   /* border: 1px solid var(--black); */
   max-width: auto;
 }
 
-.habitBox {
+.habits-image-creation {
+  opacity: .9;
+  filter: brightness(.25);
+}
+
+.habit-box {
   /* border: 1px solid var(--black); */
   display: flex;
   flex-direction: column;
@@ -135,7 +140,7 @@ body {
   padding-right: 4vw;
 }
 
-.quoteBox {
+.quote-box {
   /* border: 1px solid var(--black); */
   /* Layout */
   padding-bottom: 2vh;
@@ -149,25 +154,29 @@ body {
   border-bottom: 1px solid var(--black);
 }
 
-.questionBox {
+.question-box {
   /* border: 1px solid var(--black); */
   padding-top: 2vh;
 
   font-size: 16px;
 }
 
-.questionSection {
+.question-section {
   padding-bottom: 3vh;
 }
 
-.questionSection:last-child {
+.question-section:last-child {
   padding-bottom: 0vh;
 }
 
-.continueButton {
-  /* border: 1px solid var(--black); */
+.button-nav {
   margin-top: auto;
-  align-self: flex-end;
+  display: flex;
+  justify-content: space-between;
+}
+
+.habits-button {
+  /* border: 1px solid var(--black); */
   padding-right: 10px;
   padding-bottom: 10px;
 
@@ -178,7 +187,7 @@ body {
 
 /* Mobile */
 @media (max-width: 768px) {
-  .resolutionsApp {
+  .resolutions-app {
     /* top right bottom left */
     padding: 8px 10px 0px 10px;
   }
@@ -187,19 +196,19 @@ body {
     font-size: 12px;
   }
 
-  .logoText {
+  .logo-text {
     font-size: 8px;
   }
 
-  .infoOptions {
+  .info-options {
     font-size: 8px;
   }
 
-  .infoOption {
+  .info-option {
     margin-left: 6px;
   }
 
-  .sideBarIcon {
+  .side-bar-icon {
     /* Layout */
     height: 12px;
     width: 12px;
@@ -207,12 +216,12 @@ body {
     cursor: pointer;
   }
 
-  .appBody {
+  .app-body {
     padding-left: 2vw;
     padding-right: 2vw;
   }
 
-  .sectionTitle {
+  .section-title {
     /* Appearance */
     font-size: 20px;
   }
@@ -222,23 +231,19 @@ body {
     grid-template-columns: 1fr;
   }
 
-  .habitsImageContainer {
-    /* display: flex; */
-    /* align-items: flex-start; */
-
+  .habits-image-container {
     /* Layout */
-    /* height: 75vh; */
     width: 100%;
   }
 
-  .habitBox {
+  .habit-box {
     /* Layout */
     padding-top: 3vh;
     padding-left: 1vw;
     padding-right: 1vw;
   }
 
-  .quoteBox {
+  .quote-box {
     /* Layout */
     padding-bottom: 1vh;
 
@@ -246,17 +251,17 @@ body {
     font-size: 10px;
   }
 
-  .questionBox {
+  .question-box {
     padding-top: 1vh;
 
     font-size: 12px;
   }
 
-  .questionSection {
+  .question-section {
     padding-bottom: 1vh;
   }
 
-  .continueButton {
+  .habits-button {
     /* border: 1px solid var(--black); */
     padding-top: 3vh;
     font-size: 12px;

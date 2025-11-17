@@ -12,7 +12,7 @@ const hoverFadeDuration = 0.2;
 
 const InfoOption = ({ text }) => (
   <motion.div
-    className="infoOption"
+    className="info-option"
     whileHover={{ opacity: hoverFadeOpacity }}
     transition={{ duration: hoverFadeDuration }}
   >
@@ -29,9 +29,9 @@ const Resolutions = () => {
       initial="hidden"
       animate="visible"
       transition={{ duration: 2.0 }}
-      class="resolutionsApp"
+      className="resolutions-app"
     >
-      <div className="topNav">
+      <div className="top-nav">
         <div className="brand">
           <motion.div
             className="logo"
@@ -40,97 +40,168 @@ const Resolutions = () => {
           >
             resolutions
           </motion.div>
-          <div className="logoText">&nbsp;- minimalist habit tracker</div>
+          <div className="logo-text">&nbsp;- minimalist habit tracker</div>
         </div>
-        <div className="infoOptions">
+        <div className="info-options">
           {infoItems.map((item) => (
             <InfoOption key={item} text={item} />
           ))}
         </div>
       </div>
-      <div className="sideBar">
+      <div className="side-bar">
         <motion.img
           src={checkIcon}
           whileHover={{ opacity: hoverFadeOpacity }}
           transition={{ duration: hoverFadeDuration }}
-          class="sideBarIcon"
+          className="side-bar-icon"
         ></motion.img>
         <motion.img
           src={terminalIcon}
           whileHover={{ opacity: hoverFadeOpacity }}
           transition={{ duration: hoverFadeDuration }}
-          class="sideBarIcon"
+          className="side-bar-icon"
         ></motion.img>
         <motion.img
           src={bagIcon}
           whileHover={{ opacity: hoverFadeOpacity }}
           transition={{ duration: hoverFadeDuration }}
-          class="sideBarIcon"
+          className="side-bar-icon"
         ></motion.img>
         <motion.img
           src={micIcon}
           whileHover={{ opacity: hoverFadeOpacity }}
           transition={{ duration: hoverFadeDuration }}
-          class="sideBarIcon"
+          className="side-bar-icon"
         ></motion.img>
       </div>
       <motion.div
-        className="appBody"
+        className="app-body"
         variants={fadeIn}
         initial="hidden"
         animate="visible"
         transition={{ delay: 1.0, duration: 2.0 }}
       >
-        <Intro />
+      <HabitsModule />
       </motion.div>
     </motion.div>
   );
 };
 
-const Intro = () => {
+const HabitsModule = () => {
+  return (
+    <div className="habits-module">
+        <div className="section-title">habits</div>
+        <HabitsIntro />
+        <HabitsCreation />
+    </div>
+  )
+}
+
+const HabitsIntro = () => {
   return (
     <div className="intro">
-      <div className="sectionTitle">habits</div>
       <div className="section">
-        <div className="habitsImageContainer">
-          <img src={flowers} className="habitsImage"></img>
+        <div className="habits-image-container">
+          <img src={flowers} className="habits-image"></img>
         </div>
-        <div className="habitBox">
-          <div className="quoteBox">
+        <div className="habit-box">
+          <div className="quote-box">
             in the eye of cacophony, time slows.
             <br />
             distill the moment to a single step.
           </div>
-          <div className="questionBox">
-            <p className="questionSection">are you running too fast?</p>
-            <p className="questionSection">
+          <div className="question-box">
+            <p className="question-section">are you running too fast?</p>
+            <p className="question-section">
               what is the <b>single</b> most important
               <br />
               habit in your life?
             </p>
-            <p className="questionSection">
+            <p className="question-section">
               think deeply. <br />
               everything else fades to noise
             </p>
-            <p className="questionSection">
+            <p className="question-section">
               this is not a result
               <br />
               this is a process
               <br />
               this is <b>you</b>.
             </p>
-            <p className="questionSection">
+            <p className="question-section">
               who are you -<br />
               why do you want this?
             </p>
           </div>
-          <motion.button
-            className="continueButton"
-            whileHover={{ opacity: hoverFadeOpacity }}
-            transition={{ duration: hoverFadeDuration }}
-          >
-            continue
-          </motion.button>
+          <div className="button-nav">
+            <motion.button
+              className="habits-button"
+              whileHover={{ opacity: hoverFadeOpacity }}
+              transition={{ duration: hoverFadeDuration }}
+            >
+              continue
+            </motion.button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const HabitsCreation = () => {
+  return (
+    <div className="creation">
+      <div className="section">
+        <div className="habits-image-container">
+          <img src={flowers} className="habits-image-creation"></img>
+          <div className="creation-guide-lines">
+          </div>
+        </div>
+        <div className="habit-box">
+          <div className="quote-box">
+            "I have the happiness to know, that it is a rising and not a setting sun."
+            <br />
+            - Benjamin Franklin
+          </div>
+          <div className="question-box">
+            <p className="question-section">are you running too fast?</p>
+            <p className="question-section">
+              what is the <b>single</b> most important
+              <br />
+              habit in your life?
+            </p>
+            <p className="question-section">
+              think deeply. <br />
+              everything else fades to noise
+            </p>
+            <p className="question-section">
+              this is not a result
+              <br />
+              this is a process
+              <br />
+              this is <b>you</b>.
+            </p>
+            <p className="question-section">
+              who are you -<br />
+              why do you want this?
+            </p>
+          </div>
+          <div className="button-nav">
+            <motion.button
+              className="habits-button"
+              whileHover={{ opacity: hoverFadeOpacity }}
+              transition={{ duration: hoverFadeDuration }}
+            >
+              back
+            </motion.button>
+            <motion.button
+              className="habits-button"
+              whileHover={{ opacity: hoverFadeOpacity }}
+              transition={{ duration: hoverFadeDuration }}
+            >
+              create
+            </motion.button>
+          </div>
         </div>
       </div>
     </div>
