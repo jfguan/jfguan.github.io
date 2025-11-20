@@ -2,7 +2,9 @@
 
 :root {
   --black: #191b15;
+  --black-rgb: 25, 27, 21;
   --cream: #e7dfc6;
+  --green: #365613;
 }
 
 body {
@@ -116,6 +118,7 @@ body {
 .section {
   display: grid;
   grid-template-columns: 0.5fr 0.5fr;
+  align-items: stretch;
 }
 
 .habits-image-container {
@@ -124,7 +127,6 @@ body {
 
 .habits-image {
   /* border: 1px solid var(--black); */
-  max-width: auto;
 }
 
 .habit-box {
@@ -138,7 +140,8 @@ body {
 .quote-box {
   /* border: 1px solid var(--black); */
   /* Layout */
-  padding-bottom: 2vh;
+  padding-top: 0.5vh;
+  padding-bottom: 0.5vh;
 
   /* Appearance */
   font-size: 12px;
@@ -149,7 +152,7 @@ body {
   border-bottom: 1px solid var(--black);
 }
 
-.question-box {
+.habit-content-box {
   /* border: 1px solid var(--black); */
   padding-top: 2vh;
 
@@ -172,8 +175,7 @@ body {
 
 .habits-button {
   /* border: 1px solid var(--black); */
-  padding-right: 10px;
-  padding-bottom: 10px;
+  padding-bottom: 8px;
 
   font-size: 16px;
   font-weight: bold;
@@ -223,6 +225,73 @@ body {
 
 .suggestions-list {
   font-size: 14px;
+}
+
+.habit-prompt {
+  margin-bottom: 5px;
+
+  font-weight: bold;
+}
+
+.habit-input {
+  /* border: 1px solid var(--black); */
+  width: 100%;
+  padding: 8px;
+  resize: none;
+  margin-bottom: 1vh;
+
+  background-color: transparent;
+  border: 1px solid rgba(var(--black-rgb), 0.8);
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.habit-input::placeholder {
+  color: rgba(var(--black-rgb), 0.5);
+}
+
+.habit-days-input {
+  width: 50px;
+  margin-left: 8px;
+  margin-right: 8px;
+  padding-top: 3vh;
+
+  background-color: transparent;
+  border-bottom: 1px solid rgba(var(--black-rgb), 0.8);
+  text-align: center;
+}
+
+.habit-days-input::placeholder {
+  color: rgba(var(--black-rgb), 0.5);
+}
+
+/* HABITS VIEW MODULE */
+.habits-view {
+  /* Layout */
+  aspect-ratio: 59 / 90;
+
+  /* border: 1px solid var(--black); */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30vw;
+}
+
+.habits-view-container {
+  /* Appearance */
+  height: 85%;
+  border: 4px solid var(--black);
+  border-radius: 8px;
+}
+
+.habits-view-new-habit-button {
+  height: 75px;
+  width: 100%;
+
+  background-color: var(--green);
+  color: var(--cream);
+  font-weight: bold;
+  border-radius: 8px;
 }
 
 /* Mobile */
@@ -319,13 +388,36 @@ body {
 
   .question-section {
     padding-bottom: 1vh;
+    font-size: 14px;
+  }
+
+  .habit-content-box {
+    /* border: 1px solid var(--black); */
+    padding-top: 2vh;
+
+    font-size: 14px;
   }
 
   .habits-button {
     /* border: 1px solid var(--black); */
     padding-top: 3vh;
-    font-size: 12px;
+    font-size: 14px;
     padding-right: 0px;
     padding-bottom: 0px;
+  }
+
+  /* HABITS VIEW MODULE */
+  .habits-view {
+    height: 450px;
+    width: 100%;
+  }
+
+  .habits-view-container {
+    height: 85%;
+  }
+
+  .habits-view-new-habit-button {
+    height: 60px;
+    font-size: 14px;
   }
 }

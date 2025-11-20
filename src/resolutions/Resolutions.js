@@ -93,6 +93,7 @@ const HabitsModule = () => {
       <div className="section-title">habits</div>
       <HabitsIntro />
       <HabitsCreation />
+      <HabitsView />
     </div>
   );
 };
@@ -110,7 +111,7 @@ const HabitsIntro = () => {
             <br />
             distill the moment to a single step.
           </div>
-          <div className="question-box">
+          <div className="habit-content-box">
             <p className="question-section">are you running too fast?</p>
             <p className="question-section">
               what is the <b>single</b> most important
@@ -134,6 +135,8 @@ const HabitsIntro = () => {
             </p>
           </div>
           <div className="button-nav">
+            {/* empty div, to maintain two button pattern */}
+            <div />
             <motion.button
               className="habits-button"
               whileHover={{ opacity: hoverFadeOpacity }}
@@ -147,6 +150,15 @@ const HabitsIntro = () => {
     </div>
   );
 };
+
+const HabitTextInput = ({ placeholder = 'placeholder', maxLength = '81' }) => (
+  <textarea
+    className="habit-input"
+    placeholder={placeholder}
+    maxLength={maxLength}
+    rows="3"
+  />
+);
 
 const HabitsCreation = () => {
   return (
@@ -186,27 +198,25 @@ const HabitsCreation = () => {
             sun."
             <br />- Benjamin Franklin
           </div>
-          <div className="question-box">
-            <p className="question-section">are you running too fast?</p>
-            <p className="question-section">
-              what is the <b>single</b> most important
-              <br />
-              habit in your life?
-            </p>
-            <p className="question-section">
-              think deeply. <br />
-              everything else fades to noise
-            </p>
-            <p className="question-section">
-              this is not a result
-              <br />
-              this is a process
-              <br />
-              this is <b>you</b>.
-            </p>
-            <p className="question-section">
-              who are you -<br />
-              why do you want this?
+          <div className="habit-content-box">
+            <p className="habit-prompt">I am</p>
+            <HabitTextInput placeholder="energetic and alive" />
+            <p className="habit-prompt">I hate</p>
+            <HabitTextInput placeholder="feeling tired and mind fog" />
+            <p className="habit-prompt">I love</p>
+            <HabitTextInput placeholder="how clear the world feels when I sleep well" />
+            <p className="habit-prompt">I will</p>
+            <HabitTextInput placeholder="sleep every day at 10pm" />
+            <p className="habit-prompt">
+              for
+              <input
+                inputMode="numberic"
+                pattern="[0-9]*"
+                className="habit-days-input"
+                placeholder="90"
+                maxLength="4"
+              />
+              days
             </p>
           </div>
           <div className="button-nav">
@@ -223,6 +233,63 @@ const HabitsCreation = () => {
               transition={{ duration: hoverFadeDuration }}
             >
               create
+            </motion.button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const HabitsView = () => {
+  return (
+    <div className="creation">
+      <div className="section">
+        <div className="habits-view">
+          <div className="habits-view-container"></div>
+          <button className="habits-view-new-habit-button">new habit</button>
+        </div>
+        <div className="habit-box">
+          <div className="quote-box">
+            "I have the happiness to know, that it is a rising and not a setting
+            sun."
+            <br />- Benjamin Franklin
+          </div>
+          <div className="habit-content-box">
+            <p className="habit-prompt">I am</p>
+            <HabitTextInput placeholder="energetic and alive" />
+            <p className="habit-prompt">I hate</p>
+            <HabitTextInput placeholder="feeling tired and mind fog" />
+            <p className="habit-prompt">I love</p>
+            <HabitTextInput placeholder="how clear the world feels when I sleep well" />
+            <p className="habit-prompt">I will</p>
+            <HabitTextInput placeholder="sleep every day at 10pm" />
+            <p className="habit-prompt">
+              for
+              <input
+                inputMode="numberic"
+                pattern="[0-9]*"
+                className="habit-days-input"
+                placeholder="90"
+                maxLength="4"
+              />
+              days
+            </p>
+          </div>
+          <div className="button-nav">
+            <motion.button
+              className="habits-button"
+              whileHover={{ opacity: hoverFadeOpacity }}
+              transition={{ duration: hoverFadeDuration }}
+            >
+              delete
+            </motion.button>
+            <motion.button
+              className="habits-button"
+              whileHover={{ opacity: hoverFadeOpacity }}
+              transition={{ duration: hoverFadeDuration }}
+            >
+              save
             </motion.button>
           </div>
         </div>
