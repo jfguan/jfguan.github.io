@@ -2,10 +2,14 @@ import './Resolutions.css';
 import { motion } from 'framer-motion';
 import { fadeIn } from './animations';
 import checkIcon from './check.svg';
+import greencheckIcon from './green_check.svg';
+import squareIcon from './square.svg';
 import terminalIcon from './terminal.svg';
 import bagIcon from './bag.svg';
 import micIcon from './mic.svg';
 import flowers from './flowers.svg';
+import leftArrow from './left_arrow.svg';
+import rightArrow from './right_arrow.svg';
 
 const hoverFadeOpacity = 0.4;
 const hoverFadeDuration = 0.2;
@@ -246,7 +250,65 @@ const HabitsView = () => {
     <div className="creation">
       <div className="section">
         <div className="habits-view">
-          <div className="habits-view-container"></div>
+          <div className="habits-view-container">
+            <div className="date-selector">
+              <motion.img
+                src={leftArrow}
+                whileHover={{ opacity: hoverFadeOpacity }}
+                transition={{ duration: hoverFadeDuration }}
+                class="date-selector-arrow"
+              ></motion.img>
+              <div className="date-selector-inputs">
+                <input
+                  inputMode="numberic"
+                  pattern="[0-9]*"
+                  className="date-selector-input day-month-len"
+                  value="11"
+                  maxLength="2"
+                />
+                -
+                <input
+                  inputMode="numberic"
+                  pattern="[0-9]*"
+                  className="date-selector-input day-month-len"
+                  value="21"
+                  maxLength="2"
+                />
+                -
+                <input
+                  inputMode="numberic"
+                  pattern="[0-9]*"
+                  className="date-selector-input year-len"
+                  value="2025"
+                  maxLength="4"
+                />
+              </div>
+              <motion.img
+                src={rightArrow}
+                whileHover={{ opacity: hoverFadeOpacity }}
+                transition={{ duration: hoverFadeDuration }}
+                class="date-selector-arrow"
+              ></motion.img>
+            </div>
+            <div className="habit-container">
+              <div className="habit-snippet-box">
+                <div className="habit-snippet-prompt">I will</div>
+                <div className="habit-snippet-statement">
+                  sleep every day at 10pm
+                </div>
+              </div>
+              <div className="habit-health-box">
+                <div className="habit-snippet-prompt">health</div>
+                <div className="habit-health-percentage">33%</div>
+              </div>
+              <motion.img
+                src={greencheckIcon}
+                whileHover={{ opacity: hoverFadeOpacity }}
+                transition={{ duration: hoverFadeDuration }}
+                class="habit-check"
+              />
+            </div>
+          </div>
           <button className="habits-view-new-habit-button">new habit</button>
         </div>
         <div className="habit-box">

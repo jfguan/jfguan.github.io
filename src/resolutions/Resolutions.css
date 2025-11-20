@@ -5,6 +5,7 @@
   --black-rgb: 25, 27, 21;
   --cream: #e7dfc6;
   --green: #365613;
+  --red: #933a3a;
 }
 
 body {
@@ -123,10 +124,6 @@ body {
 
 .habits-image-container {
   width: 30vw;
-}
-
-.habits-image {
-  /* border: 1px solid var(--black); */
 }
 
 .habit-box {
@@ -267,8 +264,10 @@ body {
 
 /* HABITS VIEW MODULE */
 .habits-view {
+  overflow: scroll;
+
   /* Layout */
-  aspect-ratio: 59 / 90;
+  aspect-ratio: 590 / 903;
 
   /* border: 1px solid var(--black); */
   display: flex;
@@ -278,10 +277,108 @@ body {
 }
 
 .habits-view-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
   /* Appearance */
   height: 85%;
   border: 4px solid var(--black);
   border-radius: 8px;
+}
+
+.date-selector {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 64px;
+
+  padding-top: 2vh;
+  padding-bottom: 2vh;
+}
+
+.date-selector-arrow {
+  height: 20px;
+
+  cursor: pointer;
+}
+
+.date-selector-inputs {
+  /* border: 1px solid var(--black); */
+  font-weight: bold;
+}
+
+.date-selector-input {
+  background-color: transparent;
+  text-align: center;
+  text-decoration: underline 2px solid var(--black);
+}
+
+.day-month-len {
+  width: 2ch;
+}
+
+.year-len {
+  width: 4ch;
+}
+
+.habit-container {
+  height: 75px;
+  width: 90%;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10%;
+
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 3%;
+  padding-right: 5%;
+  padding-top: 6px;
+  padding-bottom: 6px;
+
+  border: 3px solid var(--black);
+  border-radius: 8px;
+  background-color: #f6eed5;
+  font-size: 14px;
+}
+
+.habit-snippet-box {
+  min-width: 0;
+}
+
+.habit-snippet-prompt {
+  font-weight: bold;
+}
+
+.habit-snippet-statement {
+  /* border: 1px solid var(--black); */
+  font-size: 12px;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.habit-health-box {
+}
+
+.habit-health-percentage {
+  /* border: 1px solid var(--black); */
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1;
+
+  color: color-mix(in srgb, var(--green) 33%, var(--red) 67%);
+}
+
+.habit-check {
+  height: 45%;
+
+  align-self: center;
+
+  cursor: pointer;
 }
 
 .habits-view-new-habit-button {
