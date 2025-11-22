@@ -5,9 +5,10 @@ import { fadeIn, expandCollapse } from './animations';
 import checkIcon from './check.svg';
 import greencheckIcon from './green_check.svg';
 import squareIcon from './square.svg';
-import terminalIcon from './terminal.svg';
+import calendarIcon from './calendar.svg';
 import bagIcon from './bag.svg';
 import micIcon from './mic.svg';
+import terminalIcon from './terminal.svg';
 import flowers from './flowers.svg';
 import leftArrow from './left_arrow.svg';
 import rightArrow from './right_arrow.svg';
@@ -15,6 +16,7 @@ import downArrow from './down_arrow.svg';
 
 const hoverFadeOpacity = 0.4;
 const hoverFadeDuration = 0.2;
+const moduleFadeDuration = 2.0;
 
 // Calendar constants
 const MAX_DAYS_IN_MONTH = 31;
@@ -56,20 +58,29 @@ const HabitTextInput = ({ placeholder = 'placeholder', maxLength = '81' }) => (
 );
 
 const HabitsModule = () => {
+  const [habitsState, setHabitsState] = React.useState('intro');
+
   return (
     <div className="habits-module">
       <div className="section-title">habits</div>
-      <HabitsIntro />
-      <HabitsCreation />
-      <HabitsView />
-      <div className="section-title">calendar</div>
-      <CalendarView />
+      <AnimatePresence mode="wait">
+        {habitsState === 'intro' && (
+          <HabitsIntro key="intro" setHabitsState={setHabitsState} />
+        )}
+        {habitsState === 'creation' && (
+          <HabitsCreation key="creation" setHabitsState={setHabitsState} />
+        )}
+        {habitsState === 'view' && (
+          <HabitsView key="view" setHabitsState={setHabitsState} />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
 
 const Resolutions = () => {
   const infoItems = ['read this', 'guide', 'account'];
+  const habits = [];
 
   return (
     <motion.div
@@ -104,7 +115,7 @@ const Resolutions = () => {
           className="side-bar-icon"
         ></motion.img>
         <motion.img
-          src={terminalIcon}
+          src={calendarIcon}
           whileHover={{ opacity: hoverFadeOpacity }}
           transition={{ duration: hoverFadeDuration }}
           className="side-bar-icon"
@@ -121,23 +132,38 @@ const Resolutions = () => {
           transition={{ duration: hoverFadeDuration }}
           className="side-bar-icon"
         ></motion.img>
+        <motion.img
+          src={terminalIcon}
+          whileHover={{ opacity: hoverFadeOpacity }}
+          transition={{ duration: hoverFadeDuration }}
+          className="side-bar-icon"
+        ></motion.img>
       </div>
-      <motion.div
-        className="app-body"
-        variants={fadeIn}
-        initial="hidden"
-        animate="visible"
-        transition={{ delay: 1.0, duration: 2.0 }}
-      >
-        <HabitsModule />
-      </motion.div>
+      <AnimatePresence mode="wait">
+        <motion.div
+          className="app-body"
+          variants={fadeIn}
+          initial="hidden"
+          animate="visible"
+          transition={{ delay: 1.0, duration: 1.0 }}
+        >
+          <HabitsModule />
+          {habits.length > 0 && <CalendarView />}
+        </motion.div>
+      </AnimatePresence>
     </motion.div>
   );
 };
 
-const HabitsIntro = () => {
+const HabitsIntro = ({ setHabitsState }) => {
   return (
-    <div className="intro">
+    <motion.div
+      className="intro"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: moduleFadeDuration }}
+    >
       <div className="section">
         <div className="habits-image-container">
           <img src={flowers} className="habits-image"></img>
@@ -179,19 +205,26 @@ const HabitsIntro = () => {
               className="habits-button"
               whileHover={{ opacity: hoverFadeOpacity }}
               transition={{ duration: hoverFadeDuration }}
+              onClick={() => setHabitsState('creation')}
             >
               continue
             </motion.button>
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
-const HabitsCreation = () => {
+const HabitsCreation = ({ setHabitsState }) => {
   return (
-    <div className="creation">
+    <motion.div
+      className="creation"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: moduleFadeDuration }}
+    >
       <div className="section">
         <div className="habits-image-container-creation">
           <img src={flowers} className="habits-image-creation"></img>
@@ -253,6 +286,7 @@ const HabitsCreation = () => {
               className="habits-button"
               whileHover={{ opacity: hoverFadeOpacity }}
               transition={{ duration: hoverFadeDuration }}
+              onClick={() => setHabitsState('intro')}
             >
               back
             </motion.button>
@@ -266,16 +300,22 @@ const HabitsCreation = () => {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
-const HabitsView = () => {
+const HabitsView = ({ setHabitsState }) => {
   const [isChecked1, setIsChecked1] = React.useState(true);
   const [isChecked2, setIsChecked2] = React.useState(false);
 
   return (
-    <div className="view">
+    <motion.div
+      className="view"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: moduleFadeDuration }}
+    >
       <div className="section">
         <div className="habits-view">
           <div className="habits-view-container">
@@ -400,7 +440,7 @@ const HabitsView = () => {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
@@ -439,6 +479,7 @@ const CalendarView = () => {
 
   return (
     <div className="calendar">
+      <div className="section-title">calendar</div>
       <div className="section">
         <div className="calendar-title-box">
           <motion.img
@@ -457,7 +498,7 @@ const CalendarView = () => {
             I will sleep every day at 10pm
           </div>
         </div>
-        <AnimatePresence mode="wait">
+        <AnimatePresence>
           {isCalendarOpen && (
             <motion.div
               className="calendar-grid"
@@ -468,7 +509,6 @@ const CalendarView = () => {
                 opacity: { duration: CALENDAR_ANIMATION_DURATION },
                 height: {
                   duration: CALENDAR_ANIMATION_DURATION,
-                  delay: CALENDAR_ANIMATION_DURATION,
                 },
               }}
             >

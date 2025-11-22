@@ -89,7 +89,7 @@ body {
   position: fixed;
   display: flex;
   flex-direction: column;
-  padding-top: 24vh;
+  padding-top: 20vh;
   gap: 12vh;
 }
 
@@ -120,6 +120,7 @@ body {
 .section {
   display: grid;
   grid-template-columns: 0.55fr 0.45fr;
+  margin-bottom: 4vh;
 }
 
 .habits-image-container {
@@ -129,7 +130,7 @@ body {
   /* border: 1px solid var(--black); */
   display: flex;
   flex-direction: column;
-  padding-left: 2vw;
+  padding-left: 20px;
   min-width: 0;
 }
 
@@ -407,7 +408,7 @@ body {
 
 /* CALENDAR MODULE */
 .calendar {
-  padding-top: 1vh;
+  padding-top: 5px;
 }
 
 .calendar-title-box {
@@ -415,8 +416,6 @@ body {
   flex-direction: row;
   align-items: center;
   gap: 6px;
-
-  padding-bottom: 5px;
 }
 
 .calendar-title-arrow {
@@ -513,8 +512,8 @@ body {
 
   .side-bar-icon {
     /* Layout */
-    height: 12px;
-    width: 12px;
+    height: 14px;
+    width: 14px;
 
     cursor: pointer;
   }
@@ -523,7 +522,7 @@ body {
     /* Layout */
     width: 95%;
     margin-right: 0vw;
-    padding-left: 2vw;
+    padding-left: 1vw;
   }
 
   .section-title {
