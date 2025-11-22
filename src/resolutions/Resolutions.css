@@ -407,14 +407,25 @@ body {
 
 /* CALENDAR MODULE */
 .calendar {
-  padding-top: 2vh;
+  padding-top: 1vh;
 }
 
-.calendar-title {
-  /* border: 1px solid var(--black); */
-  grid-column: 1 / -1;
-  width: 100%;
+.calendar-title-box {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
 
+  padding-bottom: 5px;
+}
+
+.calendar-title-arrow {
+  height: 16px;
+  cursor: pointer;
+}
+
+.calendar-title-text {
+  /* border: 1px solid var(--black); */
   font-size: 14px;
   font-weight: bold;
 }
@@ -427,6 +438,7 @@ body {
   gap: 4px;
 
   padding-top: 5px;
+  overflow: hidden;
 }
 
 .calendar-header {
@@ -511,6 +523,7 @@ body {
     /* Layout */
     width: 95%;
     margin-right: 0vw;
+    padding-left: 2vw;
   }
 
   .section-title {
@@ -575,8 +588,6 @@ body {
   }
 
   .habit-content-box {
-    border: 1px solid var(--black);
-
     font-size: 14px;
   }
 
@@ -624,6 +635,10 @@ body {
   .habit-health-percentage {
     /* border: 1px solid var(--black); */
     font-size: 16px;
+  }
+
+  .calendar-title-text {
+    font-size: 12px;
   }
 
   .calendar-grid {

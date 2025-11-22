@@ -1,7 +1,7 @@
 import './Resolutions.css';
 import React from 'react';
-import { motion } from 'framer-motion';
-import { fadeIn } from './animations';
+import { motion, AnimatePresence } from 'framer-motion';
+import { fadeIn, expandCollapse } from './animations';
 import checkIcon from './check.svg';
 import greencheckIcon from './green_check.svg';
 import squareIcon from './square.svg';
@@ -11,9 +11,30 @@ import micIcon from './mic.svg';
 import flowers from './flowers.svg';
 import leftArrow from './left_arrow.svg';
 import rightArrow from './right_arrow.svg';
+import downArrow from './down_arrow.svg';
 
 const hoverFadeOpacity = 0.4;
 const hoverFadeDuration = 0.2;
+
+// Calendar constants
+const MAX_DAYS_IN_MONTH = 31;
+const CALENDAR_ANIMATION_DURATION = 0.3;
+const ARROW_COLLAPSED_ROTATION = -90;
+const ARROW_EXPANDED_ROTATION = 0;
+const MONTHS = [
+  'jan',
+  'feb',
+  'mar',
+  'apr',
+  'may',
+  'jun',
+  'jul',
+  'aug',
+  'sep',
+  'oct',
+  'nov',
+  'dec',
+];
 
 const InfoOption = ({ text }) => (
   <motion.div
@@ -41,6 +62,7 @@ const HabitsModule = () => {
       <HabitsIntro />
       <HabitsCreation />
       <HabitsView />
+      <div className="section-title">calendar</div>
       <CalendarView />
     </div>
   );
@@ -383,37 +405,30 @@ const HabitsView = () => {
 };
 
 const CalendarView = () => {
-  const months = [
-    'jan',
-    'feb',
-    'mar',
-    'apr',
-    'may',
-    'jun',
-    'jul',
-    'aug',
-    'sep',
-    'oct',
-    'nov',
-    'dec',
-  ];
-  const year = 2025;
+  const year = new Date().getFullYear();
   const [filledDays, setFilledDays] = React.useState({});
+  const [isCalendarOpen, setIsCalendarOpen] = React.useState(true);
 
   const getDaysInMonth = (month, year) => {
     return new Date(year, month + 1, 0).getDate();
   };
 
+  const createDayKey = (month, day) => `${month}-${day}`;
+
   const toggleDay = (month, day) => {
-    const key = `${month}-${day}`;
+    const key = createDayKey(month, day);
     setFilledDays((prev) => ({
       ...prev,
       [key]: !prev[key],
     }));
   };
 
-  const headerDays = Array.from({ length: 31 }, (_, i) => i + 1);
-  const monthsWithDays = months.map((month, monthIndex) => ({
+  const toggleCalendar = () => {
+    setIsCalendarOpen((prev) => !prev);
+  };
+
+  const headerDays = Array.from({ length: MAX_DAYS_IN_MONTH }, (_, i) => i + 1);
+  const monthsWithDays = MONTHS.map((month, monthIndex) => ({
     name: month,
     index: monthIndex,
     days: Array.from(
@@ -425,32 +440,64 @@ const CalendarView = () => {
   return (
     <div className="calendar">
       <div className="section">
-        <div className="calendar-title">I will sleep every day at 10pm</div>
-        <div className="calendar-grid">
-          <div className="calendar-header">
-            <div className="calendar-header-year">{year}</div>
-            {headerDays.map((day) => (
-              <div key={day} className="calendar-header-day">
-                {String(day).padStart(2, '0')}
-              </div>
-            ))}
+        <div className="calendar-title-box">
+          <motion.img
+            src={downArrow}
+            onClick={toggleCalendar}
+            whileHover={{ opacity: hoverFadeOpacity }}
+            animate={{
+              rotate: isCalendarOpen
+                ? ARROW_EXPANDED_ROTATION
+                : ARROW_COLLAPSED_ROTATION,
+            }}
+            transition={{ duration: CALENDAR_ANIMATION_DURATION }}
+            className="calendar-title-arrow"
+          />
+          <div className="calendar-title-text">
+            I will sleep every day at 10pm
           </div>
-          {monthsWithDays.map(({ name, index, days }) => (
-            <div key={name} className="calendar-month">
-              <div className="calendar-month-title">{name}</div>
-              {days.map((day) => {
-                const key = `${index}-${day}`;
-                return (
-                  <div
-                    key={day}
-                    className={`calendar-day ${filledDays[key] ? 'filled' : ''}`}
-                    onClick={() => toggleDay(index, day)}
-                  />
-                );
-              })}
-            </div>
-          ))}
         </div>
+        <AnimatePresence mode="wait">
+          {isCalendarOpen && (
+            <motion.div
+              className="calendar-grid"
+              initial={expandCollapse.hidden}
+              animate={expandCollapse.visible}
+              exit={expandCollapse.hidden}
+              transition={{
+                opacity: { duration: CALENDAR_ANIMATION_DURATION },
+                height: {
+                  duration: CALENDAR_ANIMATION_DURATION,
+                  delay: CALENDAR_ANIMATION_DURATION,
+                },
+              }}
+            >
+              <div className="calendar-header">
+                <div className="calendar-header-year">{year}</div>
+                {headerDays.map((day) => (
+                  <div key={day} className="calendar-header-day">
+                    {String(day).padStart(2, '0')}
+                  </div>
+                ))}
+              </div>
+              {monthsWithDays.map(({ name, index, days }) => (
+                <div key={name} className="calendar-month">
+                  <div className="calendar-month-title">{name}</div>
+                  {days.map((day) => {
+                    const key = createDayKey(index, day);
+                    return (
+                      <div
+                        key={day}
+                        className={`calendar-day ${filledDays[key] ? 'filled' : ''}`}
+                        onClick={() => toggleDay(index, day)}
+                      />
+                    );
+                  })}
+                </div>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
