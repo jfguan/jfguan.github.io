@@ -1,4 +1,5 @@
 import './Resolutions.css';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { fadeIn } from './animations';
 import checkIcon from './check.svg';
@@ -23,6 +24,27 @@ const InfoOption = ({ text }) => (
     {text}
   </motion.div>
 );
+
+const HabitTextInput = ({ placeholder = 'placeholder', maxLength = '81' }) => (
+  <textarea
+    className="habit-input"
+    placeholder={placeholder}
+    maxLength={maxLength}
+    rows="3"
+  />
+);
+
+const HabitsModule = () => {
+  return (
+    <div className="habits-module">
+      <div className="section-title">habits</div>
+      <HabitsIntro />
+      <HabitsCreation />
+      <HabitsView />
+      <CalendarView />
+    </div>
+  );
+};
 
 const Resolutions = () => {
   const infoItems = ['read this', 'guide', 'account'];
@@ -91,17 +113,6 @@ const Resolutions = () => {
   );
 };
 
-const HabitsModule = () => {
-  return (
-    <div className="habits-module">
-      <div className="section-title">habits</div>
-      <HabitsIntro />
-      <HabitsCreation />
-      <HabitsView />
-    </div>
-  );
-};
-
 const HabitsIntro = () => {
   return (
     <div className="intro">
@@ -134,7 +145,8 @@ const HabitsIntro = () => {
               this is <b>you</b>.
             </p>
             <p className="question-section">
-              who are you -<br />
+              who are you
+              <br />
               why do you want this?
             </p>
           </div>
@@ -154,15 +166,6 @@ const HabitsIntro = () => {
     </div>
   );
 };
-
-const HabitTextInput = ({ placeholder = 'placeholder', maxLength = '81' }) => (
-  <textarea
-    className="habit-input"
-    placeholder={placeholder}
-    maxLength={maxLength}
-    rows="3"
-  />
-);
 
 const HabitsCreation = () => {
   return (
@@ -246,8 +249,11 @@ const HabitsCreation = () => {
 };
 
 const HabitsView = () => {
+  const [isChecked1, setIsChecked1] = React.useState(true);
+  const [isChecked2, setIsChecked2] = React.useState(false);
+
   return (
-    <div className="creation">
+    <div className="view">
       <div className="section">
         <div className="habits-view">
           <div className="habits-view-container">
@@ -290,22 +296,38 @@ const HabitsView = () => {
                 class="date-selector-arrow"
               ></motion.img>
             </div>
-            <div className="habit-container">
+            <div className="habit-container container-focused">
               <div className="habit-snippet-box">
                 <div className="habit-snippet-prompt">I will</div>
-                <div className="habit-snippet-statement">
-                  sleep every day at 10pm
-                </div>
+                <div className="habit-snippet-statement">journal every day</div>
               </div>
               <div className="habit-health-box">
                 <div className="habit-snippet-prompt">health</div>
                 <div className="habit-health-percentage">33%</div>
               </div>
               <motion.img
-                src={greencheckIcon}
+                src={isChecked1 ? greencheckIcon : squareIcon}
+                onClick={() => setIsChecked1(!isChecked1)}
                 whileHover={{ opacity: hoverFadeOpacity }}
                 transition={{ duration: hoverFadeDuration }}
-                class="habit-check"
+                class={isChecked1 ? 'habit-check' : 'habit-square'}
+              />
+            </div>
+            <div className="habit-container">
+              <div className="habit-snippet-box">
+                <div className="habit-snippet-prompt">I will</div>
+                <div className="habit-snippet-statement">journal every day</div>
+              </div>
+              <div className="habit-health-box">
+                <div className="habit-snippet-prompt">health</div>
+                <div className="habit-health-percentage">0%</div>
+              </div>
+              <motion.img
+                src={isChecked2 ? greencheckIcon : squareIcon}
+                onClick={() => setIsChecked2(!isChecked2)}
+                whileHover={{ opacity: hoverFadeOpacity }}
+                transition={{ duration: hoverFadeDuration }}
+                class={isChecked2 ? 'habit-check' : 'habit-square'}
               />
             </div>
           </div>
@@ -354,6 +376,80 @@ const HabitsView = () => {
               save
             </motion.button>
           </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const CalendarView = () => {
+  const months = [
+    'jan',
+    'feb',
+    'mar',
+    'apr',
+    'may',
+    'jun',
+    'jul',
+    'aug',
+    'sep',
+    'oct',
+    'nov',
+    'dec',
+  ];
+  const year = 2025;
+  const [filledDays, setFilledDays] = React.useState({});
+
+  const getDaysInMonth = (month, year) => {
+    return new Date(year, month + 1, 0).getDate();
+  };
+
+  const toggleDay = (month, day) => {
+    const key = `${month}-${day}`;
+    setFilledDays((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
+
+  const headerDays = Array.from({ length: 31 }, (_, i) => i + 1);
+  const monthsWithDays = months.map((month, monthIndex) => ({
+    name: month,
+    index: monthIndex,
+    days: Array.from(
+      { length: getDaysInMonth(monthIndex, year) },
+      (_, i) => i + 1
+    ),
+  }));
+
+  return (
+    <div className="calendar">
+      <div className="section">
+        <div className="calendar-title">I will sleep every day at 10pm</div>
+        <div className="calendar-grid">
+          <div className="calendar-header">
+            <div className="calendar-header-year">{year}</div>
+            {headerDays.map((day) => (
+              <div key={day} className="calendar-header-day">
+                {String(day).padStart(2, '0')}
+              </div>
+            ))}
+          </div>
+          {monthsWithDays.map(({ name, index, days }) => (
+            <div key={name} className="calendar-month">
+              <div className="calendar-month-title">{name}</div>
+              {days.map((day) => {
+                const key = `${index}-${day}`;
+                return (
+                  <div
+                    key={day}
+                    className={`calendar-day ${filledDays[key] ? 'filled' : ''}`}
+                    onClick={() => toggleDay(index, day)}
+                  />
+                );
+              })}
+            </div>
+          ))}
         </div>
       </div>
     </div>
