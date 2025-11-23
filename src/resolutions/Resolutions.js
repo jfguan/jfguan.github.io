@@ -38,11 +38,18 @@ const MONTHS = [
   'dec',
 ];
 
-const createHabit = (identityText, loveText, hateText, duration) => ({
+const createHabit = (
+  identityText,
+  loveText,
+  hateText,
+  actionText,
+  duration
+) => ({
   id: crypto.randomUUID(),
   identityText,
   loveText,
   hateText,
+  actionText,
   duration,
 });
 
@@ -56,26 +63,33 @@ const InfoOption = ({ text }) => (
   </motion.div>
 );
 
-const HabitTextInput = ({ placeholder = 'placeholder', maxLength = '81' }) => (
+const HabitTextInput = ({
+  placeholder = '',
+  maxLength = '81',
+  value,
+  onChange,
+}) => (
   <textarea
     className="habit-input"
     placeholder={placeholder}
     maxLength={maxLength}
+    value={value}
+    onChange={onChange}
     rows="3"
   />
 );
 
 const HabitsModule = ({ habits, setHabits }) => {
-  const [habitsState, setHabitsState] = React.useState('intro');
+  const [habitModuleState, setHabitsState] = React.useState('intro');
 
   return (
     <div className="habits-module">
       <div className="section-title">habits</div>
       <AnimatePresence mode="wait">
-        {habitsState === 'intro' && (
+        {habitModuleState === 'intro' && (
           <HabitsIntro key="intro" setHabitsState={setHabitsState} />
         )}
-        {habitsState === 'creation' && (
+        {habitModuleState === 'creation' && (
           <HabitsCreation
             key="creation"
             setHabitsState={setHabitsState}
@@ -83,11 +97,12 @@ const HabitsModule = ({ habits, setHabits }) => {
             setHabits={setHabits}
           />
         )}
-        {habitsState === 'view' && (
+        {habitModuleState === 'view' && (
           <HabitsView
             key="view"
             setHabitsState={setHabitsState}
             habits={habits}
+            setHabits={setHabits}
           />
         )}
       </AnimatePresence>
@@ -124,38 +139,40 @@ const Resolutions = () => {
           ))}
         </div>
       </div>
-      <div className="side-bar">
-        <motion.img
-          src={checkIcon}
-          whileHover={{ opacity: hoverFadeOpacity }}
-          transition={{ duration: hoverFadeDuration }}
-          className="side-bar-icon"
-        ></motion.img>
-        <motion.img
-          src={calendarIcon}
-          whileHover={{ opacity: hoverFadeOpacity }}
-          transition={{ duration: hoverFadeDuration }}
-          className="side-bar-icon"
-        ></motion.img>
-        <motion.img
-          src={bagIcon}
-          whileHover={{ opacity: hoverFadeOpacity }}
-          transition={{ duration: hoverFadeDuration }}
-          className="side-bar-icon"
-        ></motion.img>
-        <motion.img
-          src={micIcon}
-          whileHover={{ opacity: hoverFadeOpacity }}
-          transition={{ duration: hoverFadeDuration }}
-          className="side-bar-icon"
-        ></motion.img>
-        <motion.img
-          src={terminalIcon}
-          whileHover={{ opacity: hoverFadeOpacity }}
-          transition={{ duration: hoverFadeDuration }}
-          className="side-bar-icon"
-        ></motion.img>
-      </div>
+      {habits.length > 0 && (
+        <div className="side-bar">
+          <motion.img
+            src={checkIcon}
+            whileHover={{ opacity: hoverFadeOpacity }}
+            transition={{ duration: hoverFadeDuration }}
+            className="side-bar-icon"
+          ></motion.img>
+          <motion.img
+            src={calendarIcon}
+            whileHover={{ opacity: hoverFadeOpacity }}
+            transition={{ duration: hoverFadeDuration }}
+            className="side-bar-icon"
+          ></motion.img>
+          <motion.img
+            src={bagIcon}
+            whileHover={{ opacity: hoverFadeOpacity }}
+            transition={{ duration: hoverFadeDuration }}
+            className="side-bar-icon"
+          ></motion.img>
+          <motion.img
+            src={micIcon}
+            whileHover={{ opacity: hoverFadeOpacity }}
+            transition={{ duration: hoverFadeDuration }}
+            className="side-bar-icon"
+          ></motion.img>
+          <motion.img
+            src={terminalIcon}
+            whileHover={{ opacity: hoverFadeOpacity }}
+            transition={{ duration: hoverFadeDuration }}
+            className="side-bar-icon"
+          ></motion.img>
+        </div>
+      )}
       <AnimatePresence mode="wait">
         <motion.div
           className="app-body"
@@ -238,15 +255,15 @@ const HabitsCreation = ({ setHabitsState, habits, setHabits }) => {
   const [loveText, setLoveText] = React.useState('');
   const [hateText, setHateText] = React.useState('');
   const [actionText, setActionText] = React.useState('');
-  const [duration, setDuration] = React.useState('');
+  const [duration, setDuration] = React.useState('90');
 
   const handleCreate = () => {
     const newHabit = createHabit(
       identityText,
-      hateText,
       loveText,
+      hateText,
       actionText,
-      parseInt(duration)
+      parseInt(duration) || 90
     );
     setHabits([...habits, newHabit]);
     setHabitsState('view');
@@ -326,7 +343,6 @@ const HabitsCreation = ({ setHabitsState, habits, setHabits }) => {
                 inputMode="numberic"
                 pattern="[0-9]*"
                 className="habit-days-input"
-                placeholder="90"
                 maxLength="3"
                 value={duration}
                 onChange={(e) => setDuration(e.target.value)}
@@ -358,9 +374,8 @@ const HabitsCreation = ({ setHabitsState, habits, setHabits }) => {
   );
 };
 
-const HabitsView = ({ setHabitsState, habits }) => {
-  const [isChecked1, setIsChecked1] = React.useState(true);
-  const [isChecked2, setIsChecked2] = React.useState(false);
+const HabitsView = ({ setHabitsState, habits, setHabits }) => {
+  const [isChecked, setIsChecked] = React.useState(false);
   const [selectedDate, setSelectedDate] = React.useState(new Date());
 
   const dayRef = React.useRef(null);
@@ -404,6 +419,65 @@ const HabitsView = ({ setHabitsState, habits }) => {
   const day = formatDatePart(selectedDate.getDate());
   const month = formatDatePart(selectedDate.getMonth() + 1);
   const year = selectedDate.getFullYear();
+
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const selectedHabit = habits[selectedIndex];
+
+  // Local state for editing
+  const [editIdentityText, setEditIdentityText] = React.useState(
+    selectedHabit.identityText
+  );
+  const [editLoveText, setEditLoveText] = React.useState(
+    selectedHabit.loveText
+  );
+  const [editHateText, setEditHateText] = React.useState(
+    selectedHabit.hateText
+  );
+  const [editActionText, setEditActionText] = React.useState(
+    selectedHabit.actionText
+  );
+  const [editDuration, setEditDuration] = React.useState(
+    selectedHabit.duration
+  );
+
+  // Update edit state when selected index changes
+  React.useEffect(() => {
+    const habit = habits[selectedIndex];
+    setEditIdentityText(habit.identityText);
+    setEditLoveText(habit.loveText);
+    setEditHateText(habit.hateText);
+    setEditActionText(habit.actionText);
+    setEditDuration(habit.duration);
+  }, [selectedIndex, habits]);
+
+  const handleSave = () => {
+    const updatedHabits = habits.map((habit, index) =>
+      index === selectedIndex
+        ? {
+            ...habit,
+            identityText: editIdentityText,
+            loveText: editLoveText,
+            hateText: editHateText,
+            actionText: editActionText,
+            duration: parseInt(editDuration),
+          }
+        : habit
+    );
+    setHabits(updatedHabits);
+  };
+
+  const handleDelete = () => {
+    const updatedHabits = habits.filter((_, index) => index !== selectedIndex);
+    setHabits(updatedHabits);
+
+    if (updatedHabits.length === 0) {
+      setHabitsState('intro');
+      return;
+    }
+
+    const newIndex = Math.max(0, selectedIndex - 1);
+    setSelectedIndex(newIndex);
+  };
 
   return (
     <motion.div
@@ -463,42 +537,38 @@ const HabitsView = ({ setHabitsState, habits }) => {
                 onClick={handleNextDay}
               ></motion.img>
             </div>
-            <div className="habit-container container-focused">
-              <div className="habit-snippet-box">
-                <div className="habit-snippet-prompt">I will</div>
-                <div className="habit-snippet-statement">journal every day</div>
+            {habits.map((habit, index) => (
+              <div
+                key={habit.id}
+                className={`habit-container ${selectedIndex === index ? 'container-focused' : ''}`}
+                onClick={() => setSelectedIndex(index)}
+              >
+                <div className="habit-snippet-box">
+                  <div className="habit-snippet-prompt">I will</div>
+                  <div className="habit-snippet-statement">
+                    {habit.actionText}
+                  </div>
+                </div>
+                <div className="habit-health-box">
+                  <div className="habit-snippet-prompt">health</div>
+                  <div className="habit-health-percentage">33%</div>
+                </div>
+                <motion.img
+                  src={isChecked ? greencheckIcon : squareIcon}
+                  onClick={() => setIsChecked(!isChecked)}
+                  whileHover={{ opacity: hoverFadeOpacity }}
+                  transition={{ duration: hoverFadeDuration }}
+                  class={isChecked ? 'habit-check' : 'habit-square'}
+                />
               </div>
-              <div className="habit-health-box">
-                <div className="habit-snippet-prompt">health</div>
-                <div className="habit-health-percentage">33%</div>
-              </div>
-              <motion.img
-                src={isChecked1 ? greencheckIcon : squareIcon}
-                onClick={() => setIsChecked1(!isChecked1)}
-                whileHover={{ opacity: hoverFadeOpacity }}
-                transition={{ duration: hoverFadeDuration }}
-                class={isChecked1 ? 'habit-check' : 'habit-square'}
-              />
-            </div>
-            <div className="habit-container">
-              <div className="habit-snippet-box">
-                <div className="habit-snippet-prompt">I will</div>
-                <div className="habit-snippet-statement">journal every day</div>
-              </div>
-              <div className="habit-health-box">
-                <div className="habit-snippet-prompt">health</div>
-                <div className="habit-health-percentage">0%</div>
-              </div>
-              <motion.img
-                src={isChecked2 ? greencheckIcon : squareIcon}
-                onClick={() => setIsChecked2(!isChecked2)}
-                whileHover={{ opacity: hoverFadeOpacity }}
-                transition={{ duration: hoverFadeDuration }}
-                class={isChecked2 ? 'habit-check' : 'habit-square'}
-              />
-            </div>
+            ))}
           </div>
-          <button className="habits-view-new-habit-button">new habit</button>
+          <button
+            className="habits-view-new-habit-button"
+            onClick={() => setHabitsState('creation')}
+          >
+            new habit
+          </button>
         </div>
         <div className="habit-box">
           <div className="quote-box">
@@ -508,20 +578,33 @@ const HabitsView = ({ setHabitsState, habits }) => {
           </div>
           <div className="habit-content-box">
             <p className="habit-prompt">I am</p>
-            <HabitTextInput placeholder="energetic and alive" />
-            <p className="habit-prompt">I hate</p>
-            <HabitTextInput placeholder="feeling tired and mind fog" />
+            <HabitTextInput
+              value={editIdentityText}
+              onChange={(e) => setEditIdentityText(e.target.value)}
+            />
             <p className="habit-prompt">I love</p>
-            <HabitTextInput placeholder="how clear the world feels when I sleep well" />
+            <HabitTextInput
+              value={editLoveText}
+              onChange={(e) => setEditLoveText(e.target.value)}
+            />
+            <p className="habit-prompt">I hate</p>
+            <HabitTextInput
+              value={editHateText}
+              onChange={(e) => setEditHateText(e.target.value)}
+            />
             <p className="habit-prompt">I will</p>
-            <HabitTextInput placeholder="sleep every day at 10pm" />
+            <HabitTextInput
+              value={editActionText}
+              onChange={(e) => setEditActionText(e.target.value)}
+            />
             <p className="habit-prompt">
               for
               <input
                 inputMode="numberic"
                 pattern="[0-9]*"
                 className="habit-days-input"
-                placeholder="90"
+                value={editDuration}
+                onChange={(e) => setEditDuration(e.target.value)}
                 maxLength="4"
               />
               days
@@ -532,6 +615,7 @@ const HabitsView = ({ setHabitsState, habits }) => {
               className="habits-button"
               whileHover={{ opacity: hoverFadeOpacity }}
               transition={{ duration: hoverFadeDuration }}
+              onClick={handleDelete}
             >
               delete
             </motion.button>
@@ -539,6 +623,7 @@ const HabitsView = ({ setHabitsState, habits }) => {
               className="habits-button"
               whileHover={{ opacity: hoverFadeOpacity }}
               transition={{ duration: hoverFadeDuration }}
+              onClick={handleSave}
             >
               save
             </motion.button>

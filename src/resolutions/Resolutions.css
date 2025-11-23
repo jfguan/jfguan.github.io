@@ -329,7 +329,6 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  gap: 6%;
 
   padding-left: 3%;
   padding-right: 5%;
@@ -350,7 +349,7 @@ body {
 
 .habit-snippet-box {
   min-width: 0;
-  width: 50%;
+  width: 60%;
 }
 
 .habit-snippet-prompt {
