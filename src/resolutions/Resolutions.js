@@ -16,7 +16,7 @@ import downArrow from './down_arrow.svg';
 
 const hoverFadeOpacity = 0.4;
 const hoverFadeDuration = 0.2;
-const moduleFadeDuration = 2.0;
+const moduleFadeDuration = 1.5;
 
 // Calendar constants
 const MAX_DAYS_IN_MONTH = 31;
@@ -38,6 +38,14 @@ const MONTHS = [
   'dec',
 ];
 
+const createHabit = (identityText, loveText, hateText, duration) => ({
+  id: crypto.randomUUID(),
+  identityText,
+  loveText,
+  hateText,
+  duration,
+});
+
 const InfoOption = ({ text }) => (
   <motion.div
     className="info-option"
@@ -57,7 +65,7 @@ const HabitTextInput = ({ placeholder = 'placeholder', maxLength = '81' }) => (
   />
 );
 
-const HabitsModule = () => {
+const HabitsModule = ({ habits, setHabits }) => {
   const [habitsState, setHabitsState] = React.useState('intro');
 
   return (
@@ -68,10 +76,19 @@ const HabitsModule = () => {
           <HabitsIntro key="intro" setHabitsState={setHabitsState} />
         )}
         {habitsState === 'creation' && (
-          <HabitsCreation key="creation" setHabitsState={setHabitsState} />
+          <HabitsCreation
+            key="creation"
+            setHabitsState={setHabitsState}
+            habits={habits}
+            setHabits={setHabits}
+          />
         )}
         {habitsState === 'view' && (
-          <HabitsView key="view" setHabitsState={setHabitsState} />
+          <HabitsView
+            key="view"
+            setHabitsState={setHabitsState}
+            habits={habits}
+          />
         )}
       </AnimatePresence>
     </div>
@@ -80,7 +97,7 @@ const HabitsModule = () => {
 
 const Resolutions = () => {
   const infoItems = ['read this', 'guide', 'account'];
-  const habits = [];
+  const [habits, setHabits] = React.useState([]);
 
   return (
     <motion.div
@@ -147,7 +164,7 @@ const Resolutions = () => {
           animate="visible"
           transition={{ delay: 1.0, duration: 1.0 }}
         >
-          <HabitsModule />
+          <HabitsModule habits={habits} setHabits={setHabits} />
           {habits.length > 0 && <CalendarView />}
         </motion.div>
       </AnimatePresence>
@@ -216,7 +233,25 @@ const HabitsIntro = ({ setHabitsState }) => {
   );
 };
 
-const HabitsCreation = ({ setHabitsState }) => {
+const HabitsCreation = ({ setHabitsState, habits, setHabits }) => {
+  const [identityText, setIdentityText] = React.useState('');
+  const [loveText, setLoveText] = React.useState('');
+  const [hateText, setHateText] = React.useState('');
+  const [actionText, setActionText] = React.useState('');
+  const [duration, setDuration] = React.useState('');
+
+  const handleCreate = () => {
+    const newHabit = createHabit(
+      identityText,
+      hateText,
+      loveText,
+      actionText,
+      parseInt(duration)
+    );
+    setHabits([...habits, newHabit]);
+    setHabitsState('view');
+  };
+
   return (
     <motion.div
       className="creation"
@@ -232,10 +267,10 @@ const HabitsCreation = ({ setHabitsState }) => {
             <div className="suggestions-title">guidelines</div>
             <div className="suggestions-subtitle">life is limited</div>
             <ul className="suggestions-list">
-              <li>enough time and energy?</li>
-              <li>sustainable with current commitments?</li>
-              <li>willing to trade off other commitments?</li>
-              <li>will I do this for many years</li>
+              <li>do I have enough time and energy?</li>
+              <li>is this sustainable with my commitments?</li>
+              <li>am I willing to trade off other commitments?</li>
+              <li>will I keep this for many years?</li>
             </ul>
             <div className="suggestions-subtitle">
               minimally difficult (for now)
@@ -262,13 +297,29 @@ const HabitsCreation = ({ setHabitsState }) => {
           </div>
           <div className="habit-content-box">
             <p className="habit-prompt">I am</p>
-            <HabitTextInput placeholder="energetic and alive" />
-            <p className="habit-prompt">I hate</p>
-            <HabitTextInput placeholder="feeling tired and mind fog" />
+            <HabitTextInput
+              placeholder="energetic and alive"
+              value={identityText}
+              onChange={(e) => setIdentityText(e.target.value)}
+            />
             <p className="habit-prompt">I love</p>
-            <HabitTextInput placeholder="how clear the world feels when I sleep well" />
+            <HabitTextInput
+              placeholder="how clear the world feels when I sleep well"
+              value={loveText}
+              onChange={(e) => setLoveText(e.target.value)}
+            />
+            <p className="habit-prompt">I hate</p>
+            <HabitTextInput
+              placeholder="feeling tired and mind fog"
+              value={hateText}
+              onChange={(e) => setHateText(e.target.value)}
+            />
             <p className="habit-prompt">I will</p>
-            <HabitTextInput placeholder="sleep every day at 10pm" />
+            <HabitTextInput
+              placeholder="sleep every day at 10pm"
+              value={actionText}
+              onChange={(e) => setActionText(e.target.value)}
+            />
             <p className="habit-prompt">
               for
               <input
@@ -276,7 +327,9 @@ const HabitsCreation = ({ setHabitsState }) => {
                 pattern="[0-9]*"
                 className="habit-days-input"
                 placeholder="90"
-                maxLength="4"
+                maxLength="3"
+                value={duration}
+                onChange={(e) => setDuration(e.target.value)}
               />
               days
             </p>
@@ -294,6 +347,7 @@ const HabitsCreation = ({ setHabitsState }) => {
               className="habits-button"
               whileHover={{ opacity: hoverFadeOpacity }}
               transition={{ duration: hoverFadeDuration }}
+              onClick={handleCreate}
             >
               create
             </motion.button>
@@ -304,9 +358,52 @@ const HabitsCreation = ({ setHabitsState }) => {
   );
 };
 
-const HabitsView = ({ setHabitsState }) => {
+const HabitsView = ({ setHabitsState, habits }) => {
   const [isChecked1, setIsChecked1] = React.useState(true);
   const [isChecked2, setIsChecked2] = React.useState(false);
+  const [selectedDate, setSelectedDate] = React.useState(new Date());
+
+  const dayRef = React.useRef(null);
+  const monthRef = React.useRef(null);
+  const yearRef = React.useRef(null);
+
+  const formatDatePart = (value, digits = 2) =>
+    String(value).padStart(digits, '0');
+
+  const updateDateInputs = (date) => {
+    if (dayRef.current && monthRef.current && yearRef.current) {
+      dayRef.current.value = formatDatePart(date.getDate());
+      monthRef.current.value = formatDatePart(date.getMonth() + 1);
+      yearRef.current.value = date.getFullYear();
+    }
+  };
+
+  React.useEffect(() => {
+    updateDateInputs(selectedDate);
+  }, [selectedDate]);
+
+  const handlePreviousDay = () => {
+    const newDate = new Date(selectedDate.getTime() - 86400000);
+    setSelectedDate(newDate);
+  };
+
+  const handleNextDay = () => {
+    const newDate = new Date(selectedDate.getTime() + 86400000);
+    setSelectedDate(newDate);
+  };
+
+  const handleDateInputBlur = () => {
+    const day = parseInt(dayRef.current?.value) || selectedDate.getDate();
+    const month =
+      parseInt(monthRef.current?.value) || selectedDate.getMonth() + 1;
+    const year = parseInt(yearRef.current?.value) || selectedDate.getFullYear();
+    const newDate = new Date(year, month - 1, day);
+    setSelectedDate(newDate);
+  };
+
+  const day = formatDatePart(selectedDate.getDate());
+  const month = formatDatePart(selectedDate.getMonth() + 1);
+  const year = selectedDate.getFullYear();
 
   return (
     <motion.div
@@ -325,30 +422,37 @@ const HabitsView = ({ setHabitsState }) => {
                 whileHover={{ opacity: hoverFadeOpacity }}
                 transition={{ duration: hoverFadeDuration }}
                 class="date-selector-arrow"
+                onClick={handlePreviousDay}
               ></motion.img>
               <div className="date-selector-inputs">
                 <input
+                  ref={monthRef}
                   inputMode="numberic"
                   pattern="[0-9]*"
                   className="date-selector-input day-month-len"
-                  value="11"
+                  defaultValue={month}
                   maxLength="2"
+                  onBlur={handleDateInputBlur}
                 />
                 -
                 <input
+                  ref={dayRef}
                   inputMode="numberic"
                   pattern="[0-9]*"
                   className="date-selector-input day-month-len"
-                  value="21"
+                  defaultValue={day}
                   maxLength="2"
+                  onBlur={handleDateInputBlur}
                 />
                 -
                 <input
+                  ref={yearRef}
                   inputMode="numberic"
                   pattern="[0-9]*"
                   className="date-selector-input year-len"
-                  value="2025"
+                  defaultValue={year}
                   maxLength="4"
+                  onBlur={handleDateInputBlur}
                 />
               </div>
               <motion.img
@@ -356,6 +460,7 @@ const HabitsView = ({ setHabitsState }) => {
                 whileHover={{ opacity: hoverFadeOpacity }}
                 transition={{ duration: hoverFadeDuration }}
                 class="date-selector-arrow"
+                onClick={handleNextDay}
               ></motion.img>
             </div>
             <div className="habit-container container-focused">
