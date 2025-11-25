@@ -113,6 +113,8 @@ body {
 }
 
 .section-title {
+  grid-column: 1 / -1;
+
   /* Appearance */
   font-family: 'Roboto Serif';
   font-size: 24px;
@@ -122,6 +124,12 @@ body {
   display: grid;
   grid-template-columns: 0.55fr 0.45fr;
   margin-bottom: 4vh;
+}
+
+.section-explanation {
+  grid-column: 1 / -1;
+  width: 100%;
+  font-size: 14px;
 }
 
 .habits-image-container {
@@ -418,6 +426,7 @@ body {
   flex-direction: row;
   align-items: center;
   gap: 6px;
+  padding-top: 3px;
 }
 
 .calendar-title-arrow {

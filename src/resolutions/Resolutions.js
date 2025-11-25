@@ -1,7 +1,15 @@
 import './Resolutions.css';
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { fadeIn, fadeInEnterDelay, expandCollapse } from './animations';
+import {
+  fadeIn,
+  fadeInEnterDelay,
+  expandCollapse,
+  hoverFadeDuration,
+  hoverFadeOpacity,
+  moduleFadeDuration,
+} from './animations';
+import { service } from './service';
 import checkIcon from './check.svg';
 import greencheckIcon from './green_check.svg';
 import squareIcon from './square.svg';
@@ -13,10 +21,6 @@ import flowers from './flowers.svg';
 import leftArrow from './left_arrow.svg';
 import rightArrow from './right_arrow.svg';
 import downArrow from './down_arrow.svg';
-
-const hoverFadeOpacity = 0.4;
-const hoverFadeDuration = 0.2;
-const moduleFadeDuration = 1.0;
 
 // Calendar constants
 const MAX_DAYS_IN_MONTH = 31;
@@ -37,21 +41,6 @@ const MONTHS = [
   'nov',
   'dec',
 ];
-
-const createHabit = (
-  identityText,
-  loveText,
-  hateText,
-  actionText,
-  duration
-) => ({
-  id: crypto.randomUUID(),
-  identityText,
-  loveText,
-  hateText,
-  actionText,
-  duration,
-});
 
 const InfoOption = ({ text }) => (
   <motion.div
@@ -80,19 +69,20 @@ const HabitTextInput = ({
 );
 
 const HabitsModule = ({ habits, setHabits }) => {
-  const [habitModuleState, setHabitsState] = React.useState('intro');
+  const initialModule = habits.length === 0 ? 'intro' : 'view';
+  const [habitModuleState, setHabitModuleState] = React.useState(initialModule);
 
   return (
     <div className="habits-module">
       <div className="section-title">habits</div>
       <AnimatePresence mode="wait">
         {habitModuleState === 'intro' && (
-          <HabitsIntro key="intro" setHabitsState={setHabitsState} />
+          <HabitsIntro key="intro" setHabitModuleState={setHabitModuleState} />
         )}
         {habitModuleState === 'creation' && (
           <HabitsCreation
             key="creation"
-            setHabitsState={setHabitsState}
+            setHabitModuleState={setHabitModuleState}
             habits={habits}
             setHabits={setHabits}
           />
@@ -100,7 +90,7 @@ const HabitsModule = ({ habits, setHabits }) => {
         {habitModuleState === 'view' && (
           <HabitsView
             key="view"
-            setHabitsState={setHabitsState}
+            setHabitModuleState={setHabitModuleState}
             habits={habits}
             setHabits={setHabits}
           />
@@ -112,7 +102,7 @@ const HabitsModule = ({ habits, setHabits }) => {
 
 const Resolutions = () => {
   const infoItems = ['read this', 'guide', 'account'];
-  const [habits, setHabits] = React.useState([]);
+  const [habits, setHabits] = React.useState(service.getHabits());
 
   return (
     <motion.div
@@ -198,7 +188,8 @@ const Resolutions = () => {
                 animate="enter"
                 exit="exit"
               >
-                <CalendarView />
+                <CalenderModule />
+                <RewardModule />
               </motion.div>
             )}
           </AnimatePresence>
@@ -208,7 +199,7 @@ const Resolutions = () => {
   );
 };
 
-const HabitsIntro = ({ setHabitsState }) => {
+const HabitsIntro = ({ setHabitModuleState }) => {
   return (
     <motion.div
       className="intro"
@@ -258,7 +249,7 @@ const HabitsIntro = ({ setHabitsState }) => {
               className="habits-button"
               whileHover={{ opacity: hoverFadeOpacity }}
               transition={{ duration: hoverFadeDuration }}
-              onClick={() => setHabitsState('creation')}
+              onClick={() => setHabitModuleState('creation')}
             >
               continue
             </motion.button>
@@ -269,7 +260,7 @@ const HabitsIntro = ({ setHabitsState }) => {
   );
 };
 
-const HabitsCreation = ({ setHabitsState, habits, setHabits }) => {
+const HabitsCreation = ({ setHabitModuleState, habits, setHabits }) => {
   const [identityText, setIdentityText] = React.useState('');
   const [loveText, setLoveText] = React.useState('');
   const [hateText, setHateText] = React.useState('');
@@ -277,15 +268,18 @@ const HabitsCreation = ({ setHabitsState, habits, setHabits }) => {
   const [duration, setDuration] = React.useState('90');
 
   const handleCreate = () => {
-    const newHabit = createHabit(
+    const newHabit = {
+      id: crypto.randomUUID(),
       identityText,
       loveText,
       hateText,
       actionText,
-      parseInt(duration) || 90
-    );
-    setHabits([newHabit, ...habits]);
-    setHabitsState('view');
+      duration: parseInt(duration) || 90,
+      last_modified_ts: Date.now(),
+    };
+
+    service.addHabit(newHabit, habits, setHabits);
+    setHabitModuleState('view');
   };
 
   return (
@@ -374,7 +368,7 @@ const HabitsCreation = ({ setHabitsState, habits, setHabits }) => {
               className="habits-button"
               whileHover={{ opacity: hoverFadeOpacity }}
               transition={{ duration: hoverFadeDuration }}
-              onClick={() => setHabitsState('intro')}
+              onClick={() => setHabitModuleState('intro')}
             >
               back
             </motion.button>
@@ -393,7 +387,7 @@ const HabitsCreation = ({ setHabitsState, habits, setHabits }) => {
   );
 };
 
-const HabitsView = ({ setHabitsState, habits, setHabits }) => {
+const HabitsView = ({ setHabitModuleState, habits, setHabits }) => {
   const [isChecked, setIsChecked] = React.useState(false);
   const [selectedDate, setSelectedDate] = React.useState(new Date());
 
@@ -440,59 +434,35 @@ const HabitsView = ({ setHabitsState, habits, setHabits }) => {
   const year = selectedDate.getFullYear();
 
   const [selectedIndex, setSelectedIndex] = React.useState(0);
-  const selectedHabit = habits[selectedIndex];
-
-  // Local state for editing
-  const [editIdentityText, setEditIdentityText] = React.useState(
-    selectedHabit.identityText
-  );
-  const [editLoveText, setEditLoveText] = React.useState(
-    selectedHabit.loveText
-  );
-  const [editHateText, setEditHateText] = React.useState(
-    selectedHabit.hateText
-  );
-  const [editActionText, setEditActionText] = React.useState(
-    selectedHabit.actionText
-  );
-  const [editDuration, setEditDuration] = React.useState(
-    selectedHabit.duration
+  const [selectedHabit, setSelectedHabit] = React.useState(
+    habits[selectedIndex]
   );
 
   // Update edit state when selected index changes
   React.useEffect(() => {
-    const habit = habits[selectedIndex];
-    setEditIdentityText(habit.identityText);
-    setEditLoveText(habit.loveText);
-    setEditHateText(habit.hateText);
-    setEditActionText(habit.actionText);
-    setEditDuration(habit.duration);
+    if (habits.length === 0) {
+      setHabitModuleState('intro');
+      const blankHabit = {
+        identityText: '',
+        loveText: '',
+        hateText: '',
+        actionText: '',
+        duration: 0,
+      };
+      setSelectedHabit(blankHabit);
+    } else {
+      const selectedHabit = habits[selectedIndex];
+      setSelectedHabit(selectedHabit);
+    }
   }, [selectedIndex, habits]);
 
   const handleSave = () => {
-    const updatedHabits = habits.map((habit, index) =>
-      index === selectedIndex
-        ? {
-            ...habit,
-            identityText: editIdentityText,
-            loveText: editLoveText,
-            hateText: editHateText,
-            actionText: editActionText,
-            duration: parseInt(editDuration),
-          }
-        : habit
-    );
-    setHabits(updatedHabits);
+    service.updateHabit(selectedHabit, habits, setHabits);
   };
 
   const handleDelete = () => {
-    const updatedHabits = habits.filter((_, index) => index !== selectedIndex);
-    setHabits(updatedHabits);
-
-    if (updatedHabits.length === 0) {
-      setHabitsState('intro');
-      return;
-    }
+    const habitId = habits[selectedIndex].id;
+    service.deleteHabit(habitId, habits, setHabits);
 
     const newIndex = Math.max(0, selectedIndex - 1);
     setSelectedIndex(newIndex);
@@ -584,7 +554,7 @@ const HabitsView = ({ setHabitsState, habits, setHabits }) => {
           </div>
           <button
             className="habits-view-new-habit-button"
-            onClick={() => setHabitsState('creation')}
+            onClick={() => setHabitModuleState('creation')}
           >
             new habit
           </button>
@@ -598,23 +568,43 @@ const HabitsView = ({ setHabitsState, habits, setHabits }) => {
           <div className="habit-content-box">
             <p className="habit-prompt">I am</p>
             <HabitTextInput
-              value={editIdentityText}
-              onChange={(e) => setEditIdentityText(e.target.value)}
+              value={selectedHabit.identityText}
+              onChange={(e) =>
+                setSelectedHabit({
+                  ...selectedHabit,
+                  identityText: e.target.value,
+                })
+              }
             />
             <p className="habit-prompt">I love</p>
             <HabitTextInput
-              value={editLoveText}
-              onChange={(e) => setEditLoveText(e.target.value)}
+              value={selectedHabit.loveText}
+              onChange={(e) =>
+                setSelectedHabit({
+                  ...selectedHabit,
+                  loveText: e.target.value,
+                })
+              }
             />
             <p className="habit-prompt">I hate</p>
             <HabitTextInput
-              value={editHateText}
-              onChange={(e) => setEditHateText(e.target.value)}
+              value={selectedHabit.hateText}
+              onChange={(e) =>
+                setSelectedHabit({
+                  ...selectedHabit,
+                  hateText: e.target.value,
+                })
+              }
             />
             <p className="habit-prompt">I will</p>
             <HabitTextInput
-              value={editActionText}
-              onChange={(e) => setEditActionText(e.target.value)}
+              value={selectedHabit.actionText}
+              onChange={(e) =>
+                setSelectedHabit({
+                  ...selectedHabit,
+                  actionText: e.target.value,
+                })
+              }
             />
             <p className="habit-prompt">
               for
@@ -622,8 +612,13 @@ const HabitsView = ({ setHabitsState, habits, setHabits }) => {
                 inputMode="numberic"
                 pattern="[0-9]*"
                 className="habit-days-input"
-                value={editDuration}
-                onChange={(e) => setEditDuration(e.target.value)}
+                value={selectedHabit.duration}
+                onChange={(e) =>
+                  setSelectedHabit({
+                    ...selectedHabit,
+                    duration: e.target.value,
+                  })
+                }
                 maxLength="4"
               />
               days
@@ -653,7 +648,7 @@ const HabitsView = ({ setHabitsState, habits, setHabits }) => {
   );
 };
 
-const CalendarView = () => {
+const CalenderModule = () => {
   const year = new Date().getFullYear();
   const [filledDays, setFilledDays] = React.useState({});
   const [isCalendarOpen, setIsCalendarOpen] = React.useState(true);
@@ -688,8 +683,8 @@ const CalendarView = () => {
 
   return (
     <div className="calendar">
-      <div className="section-title">calendar</div>
       <div className="section">
+        <div className="section-title">calendar</div>
         <div className="calendar-title-box">
           <motion.img
             src={downArrow}
@@ -747,6 +742,21 @@ const CalendarView = () => {
             </motion.div>
           )}
         </AnimatePresence>
+      </div>
+    </div>
+  );
+};
+
+const RewardModule = () => {
+  return (
+    <div className="rewards">
+      <div className="section">
+        <div className="section-title">treat yourself!</div>
+        <div className="section-explanation">
+          for each habit completion, click to fill up your piggy bank! buy
+          something guilt free! rewards are randomly multiplied by x1 to x7 for
+          that nice dopamine hit :)
+        </div>
       </div>
     </div>
   );
