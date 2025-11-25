@@ -36,14 +36,18 @@
     padding-left: 1vw;
   }
 
+  .section {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
   .section-title {
     /* Appearance */
     font-size: 20px;
   }
 
-  .section {
-    display: grid;
-    grid-template-columns: 1fr;
+  .section-explanation {
+    font-size: 12px;
   }
 
   .habits-image-container {

@@ -21,6 +21,7 @@ import flowers from './flowers.svg';
 import leftArrow from './left_arrow.svg';
 import rightArrow from './right_arrow.svg';
 import downArrow from './down_arrow.svg';
+import catGettingTreat from './cat_getting_treat.png';
 
 // Calendar constants
 const MAX_DAYS_IN_MONTH = 31;
@@ -685,6 +686,9 @@ const CalenderModule = () => {
     <div className="calendar">
       <div className="section">
         <div className="section-title">calendar</div>
+        <div className="section-explanation">
+          visualize your habits! the squares are clickable
+        </div>
         <div className="calendar-title-box">
           <motion.img
             src={downArrow}
@@ -753,9 +757,11 @@ const RewardModule = () => {
       <div className="section">
         <div className="section-title">treat yourself!</div>
         <div className="section-explanation">
-          for each habit completion, click to fill up your piggy bank! buy
-          something guilt free! rewards are randomly multiplied by x1 to x7 for
-          that nice dopamine hit :)
+          save up for each successful habit and buy something guilt free!
+          rewards are randomly multiplied by x1 to x7 for a nice dopamine hit :)
+        </div>
+        <div className="habits-image-container">
+          <img src={catGettingTreat} className="habits-image"></img>
         </div>
       </div>
     </div>

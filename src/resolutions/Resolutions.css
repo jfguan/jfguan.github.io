@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap');
-@import './Resolutions.mobile.css';
 
 :root {
   --black: #191b15;
@@ -112,6 +111,12 @@ body {
   width: 775px;
 }
 
+.section {
+  display: grid;
+  grid-template-columns: 0.55fr 0.45fr;
+  margin-bottom: 8vh;
+}
+
 .section-title {
   grid-column: 1 / -1;
 
@@ -120,16 +125,14 @@ body {
   font-size: 24px;
 }
 
-.section {
-  display: grid;
-  grid-template-columns: 0.55fr 0.45fr;
-  margin-bottom: 4vh;
-}
-
 .section-explanation {
   grid-column: 1 / -1;
   width: 100%;
-  font-size: 14px;
+  margin-bottom: 20px;
+  padding-bottom: 5px;
+  font-size: 12px;
+
+  border-bottom: 1px solid var(--black);
 }
 
 .habits-image-container {
@@ -497,3 +500,5 @@ body {
   background-color: var(--green);
   border: 0px;
 }
+
+@import './Resolutions.mobile.css';
