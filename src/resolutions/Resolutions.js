@@ -1,7 +1,7 @@
 import './Resolutions.css';
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { fadeIn, expandCollapse } from './animations';
+import { fadeIn, fadeInEnterDelay, expandCollapse } from './animations';
 import checkIcon from './check.svg';
 import greencheckIcon from './green_check.svg';
 import squareIcon from './square.svg';
@@ -16,7 +16,7 @@ import downArrow from './down_arrow.svg';
 
 const hoverFadeOpacity = 0.4;
 const hoverFadeDuration = 0.2;
-const moduleFadeDuration = 1.5;
+const moduleFadeDuration = 1.0;
 
 // Calendar constants
 const MAX_DAYS_IN_MONTH = 31;
@@ -139,40 +139,48 @@ const Resolutions = () => {
           ))}
         </div>
       </div>
-      {habits.length > 0 && (
-        <div className="side-bar">
-          <motion.img
-            src={checkIcon}
-            whileHover={{ opacity: hoverFadeOpacity }}
-            transition={{ duration: hoverFadeDuration }}
-            className="side-bar-icon"
-          ></motion.img>
-          <motion.img
-            src={calendarIcon}
-            whileHover={{ opacity: hoverFadeOpacity }}
-            transition={{ duration: hoverFadeDuration }}
-            className="side-bar-icon"
-          ></motion.img>
-          <motion.img
-            src={bagIcon}
-            whileHover={{ opacity: hoverFadeOpacity }}
-            transition={{ duration: hoverFadeDuration }}
-            className="side-bar-icon"
-          ></motion.img>
-          <motion.img
-            src={micIcon}
-            whileHover={{ opacity: hoverFadeOpacity }}
-            transition={{ duration: hoverFadeDuration }}
-            className="side-bar-icon"
-          ></motion.img>
-          <motion.img
-            src={terminalIcon}
-            whileHover={{ opacity: hoverFadeOpacity }}
-            transition={{ duration: hoverFadeDuration }}
-            className="side-bar-icon"
-          ></motion.img>
-        </div>
-      )}
+      <AnimatePresence>
+        {habits.length > 0 && (
+          <motion.div
+            className="side-bar"
+            variants={fadeInEnterDelay(moduleFadeDuration)}
+            initial="initial"
+            animate="enter"
+            exit="exit"
+          >
+            <motion.img
+              src={checkIcon}
+              whileHover={{ opacity: hoverFadeOpacity }}
+              transition={{ duration: hoverFadeDuration }}
+              className="side-bar-icon"
+            ></motion.img>
+            <motion.img
+              src={calendarIcon}
+              whileHover={{ opacity: hoverFadeOpacity }}
+              transition={{ duration: hoverFadeDuration }}
+              className="side-bar-icon"
+            ></motion.img>
+            <motion.img
+              src={bagIcon}
+              whileHover={{ opacity: hoverFadeOpacity }}
+              transition={{ duration: hoverFadeDuration }}
+              className="side-bar-icon"
+            ></motion.img>
+            <motion.img
+              src={micIcon}
+              whileHover={{ opacity: hoverFadeOpacity }}
+              transition={{ duration: hoverFadeDuration }}
+              className="side-bar-icon"
+            ></motion.img>
+            <motion.img
+              src={terminalIcon}
+              whileHover={{ opacity: hoverFadeOpacity }}
+              transition={{ duration: hoverFadeDuration }}
+              className="side-bar-icon"
+            ></motion.img>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <AnimatePresence mode="wait">
         <motion.div
           className="app-body"
@@ -182,7 +190,18 @@ const Resolutions = () => {
           transition={{ delay: 1.0, duration: 1.0 }}
         >
           <HabitsModule habits={habits} setHabits={setHabits} />
-          {habits.length > 0 && <CalendarView />}
+          <AnimatePresence>
+            {habits.length > 0 && (
+              <motion.div
+                variants={fadeInEnterDelay(moduleFadeDuration)}
+                initial="initial"
+                animate="enter"
+                exit="exit"
+              >
+                <CalendarView />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
       </AnimatePresence>
     </motion.div>
@@ -265,7 +284,7 @@ const HabitsCreation = ({ setHabitsState, habits, setHabits }) => {
       actionText,
       parseInt(duration) || 90
     );
-    setHabits([...habits, newHabit]);
+    setHabits([newHabit, ...habits]);
     setHabitsState('view');
   };
 
