@@ -416,6 +416,14 @@ body {
   padding-top: 5px;
 }
 
+.habit-calendar-box {
+  grid-column: 1 / -1;
+}
+
+.habit-calendar {
+  padding-bottom: 1vh;
+}
+
 .calendar-title-box {
   display: flex;
   flex-direction: row;
@@ -436,8 +444,6 @@ body {
 }
 
 .calendar-grid {
-  grid-column: 1 / -1;
-
   display: grid;
   grid-template-columns: 4ch repeat(31, 1fr);
   gap: 4px;

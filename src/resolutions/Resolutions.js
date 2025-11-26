@@ -168,7 +168,11 @@ const Resolutions = () => {
                 animate="enter"
                 exit="exit"
               >
-                <CalenderModule />
+                <CalenderModule
+                  habits={habits}
+                  completions={completions}
+                  setCompletions={setCompletions}
+                />
                 <RewardModule />
               </motion.div>
             )}
@@ -712,27 +716,19 @@ const HabitTextInput = ({
   />
 );
 
-const CalenderModule = () => {
+const CalenderModule = ({ habits, completions, setCompletions }) => {
   const year = new Date().getFullYear();
-  const [filledDays, setFilledDays] = React.useState({});
-  const [isCalendarOpen, setIsCalendarOpen] = React.useState(true);
+  const [openCalendars, setOpenCalendars] = React.useState({});
 
   const getDaysInMonth = (month, year) => {
     return new Date(year, month + 1, 0).getDate();
   };
 
-  const createDayKey = (month, day) => `${month}-${day}`;
-
-  const toggleDay = (month, day) => {
-    const key = createDayKey(month, day);
-    setFilledDays((prev) => ({
+  const toggleCalendar = (habitId) => {
+    setOpenCalendars((prev) => ({
       ...prev,
-      [key]: !prev[key],
+      [habitId]: !prev[habitId],
     }));
-  };
-
-  const toggleCalendar = () => {
-    setIsCalendarOpen((prev) => !prev);
   };
 
   const headerDays = Array.from({ length: MAX_DAYS_IN_MONTH }, (_, i) => i + 1);
@@ -752,63 +748,85 @@ const CalenderModule = () => {
         <div className="section-explanation">
           visualize your habits, squares are clickable!
         </div>
-        <div className="calendar-title-box">
-          <motion.img
-            src={downArrow}
-            onClick={toggleCalendar}
-            whileHover={{ opacity: hoverFadeOpacity }}
-            animate={{
-              rotate: isCalendarOpen
-                ? ARROW_EXPANDED_ROTATION
-                : ARROW_COLLAPSED_ROTATION,
-            }}
-            transition={{ duration: CALENDAR_ANIMATION_DURATION }}
-            className="calendar-title-arrow"
-          />
-          <div className="calendar-title-text">
-            I will sleep every day at 10pm
-          </div>
-        </div>
-        <AnimatePresence>
-          {isCalendarOpen && (
-            <motion.div
-              className="calendar-grid"
-              initial={expandCollapse.hidden}
-              animate={expandCollapse.visible}
-              exit={expandCollapse.hidden}
-              transition={{
-                opacity: { duration: CALENDAR_ANIMATION_DURATION },
-                height: {
-                  duration: CALENDAR_ANIMATION_DURATION,
-                },
-              }}
-            >
-              <div className="calendar-header">
-                <div className="calendar-header-year">{year}</div>
-                {headerDays.map((day) => (
-                  <div key={day} className="calendar-header-day">
-                    {String(day).padStart(2, '0')}
-                  </div>
-                ))}
-              </div>
-              {monthsWithDays.map(({ name, index, days }) => (
-                <div key={name} className="calendar-month">
-                  <div className="calendar-month-title">{name}</div>
-                  {days.map((day) => {
-                    const key = createDayKey(index, day);
-                    return (
-                      <div
-                        key={day}
-                        className={`calendar-day ${filledDays[key] ? 'filled' : ''}`}
-                        onClick={() => toggleDay(index, day)}
-                      />
-                    );
-                  })}
+        <div className="habit-calendar-box">
+          {habits.map((habit) => (
+            <div key={habit.id} className="habit-calendar">
+              <div className="calendar-title-box">
+                <motion.img
+                  src={downArrow}
+                  onClick={() => toggleCalendar(habit.id)}
+                  whileHover={{ opacity: hoverFadeOpacity }}
+                  animate={{
+                    rotate: openCalendars[habit.id]
+                      ? ARROW_EXPANDED_ROTATION
+                      : ARROW_COLLAPSED_ROTATION,
+                  }}
+                  transition={{ duration: CALENDAR_ANIMATION_DURATION }}
+                  className="calendar-title-arrow"
+                />
+                <div className="calendar-title-text">
+                  I will {habit.actionText}
                 </div>
-              ))}
-            </motion.div>
-          )}
-        </AnimatePresence>
+              </div>
+              <AnimatePresence>
+                {openCalendars[habit.id] && (
+                  <motion.div
+                    className="calendar-grid"
+                    initial={expandCollapse.hidden}
+                    animate={expandCollapse.visible}
+                    exit={expandCollapse.hidden}
+                    transition={{
+                      opacity: { duration: CALENDAR_ANIMATION_DURATION },
+                      height: {
+                        duration: CALENDAR_ANIMATION_DURATION,
+                      },
+                    }}
+                  >
+                    <div className="calendar-header">
+                      <div className="calendar-header-year">{year}</div>
+                      {headerDays.map((day) => (
+                        <div key={day} className="calendar-header-day">
+                          {String(day).padStart(2, '0')}
+                        </div>
+                      ))}
+                    </div>
+                    {monthsWithDays.map(({ name, index, days }) => (
+                      <div key={name} className="calendar-month">
+                        <div className="calendar-month-title">{name}</div>
+                        {days.map((day) => {
+                          const dateStr = new Date(
+                            year,
+                            index,
+                            day
+                          ).toLocaleDateString('en-CA');
+                          const isCompleted = completions[habit.id]?.[dateStr];
+                          return (
+                            <div
+                              key={day}
+                              className={`calendar-day ${isCompleted ? 'filled' : ''}`}
+                              onClick={() => {
+                                const date = new Date(year, index, day);
+                                const updatedCompletions =
+                                  service.toggleHabitCompletion(
+                                    habit.id,
+                                    date,
+                                    completions,
+                                    setCompletions
+                                  );
+                                setCompletions(updatedCompletions);
+                                service.saveCompletions(updatedCompletions);
+                              }}
+                            />
+                          );
+                        })}
+                      </div>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
