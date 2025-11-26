@@ -1,7 +1,14 @@
 import './Resolutions.css';
 import './Resolutions.mobile.css';
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import {
+  motion,
+  AnimatePresence,
+  useMotionValue,
+  useTransform,
+  animate,
+  useMotionTemplate,
+} from 'framer-motion';
 import {
   fadeIn,
   fadeInEnterDelay,
@@ -43,6 +50,22 @@ const MONTHS = [
   'nov',
   'dec',
 ];
+
+const CountUpNumber = ({ value }) => {
+  const count = useMotionValue(0);
+  const rounded = useTransform(count, Math.round);
+  const color = useTransform(
+    rounded,
+    (v) => `color-mix(in srgb, var(--green) ${v}%, var(--red) ${100 - v}%)`
+  );
+
+  React.useEffect(() => {
+    const controls = animate(count, value, { duration: 0.3 });
+    return () => controls.stop();
+  }, [value, count]);
+
+  return <motion.span style={{ color }}>{rounded}</motion.span>;
+};
 
 const InfoOption = ({ text }) => (
   <motion.div
@@ -585,7 +608,16 @@ const HabitsView = ({
                 </div>
                 <div className="habit-health-box">
                   <div className="habit-snippet-prompt">health</div>
-                  <div className="habit-health-percentage">33%</div>
+                  <div className="habit-health-percentage">
+                    <CountUpNumber
+                      value={service.calculateHabitHealth(
+                        habit.id,
+                        habit.duration,
+                        completions
+                      )}
+                    />
+                    %
+                  </div>
                 </div>
                 <motion.img
                   src={getHabitCompletionIcon(habit.id)}
@@ -746,7 +778,7 @@ const CalenderModule = ({ habits, completions, setCompletions }) => {
       <div className="section">
         <div className="section-title">calendar</div>
         <div className="section-explanation">
-          visualize your habits, squares are clickable!
+          visualize - squares are clickable!
         </div>
         <div className="habit-calendar-box">
           {habits.map((habit) => (

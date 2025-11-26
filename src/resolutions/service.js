@@ -1,6 +1,7 @@
 const USE_CLOUD = false;
 const HABITS_STORAGE_KEY = 'resolutions_app_habits';
 const COMPLETIONS_STORAGE_KEY = 'resolutions_app_completions';
+const MS_DAY = 86400000;
 
 const localService = {
   // HABITS DATA MODEL
@@ -95,6 +96,32 @@ const localService = {
     setCompletions(updatedCompletions);
 
     return updatedCompletions;
+  },
+
+  calculateHabitHealth: (
+    habitId,
+    duration,
+    completions,
+    currentDate = new Date()
+  ) => {
+    const habitCompletions = completions[habitId] || {};
+
+    let completedWeight = 0;
+    let totalWeight = 0;
+
+    const startDate = new Date(currentDate.getTime() - (duration - 1) * MS_DAY);
+    for (let i = 0; i < duration; i++) {
+      const dayDate = new Date(startDate.getTime() + i * MS_DAY);
+      const dateStr = dayDate.toLocaleDateString('en-CA');
+      const weight = i + 1;
+
+      totalWeight += weight;
+      if (habitCompletions[dateStr]) {
+        completedWeight += weight;
+      }
+    }
+
+    return Math.round((completedWeight / totalWeight) * 100);
   },
 };
 
