@@ -1,4 +1,5 @@
 import './Resolutions.css';
+import './Resolutions.mobile.css';
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -11,7 +12,7 @@ import {
 } from './animations';
 import { service } from './service';
 import checkIcon from './check.svg';
-import greencheckIcon from './green_check.svg';
+import greenCheckIcon from './green_check.svg';
 import squareIcon from './square.svg';
 import calendarIcon from './calendar.svg';
 import bagIcon from './bag.svg';
@@ -53,57 +54,37 @@ const InfoOption = ({ text }) => (
   </motion.div>
 );
 
-const HabitTextInput = ({
-  placeholder = '',
-  maxLength = '81',
-  value,
-  onChange,
-}) => (
-  <textarea
-    className="habit-input"
-    placeholder={placeholder}
-    maxLength={maxLength}
-    value={value}
-    onChange={onChange}
-    rows="3"
-  />
-);
-
-const HabitsModule = ({ habits, setHabits }) => {
-  const initialModule = habits.length === 0 ? 'intro' : 'view';
-  const [habitModuleState, setHabitModuleState] = React.useState(initialModule);
-
-  return (
-    <div className="habits-module">
-      <div className="section-title">habits</div>
-      <AnimatePresence mode="wait">
-        {habitModuleState === 'intro' && (
-          <HabitsIntro key="intro" setHabitModuleState={setHabitModuleState} />
-        )}
-        {habitModuleState === 'creation' && (
-          <HabitsCreation
-            key="creation"
-            setHabitModuleState={setHabitModuleState}
-            habits={habits}
-            setHabits={setHabits}
-          />
-        )}
-        {habitModuleState === 'view' && (
-          <HabitsView
-            key="view"
-            setHabitModuleState={setHabitModuleState}
-            habits={habits}
-            setHabits={setHabits}
-          />
-        )}
-      </AnimatePresence>
-    </div>
-  );
-};
-
 const Resolutions = () => {
   const infoItems = ['read this', 'guide', 'account'];
-  const [habits, setHabits] = React.useState(service.getHabits());
+  const [habits, setHabits] = React.useState(null);
+  const [completions, setCompletions] = React.useState(null);
+
+  React.useEffect(() => {
+    Promise.all([service.getHabits(), service.getCompletions()]).then(
+      ([h, c]) => {
+        setHabits(h);
+        setCompletions(c);
+      }
+    );
+  }, []);
+
+  // return loading if not ready
+  if (!habits || !completions) return <div>Loading...</div>;
+
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const elementTop = element.getBoundingClientRect().top + window.scrollY;
+      const offsetTop = elementTop - window.innerHeight * 0.2;
+      window.scrollTo({ top: offsetTop, behavior: 'smooth' });
+    }
+  };
+
+  const scrollableSections = [
+    { id: 'habits', icon: checkIcon },
+    { id: 'calendar', icon: calendarIcon },
+    { id: 'rewards', icon: bagIcon },
+  ];
 
   return (
     <motion.div
@@ -139,24 +120,17 @@ const Resolutions = () => {
             animate="enter"
             exit="exit"
           >
-            <motion.img
-              src={checkIcon}
-              whileHover={{ opacity: hoverFadeOpacity }}
-              transition={{ duration: hoverFadeDuration }}
-              className="side-bar-icon"
-            ></motion.img>
-            <motion.img
-              src={calendarIcon}
-              whileHover={{ opacity: hoverFadeOpacity }}
-              transition={{ duration: hoverFadeDuration }}
-              className="side-bar-icon"
-            ></motion.img>
-            <motion.img
-              src={bagIcon}
-              whileHover={{ opacity: hoverFadeOpacity }}
-              transition={{ duration: hoverFadeDuration }}
-              className="side-bar-icon"
-            ></motion.img>
+            {scrollableSections.map((section) => (
+              <motion.img
+                key={section.id}
+                src={section.icon}
+                whileHover={{ opacity: hoverFadeOpacity }}
+                transition={{ duration: hoverFadeDuration }}
+                className="side-bar-icon"
+                onClick={() => scrollToSection(section.id)}
+                title={section.id}
+              ></motion.img>
+            ))}
             <motion.img
               src={micIcon}
               whileHover={{ opacity: hoverFadeOpacity }}
@@ -180,7 +154,12 @@ const Resolutions = () => {
           animate="visible"
           transition={{ delay: 1.0, duration: 1.0 }}
         >
-          <HabitsModule habits={habits} setHabits={setHabits} />
+          <HabitsModule
+            habits={habits}
+            setHabits={setHabits}
+            completions={completions}
+            setCompletions={setCompletions}
+          />
           <AnimatePresence>
             {habits.length > 0 && (
               <motion.div
@@ -197,6 +176,42 @@ const Resolutions = () => {
         </motion.div>
       </AnimatePresence>
     </motion.div>
+  );
+};
+
+const HabitsModule = ({ habits, setHabits, completions, setCompletions }) => {
+  const initialModule = habits.length === 0 ? 'intro' : 'view';
+  const [habitModuleState, setHabitModuleState] = React.useState(initialModule);
+
+  return (
+    <div className="habits-module" id="habits">
+      <div className="section-title">habits</div>
+      <AnimatePresence mode="wait">
+        {habitModuleState === 'intro' && (
+          <HabitsIntro key="intro" setHabitModuleState={setHabitModuleState} />
+        )}
+        {habitModuleState === 'creation' && (
+          <HabitsCreation
+            key="creation"
+            setHabitModuleState={setHabitModuleState}
+            habits={habits}
+            setHabits={setHabits}
+            completions={completions}
+            setCompletions={setCompletions}
+          />
+        )}
+        {habitModuleState === 'view' && (
+          <HabitsView
+            key="view"
+            setHabitModuleState={setHabitModuleState}
+            habits={habits}
+            setHabits={setHabits}
+            completions={completions}
+            setCompletions={setCompletions}
+          />
+        )}
+      </AnimatePresence>
+    </div>
   );
 };
 
@@ -261,7 +276,13 @@ const HabitsIntro = ({ setHabitModuleState }) => {
   );
 };
 
-const HabitsCreation = ({ setHabitModuleState, habits, setHabits }) => {
+const HabitsCreation = ({
+  setHabitModuleState,
+  habits,
+  setHabits,
+  completions,
+  setCompletions,
+}) => {
   const [identityText, setIdentityText] = React.useState('');
   const [loveText, setLoveText] = React.useState('');
   const [hateText, setHateText] = React.useState('');
@@ -280,6 +301,7 @@ const HabitsCreation = ({ setHabitModuleState, habits, setHabits }) => {
     };
 
     service.addHabit(newHabit, habits, setHabits);
+    service.createHabitCompletions(newHabit.id, completions, setCompletions);
     setHabitModuleState('view');
   };
 
@@ -369,7 +391,9 @@ const HabitsCreation = ({ setHabitModuleState, habits, setHabits }) => {
               className="habits-button"
               whileHover={{ opacity: hoverFadeOpacity }}
               transition={{ duration: hoverFadeDuration }}
-              onClick={() => setHabitModuleState('intro')}
+              onClick={() =>
+                setHabitModuleState(habits.length > 0 ? 'view' : 'intro')
+              }
             >
               back
             </motion.button>
@@ -388,36 +412,39 @@ const HabitsCreation = ({ setHabitModuleState, habits, setHabits }) => {
   );
 };
 
-const HabitsView = ({ setHabitModuleState, habits, setHabits }) => {
-  const [isChecked, setIsChecked] = React.useState(false);
+const HabitsView = ({
+  setHabitModuleState,
+  habits,
+  setHabits,
+  completions,
+  setCompletions,
+}) => {
   const [selectedDate, setSelectedDate] = React.useState(new Date());
+
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [selectedHabit, setSelectedHabit] = React.useState(
+    habits[selectedIndex]
+  );
+
+  const formatDatePart = (value, digits = 2) =>
+    String(value).padStart(digits, '0');
+
+  const day = formatDatePart(selectedDate.getDate());
+  const month = formatDatePart(selectedDate.getMonth() + 1);
+  const year = selectedDate.getFullYear();
 
   const dayRef = React.useRef(null);
   const monthRef = React.useRef(null);
   const yearRef = React.useRef(null);
 
-  const formatDatePart = (value, digits = 2) =>
-    String(value).padStart(digits, '0');
-
-  const updateDateInputs = (date) => {
-    if (dayRef.current && monthRef.current && yearRef.current) {
-      dayRef.current.value = formatDatePart(date.getDate());
-      monthRef.current.value = formatDatePart(date.getMonth() + 1);
-      yearRef.current.value = date.getFullYear();
-    }
-  };
-
-  React.useEffect(() => {
-    updateDateInputs(selectedDate);
-  }, [selectedDate]);
-
+  const MS_DAY = 86400000;
   const handlePreviousDay = () => {
-    const newDate = new Date(selectedDate.getTime() - 86400000);
+    const newDate = new Date(selectedDate.getTime() - MS_DAY);
     setSelectedDate(newDate);
   };
 
   const handleNextDay = () => {
-    const newDate = new Date(selectedDate.getTime() + 86400000);
+    const newDate = new Date(selectedDate.getTime() + MS_DAY);
     setSelectedDate(newDate);
   };
 
@@ -430,14 +457,17 @@ const HabitsView = ({ setHabitModuleState, habits, setHabits }) => {
     setSelectedDate(newDate);
   };
 
-  const day = formatDatePart(selectedDate.getDate());
-  const month = formatDatePart(selectedDate.getMonth() + 1);
-  const year = selectedDate.getFullYear();
+  const updateDateInputs = (date) => {
+    if (dayRef.current && monthRef.current && yearRef.current) {
+      dayRef.current.value = formatDatePart(date.getDate());
+      monthRef.current.value = formatDatePart(date.getMonth() + 1);
+      yearRef.current.value = date.getFullYear();
+    }
+  };
 
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
-  const [selectedHabit, setSelectedHabit] = React.useState(
-    habits[selectedIndex]
-  );
+  React.useEffect(() => {
+    updateDateInputs(selectedDate);
+  }, [selectedDate]);
 
   // Update edit state when selected index changes
   React.useEffect(() => {
@@ -469,6 +499,16 @@ const HabitsView = ({ setHabitModuleState, habits, setHabits }) => {
     setSelectedIndex(newIndex);
   };
 
+  const getHabitCompletionIcon = (habitId) => {
+    const habitCompletions = (completions[habitId] ||= {});
+
+    const dateStr = selectedDate.toLocaleDateString('en-CA');
+
+    const completed = habitCompletions[dateStr] || false;
+
+    return completed ? greenCheckIcon : squareIcon;
+  };
+
   return (
     <motion.div
       className="view"
@@ -490,6 +530,16 @@ const HabitsView = ({ setHabitModuleState, habits, setHabits }) => {
               ></motion.img>
               <div className="date-selector-inputs">
                 <input
+                  ref={yearRef}
+                  inputMode="numberic"
+                  pattern="[0-9]*"
+                  className="date-selector-input year-len"
+                  defaultValue={year}
+                  maxLength="4"
+                  onBlur={handleDateInputBlur}
+                />
+                -
+                <input
                   ref={monthRef}
                   inputMode="numberic"
                   pattern="[0-9]*"
@@ -506,16 +556,6 @@ const HabitsView = ({ setHabitModuleState, habits, setHabits }) => {
                   className="date-selector-input day-month-len"
                   defaultValue={day}
                   maxLength="2"
-                  onBlur={handleDateInputBlur}
-                />
-                -
-                <input
-                  ref={yearRef}
-                  inputMode="numberic"
-                  pattern="[0-9]*"
-                  className="date-selector-input year-len"
-                  defaultValue={year}
-                  maxLength="4"
                   onBlur={handleDateInputBlur}
                 />
               </div>
@@ -544,11 +584,18 @@ const HabitsView = ({ setHabitModuleState, habits, setHabits }) => {
                   <div className="habit-health-percentage">33%</div>
                 </div>
                 <motion.img
-                  src={isChecked ? greencheckIcon : squareIcon}
-                  onClick={() => setIsChecked(!isChecked)}
+                  src={getHabitCompletionIcon(habit.id)}
                   whileHover={{ opacity: hoverFadeOpacity }}
                   transition={{ duration: hoverFadeDuration }}
-                  class={isChecked ? 'habit-check' : 'habit-square'}
+                  className="habit-completion-icon"
+                  onClick={() =>
+                    service.toggleHabitCompletion(
+                      habit.id,
+                      selectedDate,
+                      completions,
+                      setCompletions
+                    )
+                  }
                 />
               </div>
             ))}
@@ -649,6 +696,22 @@ const HabitsView = ({ setHabitModuleState, habits, setHabits }) => {
   );
 };
 
+const HabitTextInput = ({
+  placeholder = '',
+  maxLength = '81',
+  value,
+  onChange,
+}) => (
+  <textarea
+    className="habit-input"
+    placeholder={placeholder}
+    maxLength={maxLength}
+    value={value}
+    onChange={onChange}
+    rows="3"
+  />
+);
+
 const CalenderModule = () => {
   const year = new Date().getFullYear();
   const [filledDays, setFilledDays] = React.useState({});
@@ -683,11 +746,11 @@ const CalenderModule = () => {
   }));
 
   return (
-    <div className="calendar">
+    <div className="calendar" id="calendar">
       <div className="section">
         <div className="section-title">calendar</div>
         <div className="section-explanation">
-          visualize your habits! the squares are clickable
+          visualize your habits, squares are clickable!
         </div>
         <div className="calendar-title-box">
           <motion.img
@@ -753,7 +816,7 @@ const CalenderModule = () => {
 
 const RewardModule = () => {
   return (
-    <div className="rewards">
+    <div className="rewards" id="rewards">
       <div className="section">
         <div className="section-title">treat yourself!</div>
         <div className="section-explanation">
@@ -762,6 +825,37 @@ const RewardModule = () => {
         </div>
         <div className="habits-image-container">
           <img src={catGettingTreat} className="habits-image"></img>
+        </div>
+        <div className="habit-box">
+          <div className="quote-box">
+            in the eye of cacophony, time slows.
+            <br />
+            distill the moment to a single step.
+          </div>
+          <div className="habit-content-box">
+            <p className="question-section">are you running too fast?</p>
+            <p className="question-section">
+              what is the <b>single</b> most important
+              <br />
+              habit in your life?
+            </p>
+            <p className="question-section">
+              think deeply. <br />
+              everything else fades to noise
+            </p>
+            <p className="question-section">
+              this is not a result
+              <br />
+              this is a process
+              <br />
+              this is <b>you</b>.
+            </p>
+            <p className="question-section">
+              who are you
+              <br />
+              why do you want this?
+            </p>
+          </div>
         </div>
       </div>
     </div>

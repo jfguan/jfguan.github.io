@@ -113,7 +113,7 @@ body {
 
 .section {
   display: grid;
-  grid-template-columns: 0.55fr 0.45fr;
+  grid-template-columns: 0.52fr 0.48fr;
   margin-bottom: 8vh;
 }
 
@@ -349,16 +349,17 @@ body {
   padding-top: 10px;
   padding-bottom: 10px;
 
-  border: 3px solid rgba(var(--black-rgb), 0.5);
+  border: 3px solid rgba(var(--black-rgb), 1);
   border-radius: 8px;
   background-color: #f6eed5;
   font-size: 14px;
+  opacity: 60%;
 
   cursor: pointer;
 }
 
 .container-focused {
-  border: 3px solid var(--black);
+  opacity: 100%;
 }
 
 .habit-snippet-box {
@@ -391,20 +392,11 @@ body {
   color: color-mix(in srgb, var(--green) 33%, var(--red) 67%);
 }
 
-.habit-check {
+.habit-completion-icon {
   height: 40%;
   align-self: center;
 
   filter: saturate(3);
-
-  cursor: pointer;
-}
-
-.habit-square {
-  height: 40%;
-  align-self: center;
-
-  opacity: 0.5;
 
   cursor: pointer;
 }
@@ -500,5 +492,3 @@ body {
   background-color: var(--green);
   border: 0px;
 }
-
-@import './Resolutions.mobile.css';
