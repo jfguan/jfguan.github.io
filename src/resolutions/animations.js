@@ -1,5 +1,5 @@
 export const hoverFadeOpacity = 0.4;
-export const hoverFadeDuration = 0.2;
+export const hoverFadeDuration = 0.3;
 export const moduleFadeDuration = 1.0;
 
 export const fadeIn = {

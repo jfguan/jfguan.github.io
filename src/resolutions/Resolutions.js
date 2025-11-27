@@ -650,12 +650,14 @@ const HabitsView = ({
               </div>
             ))}
           </div>
-          <button
+          <motion.button
             className="habits-view-new-habit-button"
             onClick={() => setHabitModuleState('creation')}
+            whileHover={{ opacity: 0.8 }}
+            transition={{ duration: hoverFadeDuration }}
           >
             new habit
-          </button>
+          </motion.button>
         </div>
         <div className="habit-box">
           <div className="quote-box">
@@ -987,13 +989,15 @@ const RewardModule = () => {
             </div>
           </div>
           {buttonValues.map((value) => (
-            <button
+            <motion.button
               key={value}
               className="reward-button"
               onClick={() => handleButtonClick(value)}
+              whileHover={{ opacity: 0.8 }}
+              transition={{ duration: hoverFadeDuration }}
             >
               ${value.toFixed(2)}
-            </button>
+            </motion.button>
           ))}
         </div>
       </div>
