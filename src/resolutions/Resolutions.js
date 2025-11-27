@@ -113,7 +113,14 @@ const Resolutions = () => {
     if (element) {
       const elementTop = element.getBoundingClientRect().top + window.scrollY;
       const offsetTop = elementTop - window.innerHeight * 0.2;
-      window.scrollTo({ top: offsetTop, behavior: 'smooth' });
+
+      animate(window.scrollY, offsetTop, {
+        duration: 0.3,
+        ease: 'easeInOut',
+        onUpdate: (value) => {
+          window.scrollTo(0, value);
+        },
+      });
     }
   };
 

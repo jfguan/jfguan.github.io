@@ -10,11 +10,11 @@
   }
 
   .logo-text {
-    font-size: 8px;
+    font-size: 10px;
   }
 
   .info-options {
-    font-size: 8px;
+    font-size: 10px;
   }
 
   .info-option {
@@ -23,8 +23,8 @@
 
   .side-bar-icon {
     /* Layout */
-    height: 14px;
-    width: 14px;
+    height: 18px;
+    width: 18px;
 
     cursor: pointer;
   }
@@ -33,7 +33,7 @@
     /* Layout */
     width: 95%;
     margin-right: 0vw;
-    padding-left: 1vw;
+    padding-left: 2vw;
   }
 
   .section {
@@ -135,10 +135,10 @@
 
     gap: 0;
 
-    padding-left: 2%;
+    padding-left: 4%;
     padding-right: 4%;
-    padding-top: 3%;
-    padding-bottom: 3%;
+    padding-top: 6px;
+    padding-bottom: 6px;
   }
 
   .habit-snippet-statement {
@@ -198,5 +198,11 @@
     border: 1px solid var(--black);
     border-radius: 2px;
     align-self: center;
+  }
+
+  /* REWARD MODEUL SECTION ------------------------------------- */
+  .reward-box {
+    margin-top: 12px;
+    margin-left: 0px;
   }
 }

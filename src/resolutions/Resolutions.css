@@ -89,14 +89,17 @@ body {
   position: fixed;
   display: flex;
   flex-direction: column;
-  padding-top: 20vh;
-  gap: 12vh;
+  /* padding-top: 10vh; */
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 6vh;
 }
 
 .side-bar-icon {
   /* Layout */
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
 
   /* Interaction */
   cursor: pointer;
@@ -345,7 +348,7 @@ body {
   justify-content: space-between;
   flex-shrink: 0;
 
-  padding-left: 3%;
+  padding-left: 4%;
   padding-right: 5%;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -529,8 +532,6 @@ body {
 }
 
 .balance-amount-box {
-  /* display: flex; */
-  /* flex-direction: row; */
   color: var(--green);
 }
 
