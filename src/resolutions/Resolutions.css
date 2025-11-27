@@ -114,7 +114,7 @@ body {
 .section {
   display: grid;
   grid-template-columns: 0.52fr 0.48fr;
-  margin-bottom: 8vh;
+  margin-bottom: 50px;
 }
 
 .section-title {
@@ -123,16 +123,17 @@ body {
   /* Appearance */
   font-family: 'Roboto Serif';
   font-size: 24px;
+  line-height: 1.2;
 }
 
 .section-explanation {
   grid-column: 1 / -1;
   width: 100%;
-  margin-bottom: 20px;
-  padding-bottom: 5px;
-  font-size: 12px;
+  padding-bottom: 3px;
+  margin-bottom: 15px;
 
-  border-bottom: 1px solid var(--black);
+  font-size: 12px;
+  /* border-bottom: 1px solid var(--black); */
 }
 
 .habits-image-container {
@@ -142,7 +143,7 @@ body {
   /* border: 1px solid var(--black); */
   display: flex;
   flex-direction: column;
-  padding-left: 20px;
+  padding-left: 25px;
   min-width: 0;
 }
 
@@ -305,8 +306,8 @@ body {
   justify-content: space-evenly;
   gap: 64px;
 
-  padding-top: 2vh;
-  padding-bottom: 2vh;
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
 
 .date-selector-arrow {
@@ -421,7 +422,7 @@ body {
 }
 
 .habit-calendar {
-  padding-bottom: 1vh;
+  padding-bottom: 3px;
 }
 
 .calendar-title-box {
@@ -449,6 +450,7 @@ body {
   gap: 4px;
 
   padding-top: 5px;
+  padding-bottom: 5px;
   overflow: hidden;
 }
 
@@ -497,4 +499,98 @@ body {
 .calendar-day.filled {
   background-color: var(--green);
   border: 0px;
+}
+
+/* REWARD MODEUL SECTION ------------------------------------- */
+.reward-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  /* Appearance */
+  border: 4px solid var(--black);
+  border-radius: 8px;
+  margin-left: 25px;
+
+  padding-top: 5%;
+  padding-left: 6%;
+  padding-right: 6%;
+}
+
+.balance-box {
+  width: 100%;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.balance-amount-box {
+  /* display: flex; */
+  /* flex-direction: row; */
+  color: var(--green);
+}
+
+.balance-amount {
+  /* border: 1px solid var(--black); */
+  text-decoration: underline;
+
+  background-color: transparent;
+  text-align: right;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.multiplier-amount {
+  width: 1ch;
+  background-color: transparent;
+  text-align: right;
+}
+
+.item-box {
+  /* border: 1px solid var(--black); */
+  width: 100%;
+
+  margin-top: 4%;
+  margin-bottom: 20%;
+}
+
+.item-box-row {
+  width: 100%;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  font-size: 14px;
+}
+
+.item-input {
+  /* border: 1px solid var(--black); */
+
+  background-color: transparent;
+  text-align: right;
+
+  text-decoration: underline;
+}
+
+.item-input::placeholder {
+  color: rgba(var(--black-rgb), 0.5);
+}
+
+.reward-button {
+  height: 70px;
+  width: 100%;
+
+  margin-bottom: 10px;
+
+  background-color: var(--green);
+  color: var(--cream);
+
+  font-weight: bold;
+  border-radius: 8px;
 }

@@ -67,6 +67,20 @@ const CountUpNumber = ({ value }) => {
   return <motion.span style={{ color }}>{rounded}</motion.span>;
 };
 
+const CountUpGreen = ({ value, format = Math.round }) => {
+  const count = useMotionValue(0);
+  const displayed = useTransform(count, format);
+
+  React.useEffect(() => {
+    const controls = animate(count, value, { duration: 0.3 });
+    return () => controls.stop();
+  }, [value, count]);
+
+  return (
+    <motion.span style={{ color: 'var(--green)' }}>{displayed}</motion.span>
+  );
+};
+
 const InfoOption = ({ text }) => (
   <motion.div
     className="info-option"
@@ -191,7 +205,7 @@ const Resolutions = () => {
                 animate="enter"
                 exit="exit"
               >
-                <CalenderModule
+                <CalendarModule
                   habits={habits}
                   completions={completions}
                   setCompletions={setCompletions}
@@ -748,7 +762,7 @@ const HabitTextInput = ({
   />
 );
 
-const CalenderModule = ({ habits, completions, setCompletions }) => {
+const CalendarModule = ({ habits, completions, setCompletions }) => {
   const year = new Date().getFullYear();
   const [openCalendars, setOpenCalendars] = React.useState({});
 
@@ -778,7 +792,7 @@ const CalenderModule = ({ habits, completions, setCompletions }) => {
       <div className="section">
         <div className="section-title">calendar</div>
         <div className="section-explanation">
-          visualize - squares are clickable!
+          checkout your progress - squares are clickable!
         </div>
         <div className="habit-calendar-box">
           {habits.map((habit) => (
@@ -865,6 +879,53 @@ const CalenderModule = ({ habits, completions, setCompletions }) => {
 };
 
 const RewardModule = () => {
+  const [balance, setBalance] = React.useState(0);
+  const [multiplier, setMultiplier] = React.useState(1);
+  const [item, setItem] = React.useState('');
+  const [cost, setCost] = React.useState('0');
+
+  const balanceInputRef = React.useRef(null);
+  const balanceMotion = useMotionValue(balance);
+  const balanceDisplay = useTransform(balanceMotion, (v) => v.toFixed(2));
+
+  const formatBalance = (value, digits = 2) =>
+    parseFloat(value).toFixed(digits);
+
+  const buttonValues = [0.05, 0.25, 0.5, 1.0];
+  const multiplierPool = [1, 2, 3, 3, 4, 4, 5, 5, 6, 7];
+
+  const itemInputPlaceholder = 'a tank air halter top';
+
+  React.useEffect(() => {
+    service.getRewardData().then((data) => {
+      setBalance(data.balance);
+      setItem(data.item);
+      setCost(data.cost);
+    });
+  }, []);
+
+  React.useEffect(() => {
+    service.saveRewardData({ balance, item, cost });
+  }, [balance, item, cost]);
+
+  React.useEffect(() => {
+    const unsubscribe = balanceDisplay.onChange((v) => {
+      if (balanceInputRef.current) {
+        balanceInputRef.current.value = v;
+      }
+    });
+
+    animate(balanceMotion, balance, { duration: 0.3 });
+    return unsubscribe;
+  }, [balance, balanceDisplay, balanceMotion]);
+
+  const handleButtonClick = (amount) => {
+    const randomIndex = Math.floor(Math.random() * multiplierPool.length);
+    const randomMultiplier = multiplierPool[randomIndex];
+    setMultiplier(randomMultiplier);
+    setBalance((prev) => prev + amount * randomMultiplier);
+  };
+
   return (
     <div className="rewards" id="rewards">
       <div className="section">
@@ -876,36 +937,64 @@ const RewardModule = () => {
         <div className="habits-image-container">
           <img src={catGettingTreat} className="habits-image"></img>
         </div>
-        <div className="habit-box">
-          <div className="quote-box">
-            in the eye of cacophony, time slows.
-            <br />
-            distill the moment to a single step.
+        <div className="reward-box">
+          <div className="balance-box">
+            <div className="balance-caption">balance</div>
+            <div className="balance-amount-box">
+              $
+              <input
+                ref={balanceInputRef}
+                type="text"
+                inputMode="decimal"
+                className="balance-amount"
+                defaultValue={formatBalance(balance)}
+                size={formatBalance(balance).length}
+                onChange={(e) => setBalance(parseFloat(e.target.value) || 0)}
+              />
+            </div>
           </div>
-          <div className="habit-content-box">
-            <p className="question-section">are you running too fast?</p>
-            <p className="question-section">
-              what is the <b>single</b> most important
-              <br />
-              habit in your life?
-            </p>
-            <p className="question-section">
-              think deeply. <br />
-              everything else fades to noise
-            </p>
-            <p className="question-section">
-              this is not a result
-              <br />
-              this is a process
-              <br />
-              this is <b>you</b>.
-            </p>
-            <p className="question-section">
-              who are you
-              <br />
-              why do you want this?
-            </p>
+          <div className="balance-box">
+            <div className="balance-caption">multiplier</div>
+            <div className="balance-amount-box">
+              x
+              <CountUpGreen value={multiplier} />
+            </div>
           </div>
+          <div className="item-box">
+            <div className="item-box-row">
+              <div className="item-caption">I will buy</div>
+              <input
+                className="item-input"
+                type="text"
+                value={item}
+                size={item.length || itemInputPlaceholder.length}
+                placeholder={itemInputPlaceholder}
+                onChange={(e) => setItem(e.target.value)}
+              />
+            </div>
+            <div className="item-box-row">
+              <div className="item-caption">cost($)</div>
+              <div className="item-input-box">
+                <input
+                  className="item-input"
+                  type="text"
+                  value={cost}
+                  size={cost.length || 2}
+                  placeholder="85"
+                  onChange={(e) => setCost(e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+          {buttonValues.map((value) => (
+            <button
+              key={value}
+              className="reward-button"
+              onClick={() => handleButtonClick(value)}
+            >
+              ${value.toFixed(2)}
+            </button>
+          ))}
         </div>
       </div>
     </div>

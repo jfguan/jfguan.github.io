@@ -1,6 +1,7 @@
 const USE_CLOUD = false;
 const HABITS_STORAGE_KEY = 'resolutions_app_habits';
 const COMPLETIONS_STORAGE_KEY = 'resolutions_app_completions';
+const REWARD_DATA_KEY = 'resolutions_app_reward';
 const MS_DAY = 86400000;
 
 const localService = {
@@ -122,6 +123,18 @@ const localService = {
     }
 
     return Math.round((completedWeight / totalWeight) * 100);
+  },
+
+  // REWARD DATA
+  getRewardData: async () => {
+    const savedData = localStorage.getItem(REWARD_DATA_KEY);
+    return savedData
+      ? JSON.parse(savedData)
+      : { balance: 0, item: '', cost: '' };
+  },
+
+  saveRewardData: async (rewardData) => {
+    localStorage.setItem(REWARD_DATA_KEY, JSON.stringify(rewardData));
   },
 };
 
