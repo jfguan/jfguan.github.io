@@ -31,7 +31,6 @@ import rightArrow from './right_arrow.svg';
 import downArrow from './down_arrow.svg';
 import catGettingTreat from './cat_getting_treat.png';
 import affirmationsHero from './affirmations_hero.svg';
-import affirmationsWaveFlat from './affirmations_wave_flat.svg';
 import affirmationsWave0 from './affirmations_wave_0.svg';
 import affirmationsWave1 from './affirmations_wave_1.svg';
 import affirmationsWave2 from './affirmations_wave_2.svg';
@@ -137,6 +136,7 @@ const Resolutions = () => {
     { id: 'calendar', icon: calendarIcon },
     { id: 'rewards', icon: bagIcon },
     { id: 'affirmations', icon: micIcon },
+    { id: 'debug', icon: terminalIcon },
   ];
 
   return (
@@ -184,12 +184,6 @@ const Resolutions = () => {
                 title={section.id}
               ></motion.img>
             ))}
-            <motion.img
-              src={terminalIcon}
-              whileHover={{ opacity: hoverFadeOpacity }}
-              transition={{ duration: hoverFadeDuration }}
-              className="side-bar-icon"
-            ></motion.img>
           </motion.div>
         )}
       </AnimatePresence>
@@ -222,6 +216,7 @@ const Resolutions = () => {
                 />
                 <RewardModule />
                 <AffirmationsModule />
+                <DebugModule />
               </motion.div>
             )}
           </AnimatePresence>
@@ -673,7 +668,7 @@ const HabitsView = ({
             </motion.button>
           ) : (
             <motion.button
-              className="habits-view-new-habit-button-disabled"
+              className="habits-view-new-habit-button button-disabled"
               disabled
             >
               new habit
@@ -1236,4 +1231,78 @@ const AffirmationsModule = () => {
   );
 };
 
+const DebugModule = () => {
+  return (
+    <div className="debug" id="debug">
+      <div className="section">
+        <div className="section-title">debug exercises</div>
+        <div className="section-explanation">
+          some exercises I found on the internet that might be helpful - credits
+          to original authors where due.
+        </div>
+        <div className="exercise-list-box">
+          <h7>1. stopping consumption - maggot visualization</h7>
+          <p className="exercise-paragraph">
+            take a piece of food, drink, or phone, etc.
+          </p>
+          <p className="exercise-paragraph">
+            slowly, mindfully, break off pieces and throw them in the trash one
+            at a time, carefully imagining that you are tasting or experiencing
+            the food and that it was full of maggots.
+          </p>
+          <p className="exercise-paragraph">
+            associate the action with the disgust, and naturally stop.
+          </p>
+          <h7>3. five whys - classic drilldown</h7>
+          <p className="exercise-paragraph">
+            find out the root cause of an issue by asking `why` five times or
+            more. for example:
+          </p>
+          <p className="exercise-paragraph">I went to sleep late. why?</p>
+          <p className="exercise-paragraph">I played games on my phone. why?</p>
+          <p className="exercise-paragraph">
+            I really like playing games. why?
+          </p>
+          <p className="exercise-paragraph">
+            games provide a sense of achievement. why do I crave achievement?
+          </p>
+          <p className="exercise-paragraph">
+            my parents strongly emphasized achievement during childhood.
+          </p>
+          <p className="exercise-paragraph">
+            conclusion: games are fun and simulate achievement. I am an
+            independent adult separate from my parents now.
+          </p>
+          <h7>2. change how you view yourself - authority questioning</h7>
+          <p className="exercise-paragraph">
+            ALL beliefs about yourself were GIVEN to you, by someone or
+            something repeatedly telling you. beliefs are just an opinion, and
+            therefore easily changed.
+          </p>
+          <p className="exercise-paragraph">
+            first, locate the source of your belief. common things include
+            parents, childhood, and society. second, examine the source's
+            authority. lastly, re-examine and upweight or downweight the
+            authority.
+          </p>
+          <p className="exercise-paragraph">
+            for example, where did my insecurity about lacking talent come? it
+            came from a similar insecurity my dad felt. is this relevant? my dad
+            likely got it from harsh competition in his homeland. I don't live
+            there, and I have various achievements, so I don't think this
+            insecurity really applies.
+          </p>
+          <p className="exercise-paragraph">
+            a second example. I feel insecure about my ethnicity due to how it's
+            portrayed on the news or in jokes society makes. but wait a second,
+            the news does that due to certain agendas of the government and the
+            people in society who makes these kind of jokes are extremely
+            stupid. but it doesn't make much sense to believe someone who is
+            extremely stupid, so therefore I can ignore what they're telling me.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
 export default Resolutions;

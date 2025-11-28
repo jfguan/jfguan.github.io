@@ -416,15 +416,8 @@ body {
   border-radius: 8px;
 }
 
-.habits-view-new-habit-button-disabled {
-  height: 75px;
-  width: 100%;
-
-  background-color: var(--black);
-  color: var(--cream);
-  font-weight: bold;
-  border-radius: 8px;
-  opacity: 0.3;
+.button-disabled {
+  opacity: 0.2;
   cursor: not-allowed;
 }
 
@@ -724,4 +717,20 @@ body {
   background: var(--black);
   cursor: pointer;
   border: none;
+}
+
+/* DEBUG EXERCISES SECTION ------------------------------------- */
+.debug {
+}
+
+.exercise-list-box {
+  /* border: 1px solid var(--black); */
+  grid-column: 1 / -1;
+
+  line-height: 2;
+}
+
+.exercise-list-box p {
+  font-size: 12px;
+  line-height: 1.2;
 }
