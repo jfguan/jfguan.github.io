@@ -118,6 +118,7 @@ body {
   display: grid;
   grid-template-columns: 0.52fr 0.48fr;
   margin-bottom: 50px;
+  margin-top: 5px;
 }
 
 .section-title {
@@ -415,6 +416,18 @@ body {
   border-radius: 8px;
 }
 
+.habits-view-new-habit-button-disabled {
+  height: 75px;
+  width: 100%;
+
+  background-color: var(--black);
+  color: var(--cream);
+  font-weight: bold;
+  border-radius: 8px;
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
 /* CALENDAR MODULE */
 .calendar {
   padding-top: 5px;
@@ -597,4 +610,118 @@ body {
 
   font-weight: bold;
   border-radius: 8px;
+}
+
+/* AFFIRMATION SECTION ------------------------------------- */
+.affirmation-controller-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  /* Appearance */
+  border: 4px solid var(--black);
+  border-radius: 8px;
+  margin-left: 24px;
+
+  padding-top: 18%;
+  padding-left: 10%;
+  padding-right: 10%;
+}
+
+.wave-box {
+  /* border: 1px solid var(--black); */
+  position: relative;
+  width: 100%;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wave-box img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.wave-vector-no-recording {
+  filter: saturate(0);
+}
+
+.affirmation-icon-box {
+  /* border: 1px solid var(--black); */
+  margin-top: 20px;
+
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  gap: 5px;
+
+  cursor: pointer;
+}
+
+.affirmation-icon-box > div {
+  /* border: 1px solid var(--black); */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 50px;
+}
+
+.affirmation-icon-label {
+  /* border: 1px solid var(--black); */
+  margin-top: 5px;
+
+  font-size: 10px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.affirmation-icon-box img {
+  height: 32px;
+}
+
+.affirmation-volume-box {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+
+  margin-top: 30px;
+}
+
+.affirmation-volume-label {
+  font-size: 14px;
+  font-weight: 600;
+  align-self: self-start;
+
+  margin-bottom: 5px;
+}
+
+.affirmation-volume-box input[type='range'] {
+  width: 100%;
+  height: 2px;
+  background: var(--black);
+  cursor: pointer;
+
+  margin-bottom: 15px;
+}
+
+.affirmation-volume-box input[type='range']::-webkit-slider-thumb {
+  width: 2px;
+  height: 14px;
+  background: var(--black);
+  cursor: pointer;
+}
+
+.affirmation-volume-box input[type='range']::-moz-range-thumb {
+  width: 2px;
+  height: 14px;
+  background: var(--black);
+  cursor: pointer;
+  border: none;
 }

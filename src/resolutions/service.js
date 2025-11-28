@@ -1,7 +1,10 @@
 const USE_CLOUD = false;
-const HABITS_STORAGE_KEY = 'resolutions_app_habits';
-const COMPLETIONS_STORAGE_KEY = 'resolutions_app_completions';
+const HABITS_DATA_KEY = 'resolutions_app_habits';
+const COMPLETIONS_DATA_KEY = 'resolutions_app_completions';
 const REWARD_DATA_KEY = 'resolutions_app_reward';
+const AFFIRMATIONS_DATA_KEY = 'resolutions_app_affirmations';
+const AFFIRMATIONS_VOLUME_KEY = 'resolutions_app_affirmations_volume';
+const BACKGROUND_RAIN_VOLUME_KEY = 'resolutions_app_background_rain_volume';
 const MS_DAY = 86400000;
 
 const localService = {
@@ -15,12 +18,12 @@ const localService = {
   // last_modified_ts: Date.now(),
 
   getHabits: async () => {
-    const savedHabits = localStorage.getItem(HABITS_STORAGE_KEY);
+    const savedHabits = localStorage.getItem(HABITS_DATA_KEY);
     return savedHabits ? JSON.parse(savedHabits) : [];
   },
 
   saveHabits: async (habits) => {
-    localStorage.setItem(HABITS_STORAGE_KEY, JSON.stringify(habits));
+    localStorage.setItem(HABITS_DATA_KEY, JSON.stringify(habits));
   },
 
   addHabit: async (newHabit, habits, setHabits) => {
@@ -57,12 +60,12 @@ const localService = {
   // }
 
   getCompletions: async () => {
-    const savedCompletions = localStorage.getItem(COMPLETIONS_STORAGE_KEY);
+    const savedCompletions = localStorage.getItem(COMPLETIONS_DATA_KEY);
     return savedCompletions ? JSON.parse(savedCompletions) : [];
   },
 
   saveCompletions: async (completions) => {
-    localStorage.setItem(COMPLETIONS_STORAGE_KEY, JSON.stringify(completions));
+    localStorage.setItem(COMPLETIONS_DATA_KEY, JSON.stringify(completions));
   },
 
   createHabitCompletions: async (habitId, completions, setCompletions) => {
@@ -99,19 +102,17 @@ const localService = {
     return updatedCompletions;
   },
 
-  calculateHabitHealth: (
-    habitId,
-    duration,
-    completions,
-    currentDate = new Date()
-  ) => {
-    const habitCompletions = completions[habitId] || {};
+  calculateHabitHealth: (habit, completions) => {
+    const habitCompletions = completions[habit.id] || {};
 
     let completedWeight = 0;
     let totalWeight = 0;
 
-    const startDate = new Date(currentDate.getTime() - (duration - 1) * MS_DAY);
-    for (let i = 0; i < duration; i++) {
+    const currentDate = new Date();
+    const startDate = new Date(
+      currentDate.getTime() - (habit.duration - 1) * MS_DAY
+    );
+    for (let i = 0; i < habit.duration; i++) {
       const dayDate = new Date(startDate.getTime() + i * MS_DAY);
       const dateStr = dayDate.toLocaleDateString('en-CA');
       const weight = i + 1;
@@ -135,6 +136,33 @@ const localService = {
 
   saveRewardData: async (rewardData) => {
     localStorage.setItem(REWARD_DATA_KEY, JSON.stringify(rewardData));
+  },
+
+  // AFFIRMATIONS DATA
+  getAffirmationsData: async () => {
+    return localStorage.getItem(AFFIRMATIONS_DATA_KEY);
+  },
+
+  saveAffirmationsData: async (base64Url) => {
+    localStorage.setItem(AFFIRMATIONS_DATA_KEY, base64Url);
+  },
+
+  getAffirmationsVolume: () => {
+    const saved = localStorage.getItem(AFFIRMATIONS_VOLUME_KEY);
+    return saved ? parseInt(saved) : 50;
+  },
+
+  saveAffirmationsVolume: (volume) => {
+    localStorage.setItem(AFFIRMATIONS_VOLUME_KEY, volume.toString());
+  },
+
+  getBackgroundRainVolume: () => {
+    const saved = localStorage.getItem(BACKGROUND_RAIN_VOLUME_KEY);
+    return saved ? parseInt(saved) : 50;
+  },
+
+  saveBackgroundRainVolume: (volume) => {
+    localStorage.setItem(BACKGROUND_RAIN_VOLUME_KEY, volume.toString());
   },
 };
 

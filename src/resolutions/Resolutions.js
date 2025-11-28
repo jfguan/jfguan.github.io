@@ -7,7 +7,6 @@ import {
   useMotionValue,
   useTransform,
   animate,
-  useMotionTemplate,
 } from 'framer-motion';
 import {
   fadeIn,
@@ -18,18 +17,27 @@ import {
   moduleFadeDuration,
 } from './animations';
 import { service } from './service';
+import flowers from './flowers.svg';
 import checkIcon from './check.svg';
 import greenCheckIcon from './green_check.svg';
 import squareIcon from './square.svg';
 import calendarIcon from './calendar.svg';
 import bagIcon from './bag.svg';
 import micIcon from './mic.svg';
+import micRedIcon from './mic_red.svg';
 import terminalIcon from './terminal.svg';
-import flowers from './flowers.svg';
 import leftArrow from './left_arrow.svg';
 import rightArrow from './right_arrow.svg';
 import downArrow from './down_arrow.svg';
 import catGettingTreat from './cat_getting_treat.png';
+import affirmationsHero from './affirmations_hero.svg';
+import affirmationsWaveFlat from './affirmations_wave_flat.svg';
+import affirmationsWave0 from './affirmations_wave_0.svg';
+import affirmationsWave1 from './affirmations_wave_1.svg';
+import affirmationsWave2 from './affirmations_wave_2.svg';
+import playIcon from './play.svg';
+import pauseIcon from './pause.svg';
+import backgroundRainAudio from './background_rain.m4a';
 
 // Calendar constants
 const MAX_DAYS_IN_MONTH = 31;
@@ -92,7 +100,7 @@ const InfoOption = ({ text }) => (
 );
 
 const Resolutions = () => {
-  const infoItems = ['read this', 'guide', 'account'];
+  const infoItems = ['read this', 'account'];
   const [habits, setHabits] = React.useState(null);
   const [completions, setCompletions] = React.useState(null);
 
@@ -128,6 +136,7 @@ const Resolutions = () => {
     { id: 'habits', icon: checkIcon },
     { id: 'calendar', icon: calendarIcon },
     { id: 'rewards', icon: bagIcon },
+    { id: 'affirmations', icon: micIcon },
   ];
 
   return (
@@ -176,12 +185,6 @@ const Resolutions = () => {
               ></motion.img>
             ))}
             <motion.img
-              src={micIcon}
-              whileHover={{ opacity: hoverFadeOpacity }}
-              transition={{ duration: hoverFadeDuration }}
-              className="side-bar-icon"
-            ></motion.img>
-            <motion.img
               src={terminalIcon}
               whileHover={{ opacity: hoverFadeOpacity }}
               transition={{ duration: hoverFadeDuration }}
@@ -218,6 +221,7 @@ const Resolutions = () => {
                   setCompletions={setCompletions}
                 />
                 <RewardModule />
+                <AffirmationsModule />
               </motion.div>
             )}
           </AnimatePresence>
@@ -557,6 +561,11 @@ const HabitsView = ({
     return completed ? greenCheckIcon : squareIcon;
   };
 
+  const primaryHabitHealth = service.calculateHabitHealth(
+    habits[0],
+    completions
+  );
+
   return (
     <motion.div
       className="view"
@@ -631,11 +640,7 @@ const HabitsView = ({
                   <div className="habit-snippet-prompt">health</div>
                   <div className="habit-health-percentage">
                     <CountUpNumber
-                      value={service.calculateHabitHealth(
-                        habit.id,
-                        habit.duration,
-                        completions
-                      )}
+                      value={service.calculateHabitHealth(habit, completions)}
                     />
                     %
                   </div>
@@ -657,14 +662,23 @@ const HabitsView = ({
               </div>
             ))}
           </div>
-          <motion.button
-            className="habits-view-new-habit-button"
-            onClick={() => setHabitModuleState('creation')}
-            whileHover={{ opacity: 0.8 }}
-            transition={{ duration: hoverFadeDuration }}
-          >
-            new habit
-          </motion.button>
+          {primaryHabitHealth > 95 ? (
+            <motion.button
+              className="habits-view-new-habit-button"
+              onClick={() => setHabitModuleState('creation')}
+              whileHover={{ opacity: 0.8 }}
+              transition={{ duration: hoverFadeDuration }}
+            >
+              new habit
+            </motion.button>
+          ) : (
+            <motion.button
+              className="habits-view-new-habit-button-disabled"
+              disabled
+            >
+              new habit
+            </motion.button>
+          )}
         </div>
         <div className="habit-box">
           <div className="quote-box">
@@ -773,7 +787,9 @@ const HabitTextInput = ({
 
 const CalendarModule = ({ habits, completions, setCompletions }) => {
   const year = new Date().getFullYear();
-  const [openCalendars, setOpenCalendars] = React.useState({});
+  const [openCalendars, setOpenCalendars] = React.useState(
+    Object.fromEntries(habits.map((h) => [h.id, true]))
+  );
 
   const getDaysInMonth = (month, year) => {
     return new Date(year, month + 1, 0).getDate();
@@ -1011,4 +1027,213 @@ const RewardModule = () => {
     </div>
   );
 };
+
+const AffirmationsModule = () => {
+  const AFFIRMATION_MAX_DURATION = 15000;
+  const waves = [affirmationsWave0, affirmationsWave2, affirmationsWave1];
+  const [affirmationsVolume, setAffirmationsVolume] = React.useState(
+    service.getAffirmationsVolume()
+  );
+  const [backgroundRainVolume, setBackgroundRainVolume] = React.useState(
+    service.getBackgroundRainVolume()
+  );
+
+  const [isRecording, setIsRecording] = React.useState(false);
+  const [audioUrl, setAudioUrl] = React.useState(null);
+  const [isPlaying, setIsPlaying] = React.useState(false);
+
+  const mediaRecorderRef = React.useRef(null);
+  const audioElementRef = React.useRef(new Audio());
+
+  const backgroundRainRef = React.useRef(new Audio(backgroundRainAudio));
+
+  const startRecording = async () => {
+    setAudioUrl(null);
+    handlePauseClick();
+
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+    const chunks = [];
+
+    // Create a new media recorder
+    const mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder.ondataavailable = (event) => chunks.push(event.data);
+    mediaRecorder.onstop = async () => {
+      const audioBlob = new Blob(chunks, { type: 'audio/webm' });
+      const base64Url = await blobToBase64(audioBlob);
+      service.saveAffirmationsData(base64Url);
+      setAudioUrl(base64Url);
+      stream.getTracks().forEach((track) => track.stop());
+    };
+
+    // Start the recording
+    mediaRecorder.start();
+    mediaRecorderRef.current = mediaRecorder;
+    setIsRecording(true);
+
+    setTimeout(() => {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+    }, AFFIRMATION_MAX_DURATION);
+  };
+
+  const blobToBase64 = async (blob) =>
+    new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.readAsDataURL(blob);
+    });
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+    }
+  };
+
+  const handleMicClick = () => {
+    if (isRecording) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
+  };
+
+  const handlePlayClick = () => {
+    if (!audioUrl) return;
+
+    audioElementRef.current.src = audioUrl;
+    audioElementRef.current.play();
+    backgroundRainRef.current.play();
+
+    setIsPlaying(true);
+  };
+
+  const handlePauseClick = () => {
+    audioElementRef.current.pause();
+    backgroundRainRef.current.pause();
+
+    setIsPlaying(false);
+  };
+
+  React.useEffect(() => {
+    audioElementRef.current.loop = true;
+    backgroundRainRef.current.loop = true;
+    service.getAffirmationsData().then(setAudioUrl);
+  }, []);
+
+  React.useEffect(() => {
+    audioElementRef.current.volume = affirmationsVolume / 100;
+    service.saveAffirmationsVolume(affirmationsVolume);
+  }, [affirmationsVolume]);
+
+  React.useEffect(() => {
+    backgroundRainRef.current.volume = backgroundRainVolume / 100;
+    service.saveBackgroundRainVolume(backgroundRainVolume);
+  }, [backgroundRainVolume]);
+
+  return (
+    <div className="affirmations" id="affirmations">
+      <div className="section">
+        <div className="section-title">affirmations</div>
+        <div className="section-explanation">
+          record and listen to an affirmation over and over until it's deeply
+          part of you. I recommend recording the `I am/love/hate` statements and
+          tuning the volume down to be barely audible. audio is stored locally,
+          limited to 15 seconds to really focus on one habit at a time.
+        </div>
+        <div className="habits-image-container">
+          <img src={affirmationsHero} className="habits-image"></img>
+        </div>
+        <div className="affirmation-controller-box">
+          <div className="wave-box">
+            <AnimatePresence>
+              {audioUrl && (
+                <>
+                  {waves.map((wave, i) => (
+                    <motion.img
+                      key={i}
+                      src={wave}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: isPlaying ? [0.3, 1, 0.3] : 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={
+                        isPlaying ? { duration: 2.0 + i, repeat: Infinity } : {}
+                      }
+                    />
+                  ))}
+                </>
+              )}
+              {!audioUrl && (
+                <>
+                  {waves.map((wave, i) => (
+                    <motion.img
+                      className="wave-vector-no-recording"
+                      key={i}
+                      src={wave}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.6 }}
+                    />
+                  ))}
+                </>
+              )}
+            </AnimatePresence>
+          </div>
+          <div className="affirmation-icon-box">
+            <div>
+              <motion.img
+                src={isRecording ? micRedIcon : micIcon}
+                whileHover={{ opacity: hoverFadeOpacity }}
+                transition={{ duration: hoverFadeDuration }}
+                onClick={handleMicClick}
+              />
+              <div className="affirmation-icon-label">new</div>
+            </div>
+            <div>
+              <motion.img
+                src={playIcon}
+                whileHover={{ opacity: hoverFadeOpacity }}
+                transition={{ duration: hoverFadeDuration }}
+                onClick={handlePlayClick}
+              />
+              <div className="affirmation-icon-label">play</div>
+            </div>
+            <div>
+              <motion.img
+                src={pauseIcon}
+                whileHover={{ opacity: hoverFadeOpacity }}
+                transition={{ duration: hoverFadeDuration }}
+                onClick={handlePauseClick}
+              />
+              <div className="affirmation-icon-label">pause</div>
+            </div>
+          </div>
+          <div className="affirmation-volume-box">
+            <div className="affirmation-volume-label">affirmations volume</div>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={affirmationsVolume}
+              onChange={(e) => setAffirmationsVolume(e.target.value)}
+            />
+            <div className="affirmation-volume-label">
+              background rain volume
+            </div>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={backgroundRainVolume}
+              onChange={(e) => setBackgroundRainVolume(e.target.value)}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default Resolutions;
