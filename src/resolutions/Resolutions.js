@@ -235,7 +235,7 @@ const HabitsModule = ({ habits, setHabits, completions, setCompletions }) => {
     <div className="habits-module" id="habits">
       <div className="section-title">habits</div>
       <div className="section-explanation">
-        to avoid "habit collapse", the health score is recency weighted to avoid
+        to avoid habit collapse, the health score is recency weighted to avoid
         the feeling of "starting over", unlike streaks. to ensure solid
         foundations, creating a new habit require a previous health score over
         95%.
@@ -563,10 +563,10 @@ const HabitsView = ({
     return completed ? greenCheckIcon : squareIcon;
   };
 
-  const primaryHabitHealth = service.calculateHabitHealth(
-    habits[0],
-    completions
-  );
+  const primaryHabitHealth =
+    habits.length > 0
+      ? service.calculateHabitHealth(habits[0], completions)
+      : 0;
 
   return (
     <motion.div
@@ -976,7 +976,7 @@ const RewardModule = () => {
                 className="balance-amount"
                 defaultValue={formatBalance(balance)}
                 size={formatBalance(balance).length}
-                onChange={(e) => setBalance(parseFloat(e.target.value) || 0)}
+                onBlur={(e) => setBalance(parseFloat(e.target.value) || 0)}
               />
             </div>
           </div>
