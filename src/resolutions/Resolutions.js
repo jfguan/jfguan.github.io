@@ -236,7 +236,7 @@ const HabitsModule = ({ habits, setHabits, completions, setCompletions }) => {
       <div className="section-title">habits</div>
       <div className="section-explanation">
         to avoid habit collapse, the health score is recency weighted to avoid
-        the feeling of "starting over", unlike streaks. to ensure solid
+        the feeling of "starting over", an issue with streaks. for solid
         foundations, creating a new habit require a previous health score over
         95%.
       </div>
@@ -377,7 +377,7 @@ const HabitsCreation = ({
               <li>do I have enough time and energy?</li>
               <li>is this sustainable with my commitments?</li>
               <li>am I willing to trade off other commitments?</li>
-              <li>will I keep this for many years?</li>
+              <li>will I keep this habit for many years?</li>
             </ul>
             <div className="suggestions-subtitle">
               minimally difficult (for now)
@@ -385,14 +385,18 @@ const HabitsCreation = ({
             <ul className="suggestions-list">
               <li>[optional] under 3 minutes</li>
               <li>
-                can be made any easier without feeling like a waste of time?
+                can this be made any easier without feeling like a waste of
+                time?
               </li>
             </ul>
             <div className="suggestions-subtitle">
               commitment duration is correct
             </div>
             <ul className="suggestions-list">
-              <li>new habits take 18 - 254 days to internalize</li>
+              <li>
+                new habits take 18 - 254 days to internalize depending on
+                difficulty
+              </li>
             </ul>
           </div>
         </div>
@@ -818,7 +822,8 @@ const CalendarModule = ({ habits, completions, setCompletions }) => {
       <div className="section">
         <div className="section-title">calendar</div>
         <div className="section-explanation">
-          checkout your progress - squares are clickable!
+          visualization of your progress - see how far you've come! the habit
+          squares are checkable as well.
         </div>
         <div className="habit-calendar-box">
           {habits.map((habit) => (
@@ -957,9 +962,10 @@ const RewardModule = () => {
       <div className="section">
         <div className="section-title">treat yourself!</div>
         <div className="section-explanation">
-          every success, click to save up and buy something guilt free! rewards
-          are randomly multiplied by x1 to x7 for a nice dopamine hit :)
-          recommended to pick a luxury prize that you can't justify otherwise.
+          for every success, give yourself a small reward. a random multipler
+          x1-x7 is applied for a lil' bit of dopamine 🎉. save up and buy
+          something guilt free, maybe something luxury that you can't justify
+          otherwise.
         </div>
         <div className="habits-image-container">
           <img src={catGettingTreat} className="habits-image"></img>
@@ -1242,9 +1248,9 @@ const DebugModule = () => {
   return (
     <div className="debug" id="debug">
       <div className="section">
-        <div className="section-title">some debug exercises</div>
+        <div className="section-title">debug exercises</div>
         <div className="section-explanation">
-          exercises I found on the internet that might be helpful - credits to
+          some stuff I found on the internet that might be helpful - credits to
           original authors where due.
         </div>
         <img src={landscape} className="debug-hero-image" />
@@ -1264,7 +1270,10 @@ const DebugModule = () => {
           <h7>3. five whys - classic drilldown</h7>
           <p className="exercise-paragraph">
             find out the root cause of an issue by asking `why` five times or
-            more. for example:
+            more.
+          </p>
+          <p className="exercise-paragraph">
+            <b>example</b>:
           </p>
           <p className="exercise-paragraph">I went to sleep late. why?</p>
           <p className="exercise-paragraph">I played games on my phone. why?</p>
@@ -1293,7 +1302,7 @@ const DebugModule = () => {
             and seek evidence to upweight or downweight it.
           </p>
           <p className="exercise-paragraph">
-            for example, I had some insecurity about lacking talent. Thinking a
+            for example, I had some insecurity about lacking talent. thinking a
             bit more, I realized my dad felt that way from harsh competition in
             his university, and was the source. was this insecurity still
             relevant? I don't live there, and I have various achievements.
