@@ -200,9 +200,28 @@
     align-self: center;
   }
 
-  /* REWARD MODEUL SECTION ------------------------------------- */
+  /* REWARD MODULE SECTION ------------------------------------- */
   .reward-box {
     margin-top: 12px;
     margin-left: 0px;
+
+    padding-bottom: 8px;
+  }
+
+  .item-box {
+    /* border: 1px solid var(--black); */
+    margin-top: 8%;
+    margin-bottom: 8%;
+  }
+
+  /* AFFIRMATION SECTION ------------------------------------- */
+  .affirmation-controller-box {
+    margin-top: 25px;
+    margin-left: 0px;
+
+    padding-top: 14%;
+    padding-left: 10%;
+    padding-right: 10%;
+    padding-bottom: 12%;
   }
 }

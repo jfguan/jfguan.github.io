@@ -37,6 +37,7 @@ import affirmationsWave2 from './affirmations_wave_2.svg';
 import playIcon from './play.svg';
 import pauseIcon from './pause.svg';
 import backgroundRainAudio from './background_rain.m4a';
+import landscape from './landscape.jpg';
 
 // Calendar constants
 const MAX_DAYS_IN_MONTH = 31;
@@ -1139,10 +1140,10 @@ const AffirmationsModule = () => {
       <div className="section">
         <div className="section-title">affirmations</div>
         <div className="section-explanation">
-          record your own affirmation, listening over and over until it is you.
-          recommend including the `I am/love/hate` statements and setting the
-          volume to be barely audible. audio is stored locally, limited to 15
-          seconds to really focus on one habit at a time.
+          record your own affirmation. listen over and over until it becomes
+          you. include the `I am/love/hate` statements and set the volume to be
+          barely audible. audio is stored locally, limited to 15 seconds to
+          really focus on one habit at a time.
         </div>
         <div className="habits-image-container">
           <img src={affirmationsHero} className="habits-image"></img>
@@ -1247,6 +1248,7 @@ const DebugModule = () => {
           exercises I found on the internet that might be helpful - credits to
           original authors where due.
         </div>
+        <img src={landscape} className="debug-hero-image" />
         <div className="exercise-list-box">
           <h7>1. stopping consumption - maggot visualization</h7>
           <p className="exercise-paragraph">
