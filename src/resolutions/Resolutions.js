@@ -233,6 +233,12 @@ const HabitsModule = ({ habits, setHabits, completions, setCompletions }) => {
   return (
     <div className="habits-module" id="habits">
       <div className="section-title">habits</div>
+      <div className="section-explanation">
+        health score (less punishing than streaks) is recency weighted to avoid
+        the feeling of "starting over". <br />
+        to avoid habit collapse, creating a new habit require a previous health
+        score of 95%.
+      </div>
       <AnimatePresence mode="wait">
         {habitModuleState === 'intro' && (
           <HabitsIntro key="intro" setHabitModuleState={setHabitModuleState} />
@@ -776,7 +782,7 @@ const HabitTextInput = ({
     maxLength={maxLength}
     value={value}
     onChange={onChange}
-    rows="3"
+    rows="2"
   />
 );
 
@@ -951,8 +957,9 @@ const RewardModule = () => {
       <div className="section">
         <div className="section-title">treat yourself!</div>
         <div className="section-explanation">
-          save up for each successful habit and buy something guilt free!
-          rewards are randomly multiplied by x1 to x7 for a nice dopamine hit :)
+          every success, click to save up and buy something guilt free! rewards
+          are randomly multiplied by x1 to x7 for a nice dopamine hit :)
+          recommended to pick a luxury prize that you can't justify otherwise.
         </div>
         <div className="habits-image-container">
           <img src={catGettingTreat} className="habits-image"></img>
@@ -1132,10 +1139,10 @@ const AffirmationsModule = () => {
       <div className="section">
         <div className="section-title">affirmations</div>
         <div className="section-explanation">
-          record and listen to an affirmation over and over until it's deeply
-          part of you. I recommend recording the `I am/love/hate` statements and
-          tuning the volume down to be barely audible. audio is stored locally,
-          limited to 15 seconds to really focus on one habit at a time.
+          record your own affirmation, listening over and over until it is you.
+          recommend including the `I am/love/hate` statements and setting the
+          volume to be barely audible. audio is stored locally, limited to 15
+          seconds to really focus on one habit at a time.
         </div>
         <div className="habits-image-container">
           <img src={affirmationsHero} className="habits-image"></img>
@@ -1235,10 +1242,10 @@ const DebugModule = () => {
   return (
     <div className="debug" id="debug">
       <div className="section">
-        <div className="section-title">debug exercises</div>
+        <div className="section-title">some debug exercises</div>
         <div className="section-explanation">
-          some exercises I found on the internet that might be helpful - credits
-          to original authors where due.
+          exercises I found on the internet that might be helpful - credits to
+          original authors where due.
         </div>
         <div className="exercise-list-box">
           <h7>1. stopping consumption - maggot visualization</h7>
@@ -1280,25 +1287,23 @@ const DebugModule = () => {
             therefore easily changed.
           </p>
           <p className="exercise-paragraph">
-            first, locate the source of your belief. common things include
-            parents, childhood, and society. second, examine the source's
-            authority. lastly, re-examine and upweight or downweight the
-            authority.
+            first, locate the source of your belief. common sources are parents,
+            childhood, and society. second, re-examine the source's authority,
+            and seek evidence to upweight or downweight it.
           </p>
           <p className="exercise-paragraph">
-            for example, where did my insecurity about lacking talent come? it
-            came from a similar insecurity my dad felt. is this relevant? my dad
-            likely got it from harsh competition in his homeland. I don't live
-            there, and I have various achievements, so I don't think this
-            insecurity really applies.
+            for example, I had some insecurity about lacking talent. Thinking a
+            bit more, I realized my dad felt that way from harsh competition in
+            his university, and was the source. was this insecurity still
+            relevant? I don't live there, and I have various achievements.
+            downweighted.
           </p>
           <p className="exercise-paragraph">
-            a second example. I feel insecure about my ethnicity due to how it's
+            I sometimes feel insecure about my ethnicity due to how it's
             portrayed on the news or in jokes society makes. but wait a second,
-            the news does that due to certain agendas of the government and the
-            people in society who makes these kind of jokes are extremely
-            stupid. but it doesn't make much sense to believe someone who is
-            extremely stupid, so therefore I can ignore what they're telling me.
+            the news has agendas of the government irrespective of me and the
+            people in society who makes those jokes are extremely stupid. why
+            believe stupid people? downweighted
           </p>
         </div>
       </div>
