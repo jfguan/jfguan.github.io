@@ -1285,7 +1285,7 @@ const DebugModule = () => {
           <p className="exercise-paragraph">
             ALL beliefs about yourself were GIVEN to you, by someone or
             something repeatedly telling you. beliefs are just an opinion, and
-            therefore easily changed.
+            therefore can be changed.
           </p>
           <p className="exercise-paragraph">
             first, locate the source of your belief. common sources are parents,
