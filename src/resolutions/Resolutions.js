@@ -61,10 +61,10 @@ const MONTHS = [
 
 const CountUpNumber = ({ value }) => {
   const count = useMotionValue(0);
-  const rounded = useTransform(count, Math.round);
+  const rounded = useTransform(count, (v) => v.toFixed(2) + '%');
   const color = useTransform(
-    rounded,
-    (v) => `color-mix(in srgb, var(--green) ${v}%, var(--red) ${100 - v}%)`
+    count,
+    (v) => `color-mix(in srgb, #4B7E14 ${v}%, #4D4D42 ${100 - v}%)`
   );
 
   React.useEffect(() => {
@@ -235,10 +235,10 @@ const HabitsModule = ({ habits, setHabits, completions, setCompletions }) => {
     <div className="habits-module" id="habits">
       <div className="section-title">habits</div>
       <div className="section-explanation">
-        health score (less punishing than streaks) is recency weighted to avoid
-        the feeling of "starting over". <br />
-        to avoid habit collapse, creating a new habit require a previous health
-        score of 95%.
+        to avoid "habit collapse", the health score is recency weighted to avoid
+        the feeling of "starting over", unlike streaks. to ensure solid
+        foundations, creating a new habit require a previous health score over
+        95%.
       </div>
       <AnimatePresence mode="wait">
         {habitModuleState === 'intro' && (
@@ -644,7 +644,6 @@ const HabitsView = ({
                     <CountUpNumber
                       value={service.calculateHabitHealth(habit, completions)}
                     />
-                    %
                   </div>
                 </div>
                 <motion.img
@@ -773,7 +772,7 @@ const HabitsView = ({
 
 const HabitTextInput = ({
   placeholder = '',
-  maxLength = '81',
+  maxLength = '60',
   value,
   onChange,
 }) => (

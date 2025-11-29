@@ -123,7 +123,7 @@ const localService = {
       }
     }
 
-    return Math.round((completedWeight / totalWeight) * 100);
+    return (completedWeight / totalWeight) * 100;
   },
 
   // REWARD DATA

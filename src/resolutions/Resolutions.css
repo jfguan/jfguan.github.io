@@ -346,13 +346,12 @@ body {
 
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  gap: 12px;
   flex-shrink: 0;
+  align-items: center;
 
-  padding-left: 4%;
-  padding-right: 5%;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-left: 3%;
+  padding-right: 2%;
 
   border: 3px solid rgba(var(--black-rgb), 1);
   border-radius: 8px;
@@ -369,36 +368,36 @@ body {
 
 .habit-snippet-box {
   min-width: 0;
-  width: 60%;
+  width: 70%;
 }
 
 .habit-snippet-prompt {
   font-weight: bold;
+  line-height: 1;
 }
 
 .habit-snippet-statement {
   /* border: 1px solid var(--black); */
-  font-size: 14px;
-  line-height: 1.2;
 
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+
+  font-size: 14px;
 }
 
 .habit-health-box {
+  /* border: 1px solid var(--black); */
 }
 
 .habit-health-percentage {
   /* border: 1px solid var(--black); */
   font-weight: 600;
-  font-size: 18px;
-  line-height: 1.2;
-
-  color: color-mix(in srgb, var(--green) 33%, var(--red) 67%);
+  font-size: 14px;
 }
 
 .habit-completion-icon {
-  height: 40%;
+  height: 20px;
   align-self: center;
 
   filter: saturate(3);
@@ -722,6 +721,8 @@ body {
 .debug-hero-image {
   grid-column: 1 / -1;
   margin-bottom: 15px;
+
+  border-radius: 8px;
 }
 
 .exercise-list-box {
