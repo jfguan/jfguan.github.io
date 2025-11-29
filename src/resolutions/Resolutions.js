@@ -1052,7 +1052,6 @@ const AffirmationsModule = () => {
 
   const mediaRecorderRef = React.useRef(null);
   const audioElementRef = React.useRef(new Audio());
-
   const backgroundRainRef = React.useRef(new Audio(backgroundRainAudio));
 
   const startRecording = async () => {
@@ -1127,6 +1126,17 @@ const AffirmationsModule = () => {
   React.useEffect(() => {
     audioElementRef.current.loop = true;
     backgroundRainRef.current.loop = true;
+
+    const audioContext = new AudioContext();
+    const source = audioContext.createMediaElementSource(
+      audioElementRef.current
+    );
+    const delay = audioContext.createDelay(0.1);
+
+    source.connect(delay);
+    delay.connect(audioContext.destination);
+    source.connect(audioContext.destination);
+
     service.getAffirmationsData().then(setAudioUrl);
   }, []);
 
@@ -1145,8 +1155,8 @@ const AffirmationsModule = () => {
       <div className="section">
         <div className="section-title">affirmations</div>
         <div className="section-explanation">
-          record your own affirmation. listen over and over until it becomes
-          you. include the `I am/love/hate` statements and set the volume to be
+          record your own, and listen over and over until it becomes you.
+          include the `I am/love/hate` statements and set the volume to be
           barely audible. audio is stored locally, limited to 15 seconds to
           really focus on one habit at a time.
         </div>
@@ -1310,10 +1320,10 @@ const DebugModule = () => {
           </p>
           <p className="exercise-paragraph">
             I sometimes feel insecure about my ethnicity due to how it's
-            portrayed on the news or in jokes society makes. but wait a second,
-            the news has agendas of the government irrespective of me and the
-            people in society who makes those jokes are extremely stupid. why
-            believe stupid people? downweighted
+            portrayed on the news or in common societal jokes. but wait a
+            second, the news has agendas of the government irrespective of me
+            and the people in society who makes those jokes are extremely
+            stupid. why believe stupid people? downweighted
           </p>
         </div>
       </div>
