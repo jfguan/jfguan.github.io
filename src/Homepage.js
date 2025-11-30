@@ -41,7 +41,8 @@ function Homepage() {
         </Link>
       </div>
       <div className="Homepage-body">
-        A minimalist and opinionated habit tracker
+        A minimalist and opinionated habit tracker, designed from scratch as an
+        first time learning experience in design.
       </div>
     </div>
   );

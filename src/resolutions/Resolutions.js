@@ -1470,7 +1470,7 @@ const AccountModule = ({ user }) => {
     <div className="section">
       <div className="section-title">account</div>
       <div className="section-explanation">
-        settings and preferences - not really any besides login atm lol
+        settings and preferences - only login atm lol
       </div>
       <div className="account-body">
         <p>
