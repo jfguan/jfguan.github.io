@@ -1,6 +1,7 @@
 import './Resolutions.css';
 import './Resolutions.mobile.css';
 import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   motion,
   AnimatePresence,
@@ -17,6 +18,8 @@ import {
   moduleFadeDuration,
 } from './animations';
 import { service } from './service';
+import redCircleIcon from './red_circle.svg';
+import greenCircleIcon from './green_circle.svg';
 import flowers from './flowers.svg';
 import checkIcon from './check.svg';
 import greenCheckIcon from './green_check.svg';
@@ -75,6 +78,7 @@ const CountUpNumber = ({ value }) => {
   return <motion.span style={{ color }}>{rounded}</motion.span>;
 };
 
+// standard green, no color mix
 const CountUpGreen = ({ value, format = Math.round }) => {
   const count = useMotionValue(0);
   const displayed = useTransform(count, format);
@@ -89,18 +93,9 @@ const CountUpGreen = ({ value, format = Math.round }) => {
   );
 };
 
-const InfoOption = ({ text }) => (
-  <motion.div
-    className="info-option"
-    whileHover={{ opacity: hoverFadeOpacity }}
-    transition={{ duration: hoverFadeDuration }}
-  >
-    {text}
-  </motion.div>
-);
-
 const Resolutions = () => {
-  const infoItems = ['read this', 'account'];
+  const location = useLocation();
+  const navigate = useNavigate();
   const [habits, setHabits] = React.useState(null);
   const [completions, setCompletions] = React.useState(null);
 
@@ -154,19 +149,33 @@ const Resolutions = () => {
             className="logo"
             whileHover={{ opacity: hoverFadeOpacity }}
             transition={{ duration: hoverFadeDuration }}
+            onClick={() => navigate('/resolutions/')}
           >
             resolutions
           </motion.div>
           <div className="logo-text">&nbsp;- minimalist habit tracker</div>
         </div>
         <div className="info-options">
-          {infoItems.map((item) => (
-            <InfoOption key={item} text={item} />
-          ))}
+          <motion.div
+            className="info-option"
+            whileHover={{ opacity: hoverFadeOpacity }}
+            transition={{ duration: hoverFadeDuration }}
+          >
+            read this
+          </motion.div>
+          <motion.div
+            className="info-option"
+            whileHover={{ opacity: hoverFadeOpacity }}
+            transition={{ duration: hoverFadeDuration }}
+            onClick={() => navigate('/resolutions/account')}
+          >
+            account
+            <img src={greenCircleIcon} className="account-sync-marker" />
+          </motion.div>
         </div>
       </div>
       <AnimatePresence>
-        {habits.length > 0 && (
+        {location.pathname === '/resolutions' && habits.length > 0 && (
           <motion.div
             className="side-bar"
             variants={fadeInEnterDelay(moduleFadeDuration)}
@@ -194,33 +203,41 @@ const Resolutions = () => {
           variants={fadeIn}
           initial="hidden"
           animate="visible"
-          transition={{ delay: 1.0, duration: 1.0 }}
+          exit="hidden"
+          transition={{ duration: 1.0 }}
+          key={location.pathname}
         >
-          <HabitsModule
-            habits={habits}
-            setHabits={setHabits}
-            completions={completions}
-            setCompletions={setCompletions}
-          />
-          <AnimatePresence>
-            {habits.length > 0 && (
-              <motion.div
-                variants={fadeInEnterDelay(moduleFadeDuration)}
-                initial="initial"
-                animate="enter"
-                exit="exit"
-              >
-                <CalendarModule
-                  habits={habits}
-                  completions={completions}
-                  setCompletions={setCompletions}
-                />
-                <RewardModule />
-                <AffirmationsModule />
-                <DebugModule />
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {location.pathname === '/resolutions/account' ? (
+            <AccountModule />
+          ) : (
+            <>
+              <HabitsModule
+                habits={habits}
+                setHabits={setHabits}
+                completions={completions}
+                setCompletions={setCompletions}
+              />
+              <AnimatePresence>
+                {habits.length > 0 && (
+                  <motion.div
+                    variants={fadeInEnterDelay(moduleFadeDuration)}
+                    initial="initial"
+                    animate="enter"
+                    exit="exit"
+                  >
+                    <CalendarModule
+                      habits={habits}
+                      completions={completions}
+                      setCompletions={setCompletions}
+                    />
+                    <RewardModule />
+                    <AffirmationsModule />
+                    <DebugModule />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </>
+          )}
         </motion.div>
       </AnimatePresence>
     </motion.div>
@@ -409,7 +426,7 @@ const HabitsCreation = ({
           <div className="habit-content-box">
             <p className="habit-prompt">I am</p>
             <HabitTextInput
-              placeholder="energetic and alive"
+              placeholder="high energy, relaxed, and fun to be around"
               value={identityText}
               onChange={(e) => setIdentityText(e.target.value)}
             />
@@ -421,7 +438,7 @@ const HabitsCreation = ({
             />
             <p className="habit-prompt">I hate</p>
             <HabitTextInput
-              placeholder="feeling tired and mind fog"
+              placeholder="being tired and feeling mind fog"
               value={hateText}
               onChange={(e) => setHateText(e.target.value)}
             />
@@ -695,6 +712,7 @@ const HabitsView = ({
             <p className="habit-prompt">I am</p>
             <HabitTextInput
               value={selectedHabit.identityText}
+              placeholder="high energy, relaxed, and fun to be around"
               onChange={(e) =>
                 setSelectedHabit({
                   ...selectedHabit,
@@ -705,6 +723,7 @@ const HabitsView = ({
             <p className="habit-prompt">I love</p>
             <HabitTextInput
               value={selectedHabit.loveText}
+              placeholder="how clear the world feels when I sleep well"
               onChange={(e) =>
                 setSelectedHabit({
                   ...selectedHabit,
@@ -715,6 +734,7 @@ const HabitsView = ({
             <p className="habit-prompt">I hate</p>
             <HabitTextInput
               value={selectedHabit.hateText}
+              placeholder="being tired and feeling mind fog"
               onChange={(e) =>
                 setSelectedHabit({
                   ...selectedHabit,
@@ -725,6 +745,7 @@ const HabitsView = ({
             <p className="habit-prompt">I will</p>
             <HabitTextInput
               value={selectedHabit.actionText}
+              placeholder="sleep every day at 10pm"
               onChange={(e) =>
                 setSelectedHabit({
                   ...selectedHabit,
@@ -822,8 +843,8 @@ const CalendarModule = ({ habits, completions, setCompletions }) => {
       <div className="section">
         <div className="section-title">calendar</div>
         <div className="section-explanation">
-          visualization of your progress - see how far you've come! the habit
-          squares are checkable as well.
+          visualization of your progress - see how far you've come! the
+          individual habit squares are interactable.
         </div>
         <div className="habit-calendar-box">
           {habits.map((habit) => (
@@ -1330,4 +1351,42 @@ const DebugModule = () => {
     </div>
   );
 };
+
+const AccountModule = () => {
+  return (
+    <div className="section">
+      <div className="section-title">account</div>
+      <div className="account-body">
+        <p>
+          <b>data storage</b> <br />
+          all data is locally with web storage API OR synced in the cloud via
+          firebase/google auth via login
+        </p>
+        <p>
+          <b>data storage</b> <br />
+          all data is locally with web storage API OR synced in the cloud via
+          firebase/google auth via login
+        </p>
+        <p>
+          <b>selected data sync method:</b> <br />
+          local
+        </p>
+        <p>
+          <b>note</b> <br />
+          this project is completely free! because it is supported by the free
+          tier of firebase, I reserve the right to remove accounts, prioritizing
+          the inactive to protect my wallet 😭. thanks!
+        </p>
+        <p>
+          <b>strict mode</b> <br />
+          the last created habit's health score must be over 95% before creating
+          a new habit. there are easy ways around this up to the user to find.
+          the app is opinionated based on my experiences, but people should be
+          able to do what they want.
+        </p>
+      </div>
+    </div>
+  );
+};
+
 export default Resolutions;

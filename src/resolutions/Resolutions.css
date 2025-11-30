@@ -67,15 +67,23 @@ body {
 }
 
 .info-option {
+  /* border: 1px solid var(--black); */
   /* Layout */
-  display: inline-block;
   margin-left: 12px;
+  display: flex;
 
   /* Appearance */
   border-bottom: 1px solid var(--black);
 
   /* Interaction */
   cursor: pointer;
+}
+
+.account-sync-marker {
+  /* border: 1px solid var(--black); */
+  width: 9px;
+  margin-left: 3px;
+  margin-bottom: -1px;
 }
 
 .info-option:last-child {
@@ -724,6 +732,24 @@ body {
   margin-bottom: 15px;
 
   border-radius: 8px;
+}
+
+.exercise-list-box {
+  /* border: 1px solid var(--black); */
+  grid-column: 1 / -1;
+
+  line-height: 2;
+}
+
+.exercise-list-box p {
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+/* ACCOUNT SECTION ------------------------------------- */
+.account-body {
+  grid-column: 1 / -1;
+  font-size: 12px;
 }
 
 .exercise-list-box {

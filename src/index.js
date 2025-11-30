@@ -28,6 +28,12 @@ const router = createBrowserRouter([
   {
     path: '/resolutions',
     element: <Resolutions />,
+    children: [
+      {
+        path: 'account',
+        element: <Resolutions />,
+      },
+    ],
   },
 ]);
 

@@ -45,9 +45,9 @@
 
   .app-body {
     /* Layout */
-    width: 95%;
-    margin-right: 0vw;
-    padding-left: 2vw;
+    width: 95vw;
+    padding-left: 1vw;
+    padding-right: 1vw;
   }
 
   .section {
@@ -147,12 +147,16 @@
     width: 95%;
     margin-bottom: 2%;
 
-    gap: 0;
+    /* gap: 0; */
 
     padding-left: 4%;
     padding-right: 4%;
     padding-top: 6px;
     padding-bottom: 6px;
+  }
+
+  .habit-snippet-box {
+    /* width: 50%; */
   }
 
   .habit-snippet-statement {
