@@ -30,6 +30,7 @@ import {
   signInWithPopup,
   signOut,
   onAuthStateChanged,
+  MS_DAY,
 } from './service';
 // Icons - UI controls
 import checkIcon from './check.svg';
@@ -73,7 +74,6 @@ const HABIT_MODULE_STATES = {
 
 const DEFAULT_HABIT_DURATION = 90;
 const HABIT_HEALTH_THRESHOLD = 95;
-const MS_DAY = 86400000;
 const DATE_FORMAT_LOCALE = 'en-CA';
 const DURATION_INPUT_MAX_LENGTH_SHORT = 3;
 const DURATION_INPUT_MAX_LENGTH = 4;

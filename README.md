@@ -11,15 +11,42 @@ npm start
 
 ## Deployment
 
-This project uses GitHub Pages with React Router for client-side routing. The deployment process requires a special configuration:
+This project uses GitHub Pages with React Router for client-side routing. React apps require additional steps for deployment:
 
-1. Follow the [Create React App deployment guide](https://create-react-app.dev/docs/deployment/#github-pages)
-2. After deploying to the `gh-pages` branch, create a `404.html` file that contains the same content as `index.html`
+### Setup (one-time)
 
-### Why the 404.html workaround?
+1. Add `homepage` to `package.json`:
+   ```json
+   {
+     "homepage": "https://jfguan.github.io"
+   }
+   ```
 
-GitHub Pages serves static files and doesn't know about React Router's routes. When users access a nested route (e.g., `/resolutions/account`), GitHub Pages looks for a physical file at that path. Since it doesn't exist, it returns a 404.
+2. Install gh-pages:
+   ```bash
+   npm install --save-dev gh-pages
+   ```
 
-By placing an `index.html` copy at `404.html`, GitHub Pages redirects all 404 errors to this file. The HTML includes a script that parses the originally-requested URL from the referrer and passes it to React Router, allowing the app to load the correct component.
+3. Add deploy scripts to `package.json`:
+   ```json
+   {
+     "scripts": {
+       "predeploy": "npm run build",
+       "deploy": "gh-pages -d build"
+     }
+   }
+   ```
 
-This is a standard workaround for SPAs (Single Page Applications) on static hosting.
+4. Configure GitHub Pages in repository Settings:
+   - Set Source to `gh-pages` branch
+   - Set Folder to `/ (root)`
+
+### Deploy
+
+```bash
+npm run deploy
+```
+
+Then copy `build/index.html` to `build/404.html` and redeploy for React Router to work on nested routes.
+
+**Why?** GitHub Pages serves static files and doesn't understand React Router. By placing `index.html` at `404.html`, GitHub Pages serves it for all 404 errors, allowing React to handle routing client-side.
