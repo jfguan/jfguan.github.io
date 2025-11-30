@@ -468,6 +468,13 @@ const HabitsCreation = ({
                 difficulty
               </li>
             </ul>
+            <div className="suggestions-subtitle">margin of error</div>
+            <ul className="suggestions-list">
+              <li>
+                sick days, going out, vacations, give yourself slack upfront to
+                prevent it from being impossible.
+              </li>
+            </ul>
           </div>
         </div>
         <div className="habit-box">

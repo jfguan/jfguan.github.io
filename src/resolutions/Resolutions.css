@@ -255,7 +255,7 @@ body {
 
 .suggestions-title {
   /* Layout */
-  margin-bottom: 10%;
+  margin-bottom: 6%;
 
   /* Typography */
   font-family: 'Roboto Serif';
@@ -272,7 +272,7 @@ body {
 
 .suggestions-list {
   /* Layout */
-  margin-bottom: 30px;
+  margin-bottom: 15px;
 
   /* Typography */
   font-size: 14px;
