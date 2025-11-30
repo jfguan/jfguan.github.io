@@ -860,7 +860,7 @@ body {
   grid-column: 1 / -1;
 
   /* Typography */
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .login-link {
@@ -870,4 +870,12 @@ body {
 
   /* Interaction */
   cursor: pointer;
+}
+
+.about-info-body {
+  /* Layout */
+  grid-column: 1 / -1;
+
+  /* Typography */
+  font-size: 14px;
 }

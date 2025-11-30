@@ -30,6 +30,10 @@ const router = createBrowserRouter([
     element: <Resolutions />,
     children: [
       {
+        path: 'read-this',
+        element: <Resolutions />,
+      },
+      {
         path: 'account',
         element: <Resolutions />,
       },

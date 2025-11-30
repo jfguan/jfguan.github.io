@@ -62,6 +62,7 @@ import landscape from './landscape.jpg';
 // Route constants
 const ROUTES = {
   HOME: '/resolutions',
+  READ_THIS: '/resolutions/read-this',
   ACCOUNT: '/resolutions/account',
 };
 
@@ -173,6 +174,7 @@ const Resolutions = () => {
             className="info-option"
             whileHover={{ opacity: hoverFadeOpacity }}
             transition={{ duration: hoverFadeDuration }}
+            onClick={() => navigate(ROUTES.READ_THIS)}
           >
             read this
           </motion.div>
@@ -223,7 +225,9 @@ const Resolutions = () => {
           transition={{ duration: moduleFadeDuration }}
           key={location.pathname}
         >
-          {location.pathname === ROUTES.ACCOUNT ? (
+          {location.pathname === ROUTES.READ_THIS ? (
+            <ReadThisModule />
+          ) : location.pathname === ROUTES.ACCOUNT ? (
             <AccountModule user={user} />
           ) : (
             <>
@@ -1503,6 +1507,167 @@ const DebugModule = () => {
             holder of the change for accountability.
           </p>
         </div>
+      </div>
+    </div>
+  );
+};
+
+const ReadThisModule = () => {
+  return (
+    <div className="section">
+      <div className="section-title">opinionated habit tracking</div>
+      <div className="section-explanation">
+        all failures are due to system level issues, not willpower
+      </div>
+      <div className="about-info-body">
+        <p>
+          I’ve read Atomic Habits and <i>way too many</i> productivity books,
+          and if you’re like me, maybe you’ve wanted to drink more water, sleep
+          on time, read, work out, etc. but then life always gets messy and
+          things fall by the wayside. After four years, I had several critical
+          perspective shifts at the meta level:
+        </p>
+
+        <ul>
+          <li>Habits are not separate entities; they are you.</li>
+          <li>Respect the mental stack to avoid habit collapse.</li>
+          <li>Prioritize the critical habits.</li>
+          <li>Account for slack.</li>
+          <li>Experiment and debug.</li>
+        </ul>
+
+        <b>I am the Habit</b>
+        <p>
+          I intuitively but incorrectly used to view myself and a habit as
+          separate entities. This is counterproductive. The goal of repeated
+          habit action, over and over, is to fundamentally change how you view
+          yourself.
+        </p>
+        <p>
+          It is the difference between “I can’t smoke anymore” versus “I don’t
+          smoke; I’m not a smoker.” The second is much more powerful because I
+          am no longer fighting myself - I don’t like it in the first place.
+        </p>
+
+        <b>Respect the Mental Stack</b>
+        <p>
+          I was very ambitious with my habits, trying to do five new habits at
+          once, with everything collapsing after two months. Your time, energy,
+          and focus are extremely limited - if any are lacking, it’s really
+          hard. If I’m tired after working out, it’s really hard to read,
+          especially if the book is Marcus Aurelius’ Meditations (didn’t
+          understand shit).
+        </p>
+        <p>
+          Overloading leads to the dreaded habit collapse. If it’s not
+          automatic, it’s going to get dropped. The 21 days to form a habit is a
+          myth - habits take 18 to 254 days depending on the difficulty.
+          Failures spiral, getting back to where we were seems too hard, and we
+          quit. It must be as easy as possible to pick back up - start slow and
+          move on only when a habit requires minimal maintenance. It’s very
+          straightforward, but very difficult to manage ego and patience.
+        </p>
+
+        <b>Prioritize the Pareto</b>
+        <p>
+          If we can at most take on one, new habit at a time, we must prioritize
+          ruthlessly for the Pareto habits that provide 80% of the benefits, for
+          example, meta-habits. These are habits that give back time and energy,
+          like sleeping, exercising, or eating correctly.
+        </p>
+        <p>
+          Figure out the single most important habit right now. It’s not
+          drinking more water or stretching. Those are nice but come later. What
+          is the single habit you will always do — one that reduces time and
+          energy from everything else.
+        </p>
+
+        <b>Giving Enough Slack</b>
+        <p>
+          Habit collapse can also occur from vacations, sick weeks, busy work
+          periods, social events, or any irregular disruption. It’s very
+          important to set flexible rules upfront.
+        </p>
+        <p>
+          If I want to sleep on time at 10 p.m., it’s extremely restricting to
+          my social life. To be realistic, I adjust the rules. If I’m hanging
+          out with people, I can sleep before 12 a.m. If I’m going out, I can
+          sleep before 2 a.m.
+        </p>
+        <p>
+          Rules have to account for life’s complexity — if they’re not
+          realistic, it’s going to be extremely hard.
+        </p>
+
+        <b>Experimenting and Debugging</b>
+        <p>
+          Lastly, I posit habits have nothing to do with willpower. The only
+          factors are the surrounding systems of your life. Successful habits
+          simply happen through adjusting the system’s friction, which requires
+          a lot of trial and error.
+        </p>
+        <p>
+          From my experience, adjusting the cue (time or place trigger) is
+          $\sim90\%$ of the struggle. I want more food after seeing Seventh
+          Street Burger, or start social media brain rotting if I sit on my
+          couch. Common ways to adjust:
+        </p>
+
+        <ul>
+          <li>
+            Increase friction by hiding things — decrease by putting them front
+            and center. Out of sight, out of mind. For example, I don’t keep my
+            phone on my work desk.
+          </li>
+          <li>
+            Reduce friction via habit difficulty. Meditate and journal for one
+            minute instead of 10 minutes every day. I removed the cushions on my
+            couch to make it uncomfortable and increase friction.
+          </li>
+          <li>
+            Reduce friction via one-time purchases. Gym clothes, a better
+            mattress, remote scheduled light bulbs all help. Invest for critical
+            habits.
+          </li>
+          <li>
+            Reduce friction by accounting for prerequisites. If I work without
+            free time, I binge my phone past my bedtime. So I give myself free
+            time. If my ego is too big to turn down the difficulty, I try to
+            find why I attribute my self-value to difficult things.
+          </li>
+        </ul>
+
+        <p>
+          Experiment and improve your systems to make your focused habit easy.
+        </p>
+
+        <b>Thoughts on other habit apps</b>
+        <p>I made this app because other apps don’t target the meta issues.</p>
+        <p>
+          They allow the user to create unlimited habits, which leads to no
+          prioritization, no experimentation, and ultimately habit collapse.
+        </p>
+        <p>
+          Second, they mostly use streaks, which exacerbates habit collapse. As
+          soon as you lose a streak, all progress feels lost, and I give up. To
+          fix this, I adapted Polar Habits’ momentum system to my own health
+          percentage score.
+        </p>
+        <p>
+          The health score is the percentage of days completed successfully in
+          the set habit window, i.e., 30 days. If you miss one day, your
+          progress doesn’t go to zero. It’s also recency weighted to avoid
+          feeling stuck. If I want to hit 30 days in a row, missing one day
+          would the score stuck at 97% until 30 days later. Instead, misses
+          further back in the window count for less, so getting back on track
+          feels like you’re still making progress.
+        </p>
+        <p>
+          I made this for myself and don’t plan on monetizing, and I hope it’s
+          useful for you too.
+        </p>
+
+        <p>Thanks for reading!</p>
       </div>
     </div>
   );
