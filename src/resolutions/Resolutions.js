@@ -1258,10 +1258,14 @@ const AffirmationsModule = () => {
       <div className="section">
         <div className="section-title">affirmations</div>
         <div className="section-explanation">
-          record your own, and listen over and over until it becomes you.
-          include the `I am/love/hate` statements and set the volume to be
-          barely audible. audio is stored locally, limited to 15 seconds to
-          really focus on one habit at a time.
+          record your own{' '}
+          <a href="https://smallconcepts.substack.com/p/affirmations-dont-work">
+            affirmations
+          </a>{' '}
+          and listen to them over and over until it becomes you. include the `I
+          am/love/hate` statements and set the volume to be barely audible.
+          audio is stored locally, limited to 15 seconds to really focus on one
+          habit at a time.
         </div>
         <div className="habits-image-container">
           <img src={affirmationsHero} className="habits-image"></img>
@@ -1368,7 +1372,7 @@ const DebugModule = () => {
         </div>
         <img src={landscape} className="debug-hero-image" />
         <div className="exercise-list-box">
-          <h7>1. stopping consumption - maggot visualization</h7>
+          <h6>1. stopping consumption - maggot visualization</h6>
           <p className="exercise-paragraph">
             take a piece of food, drink, or phone, etc.
           </p>
@@ -1380,7 +1384,7 @@ const DebugModule = () => {
           <p className="exercise-paragraph">
             associate the action with the disgust, and naturally stop.
           </p>
-          <h7>3. five whys - classic drilldown</h7>
+          <h6>3. five whys - classic drilldown</h6>
           <p className="exercise-paragraph">
             find out the root cause of an issue by asking `why` five times or
             more.
@@ -1403,7 +1407,7 @@ const DebugModule = () => {
             conclusion: games are fun and simulate achievement. I am an
             independent adult separate from my parents now.
           </p>
-          <h7>2. change how you view yourself - authority questioning</h7>
+          <h6>2. change how you view yourself - authority questioning</h6>
           <p className="exercise-paragraph">
             ALL beliefs about yourself were GIVEN to you, by someone or
             something repeatedly telling you. beliefs are just an opinion, and
@@ -1427,6 +1431,25 @@ const DebugModule = () => {
             second, the news has agendas of the government irrespective of me
             and the people in society who makes those jokes are extremely
             stupid. why believe stupid people? downweighted
+          </p>
+          <h6>4. habit contract - stay committed</h6>
+          <p className="exercise-paragraph">
+            <a href="https://smallconcepts.substack.com/p/compounding-habits-and-habit-contracts">
+              a habit contract
+            </a>{' '}
+            is a contract you make with your friend or your mom. for your most
+            important habit, text your friend that the conditions, and venmo
+            them money whenever you don't complete it.
+          </p>
+          <p className="exercise-paragraph">
+            tune the cash amount to painful, but not too painful. your word is
+            your honor, so any cheating is just cheating yourself and your
+            friend.
+          </p>
+          <p className="exercise-paragraph">
+            you can and should adjust the contract should it be too difficult or
+            easy. the only catch is that in adjusting it you must notify the
+            holder of the change for accountability.
           </p>
         </div>
       </div>

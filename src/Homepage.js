@@ -21,15 +21,6 @@ function Homepage() {
         elo based match structure
       </div>
       <div className="Homepage-subtitle">
-        <Link to="/habitgambling" className="Homepage-link">
-          Habit Gambling
-        </Link>
-      </div>
-      <div className="Homepage-body">
-        Earn money by completing my habits, with a random multiplier on each
-        reward
-      </div>
-      <div className="Homepage-subtitle">
         <Link to="/24game" className="Homepage-link">
           24 Game
         </Link>
