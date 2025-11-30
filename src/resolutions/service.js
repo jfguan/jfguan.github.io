@@ -180,31 +180,57 @@ export const localService = {
 export const cloudService = {
   unsubscribers: [],
 
-  init: (db, userId, callbacks) => {
+  init: async (db, userId, callbacks) => {
     cloudService.db = db;
     cloudService.userId = userId;
 
-    // Subscribe to habits
+    // Fetch initial data immediately to prevent stale local data from overwriting cloud
+    const habitsDoc = await getDoc(doc(db, 'users', userId, 'habits', 'data'));
+    const completionsDoc = await getDoc(
+      doc(db, 'users', userId, 'completions', 'data')
+    );
+    const rewardDoc = await getDoc(doc(db, 'users', userId, 'reward', 'data'));
+
+    callbacks.setHabits(
+      habitsDoc.exists() ? habitsDoc.data().habits || [] : []
+    );
+    callbacks.setCompletions(
+      completionsDoc.exists() ? completionsDoc.data().completions || {} : {}
+    );
+    callbacks.setReward(
+      rewardDoc.exists() ? rewardDoc.data() : { balance: 0, item: '', cost: '' }
+    );
+
+    // Then set up subscriptions for real-time updates
     const habitsUnsub = onSnapshot(
       doc(db, 'users', userId, 'habits', 'data'),
       (docSnap) => {
-        if (docSnap.exists()) {
-          callbacks.setHabits(docSnap.data().habits || []);
-        }
+        callbacks.setHabits(
+          docSnap.exists() ? docSnap.data().habits || [] : []
+        );
       }
     );
     cloudService.unsubscribers.push(habitsUnsub);
 
-    // Subscribe to completions
     const completionsUnsub = onSnapshot(
       doc(db, 'users', userId, 'completions', 'data'),
       (docSnap) => {
-        if (docSnap.exists()) {
-          callbacks.setCompletions(docSnap.data().completions || {});
-        }
+        callbacks.setCompletions(
+          docSnap.exists() ? docSnap.data().completions || {} : {}
+        );
       }
     );
     cloudService.unsubscribers.push(completionsUnsub);
+
+    const rewardUnsub = onSnapshot(
+      doc(db, 'users', userId, 'reward', 'data'),
+      (docSnap) => {
+        callbacks.setReward(
+          docSnap.exists() ? docSnap.data() : { balance: 0, item: '', cost: '' }
+        );
+      }
+    );
+    cloudService.unsubscribers.push(rewardUnsub);
   },
 
   cleanup: () => {
@@ -239,17 +265,23 @@ export const cloudService = {
     return updatedHabits;
   },
 
-  toggleHabitCompletion: async (habitId, date, completions) => {
+  toggleHabitCompletion: async (habitId, date, completions, setCompletions) => {
     const dateStr = date.toLocaleDateString('en-CA');
-    const isCompleted = completions[habitId]?.[dateStr];
+    const updatedCompletions = { ...completions };
 
-    await updateDoc(
+    if (!updatedCompletions[habitId]) {
+      updatedCompletions[habitId] = {};
+    }
+
+    if (updatedCompletions[habitId][dateStr]) {
+      delete updatedCompletions[habitId][dateStr];
+    } else {
+      updatedCompletions[habitId][dateStr] = true;
+    }
+
+    await setDoc(
       doc(cloudService.db, 'users', cloudService.userId, 'completions', 'data'),
-      {
-        [`completions.${habitId}.${dateStr}`]: isCompleted
-          ? deleteField()
-          : true,
-      }
+      { completions: updatedCompletions }
     );
   },
 

@@ -18,8 +18,14 @@ import {
   moduleFadeDuration,
 } from './animations';
 import { service, localService, cloudService } from './service';
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
+import { initializeApp } from 'firebase/app';
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+  onAuthStateChanged,
+} from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import redCircleIcon from './red_circle.svg';
 import greenCircleIcon from './green_circle.svg';
@@ -107,51 +113,57 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-let app;
-if (!firebase.apps.length) {
-  app = firebase.initializeApp(firebaseConfig);
-} else {
-  app = firebase.app();
-}
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
 const Resolutions = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [habits, setHabits] = React.useState(null);
   const [completions, setCompletions] = React.useState(null);
+  const [rewardData, setRewardData] = React.useState(null);
   const [user, setUser] = React.useState(null);
   const db = getFirestore(app);
+
+  const setReward = (data) => {
+    setRewardData(data);
+  };
 
   // Service selection: cloudService when logged in, localService when logged out
   // cloudService/localService used for: habits, completions, rewards
   // affirmations always uses localService
   const currentService = user ? cloudService : localService;
   React.useEffect(() => {
-    const unregisterAuthObserver = firebase
-      .auth()
-      .onAuthStateChanged((user) => {
-        setUser(user);
+    const unregisterAuthObserver = onAuthStateChanged(auth, (user) => {
+      setUser(user);
 
-        if (user) {
-          // Logged in - init cloud subscriptions
-          cloudService.init(db, user.uid, { setHabits, setCompletions });
-        } else {
-          // Logged out - cleanup and load from localStorage
-          cloudService.cleanup();
-          Promise.all([
-            localService.getHabits(),
-            localService.getCompletions(),
-          ]).then(([h, c]) => {
-            setHabits(h);
-            setCompletions(c);
-          });
-        }
-      });
+      if (user) {
+        // Logged in - init cloud subscriptions
+        cloudService.init(db, user.uid, {
+          setHabits,
+          setCompletions,
+          setReward,
+        });
+      } else {
+        // Logged out - cleanup and load from localStorage
+        cloudService.cleanup();
+        Promise.all([
+          localService.getHabits(),
+          localService.getCompletions(),
+          localService.getRewardData(),
+        ]).then(([h, c, r]) => {
+          setHabits(h);
+          setCompletions(c);
+          setRewardData(r);
+        });
+      }
+    });
     return () => unregisterAuthObserver();
   }, []);
 
   // return loading if not ready
-  if (!habits || !completions) return <div>Loading...</div>;
+  if (!habits || !completions || !rewardData)
+    return <div className="loading-screen">Loading...</div>;
 
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
@@ -212,7 +224,10 @@ const Resolutions = () => {
             onClick={() => navigate('/resolutions/account')}
           >
             account
-            <img src={greenCircleIcon} className="account-sync-marker" />
+            <img
+              src={user ? greenCircleIcon : redCircleIcon}
+              className="account-sync-marker"
+            />
           </motion.div>
         </div>
       </div>
@@ -274,7 +289,10 @@ const Resolutions = () => {
                       setCompletions={setCompletions}
                       currentService={currentService}
                     />
-                    <RewardModule currentService={currentService} />
+                    <RewardModule
+                      currentService={currentService}
+                      initialRewardData={rewardData}
+                    />
                     <AffirmationsModule />
                     <DebugModule />
                   </motion.div>
@@ -663,7 +681,7 @@ const HabitsView = ({
                 src={leftArrow}
                 whileHover={{ opacity: hoverFadeOpacity }}
                 transition={{ duration: hoverFadeDuration }}
-                class="date-selector-arrow"
+                className="date-selector-arrow"
                 onClick={handlePreviousDay}
               ></motion.img>
               <div className="date-selector-inputs">
@@ -701,7 +719,7 @@ const HabitsView = ({
                 src={rightArrow}
                 whileHover={{ opacity: hoverFadeOpacity }}
                 transition={{ duration: hoverFadeDuration }}
-                class="date-selector-arrow"
+                className="date-selector-arrow"
                 onClick={handleNextDay}
               ></motion.img>
             </div>
@@ -970,16 +988,11 @@ const CalendarModule = ({
                               className={`calendar-day ${isCompleted ? 'filled' : ''}`}
                               onClick={() => {
                                 const date = new Date(year, index, day);
-                                const updatedCompletions =
-                                  currentService.toggleHabitCompletion(
-                                    habit.id,
-                                    date,
-                                    completions,
-                                    setCompletions
-                                  );
-                                setCompletions(updatedCompletions);
-                                currentService.saveCompletions(
-                                  updatedCompletions
+                                currentService.toggleHabitCompletion(
+                                  habit.id,
+                                  date,
+                                  completions,
+                                  setCompletions
                                 );
                               }}
                             />
@@ -998,11 +1011,11 @@ const CalendarModule = ({
   );
 };
 
-const RewardModule = ({ currentService }) => {
-  const [balance, setBalance] = React.useState(0);
+const RewardModule = ({ currentService, initialRewardData }) => {
+  const [balance, setBalance] = React.useState(initialRewardData.balance);
   const [multiplier, setMultiplier] = React.useState(1);
-  const [item, setItem] = React.useState('');
-  const [cost, setCost] = React.useState('0');
+  const [item, setItem] = React.useState(initialRewardData.item);
+  const [cost, setCost] = React.useState(initialRewardData.cost);
 
   const balanceInputRef = React.useRef(null);
   const balanceMotion = useMotionValue(balance);
@@ -1017,15 +1030,16 @@ const RewardModule = ({ currentService }) => {
   const itemInputPlaceholder = 'a tank air halter top';
 
   React.useEffect(() => {
-    currentService.getRewardData().then((data) => {
-      setBalance(data.balance);
-      setItem(data.item);
-      setCost(data.cost);
-    });
-  }, []);
+    setBalance(initialRewardData.balance);
+    setItem(initialRewardData.item);
+    setCost(initialRewardData.cost);
+  }, [initialRewardData]);
 
   React.useEffect(() => {
-    currentService.saveRewardData({ balance, item, cost });
+    const timer = setTimeout(() => {
+      currentService.saveRewardData({ balance, item, cost });
+    }, 2000);
+    return () => clearTimeout(timer);
   }, [balance, item, cost]);
 
   React.useEffect(() => {
@@ -1422,11 +1436,12 @@ const DebugModule = () => {
 
 const AccountModule = ({ user }) => {
   const handleLogin = () => {
-    firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider());
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider);
   };
 
   const handleLogout = () => {
-    firebase.auth().signOut();
+    signOut(auth);
   };
   return (
     <div className="section">
@@ -1440,10 +1455,10 @@ const AccountModule = ({ user }) => {
             <b>google account - </b>{' '}
             {user ? (
               <>
-                {user.email} -{' '}
                 <span className="login-link" onClick={handleLogout}>
                   logout
-                </span>
+                </span>{' '}
+                - {user.email}
               </>
             ) : (
               <span className="login-link" onClick={handleLogin}>
