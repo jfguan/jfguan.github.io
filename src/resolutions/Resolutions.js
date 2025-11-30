@@ -286,7 +286,7 @@ const HabitsModule = ({
       <div className="section-explanation">
         to avoid habit collapse, the health score is recency weighted to avoid
         the feeling of "starting over", an issue with streaks. for solid
-        foundations, creating a new habit require a previous health score over
+        foundations, creating a new habit requires a previous health score over
         95%.
       </div>
       <AnimatePresence mode="wait">
