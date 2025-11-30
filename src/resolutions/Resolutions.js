@@ -17,7 +17,10 @@ import {
   hoverFadeOpacity,
   moduleFadeDuration,
 } from './animations';
-import { service } from './service';
+import { service, localService, cloudService } from './service';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import { getFirestore } from 'firebase/firestore';
 import redCircleIcon from './red_circle.svg';
 import greenCircleIcon from './green_circle.svg';
 import flowers from './flowers.svg';
@@ -93,19 +96,58 @@ const CountUpGreen = ({ value, format = Math.round }) => {
   );
 };
 
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: 'AIzaSyCzCe2TiOCupH84FxClAAVdEJp9BuWedFI',
+  authDomain: 'habitgambling.firebaseapp.com',
+  projectId: 'habitgambling',
+  storageBucket: 'habitgambling.appspot.com',
+  messagingSenderId: '60788841107',
+  appId: '1:60788841107:web:8affc98f8c54619fd40b66',
+};
+
+// Initialize Firebase
+let app;
+if (!firebase.apps.length) {
+  app = firebase.initializeApp(firebaseConfig);
+} else {
+  app = firebase.app();
+}
+
 const Resolutions = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [habits, setHabits] = React.useState(null);
   const [completions, setCompletions] = React.useState(null);
+  const [user, setUser] = React.useState(null);
+  const db = getFirestore(app);
 
+  // Service selection: cloudService when logged in, localService when logged out
+  // cloudService/localService used for: habits, completions, rewards
+  // affirmations always uses localService
+  const currentService = user ? cloudService : localService;
   React.useEffect(() => {
-    Promise.all([service.getHabits(), service.getCompletions()]).then(
-      ([h, c]) => {
-        setHabits(h);
-        setCompletions(c);
-      }
-    );
+    const unregisterAuthObserver = firebase
+      .auth()
+      .onAuthStateChanged((user) => {
+        setUser(user);
+
+        if (user) {
+          // Logged in - init cloud subscriptions
+          cloudService.init(db, user.uid, { setHabits, setCompletions });
+        } else {
+          // Logged out - cleanup and load from localStorage
+          cloudService.cleanup();
+          Promise.all([
+            localService.getHabits(),
+            localService.getCompletions(),
+          ]).then(([h, c]) => {
+            setHabits(h);
+            setCompletions(c);
+          });
+        }
+      });
+    return () => unregisterAuthObserver();
   }, []);
 
   // return loading if not ready
@@ -204,11 +246,11 @@ const Resolutions = () => {
           initial="hidden"
           animate="visible"
           exit="hidden"
-          transition={{ duration: 1.0 }}
+          transition={{ duration: moduleFadeDuration }}
           key={location.pathname}
         >
           {location.pathname === '/resolutions/account' ? (
-            <AccountModule />
+            <AccountModule user={user} />
           ) : (
             <>
               <HabitsModule
@@ -216,6 +258,7 @@ const Resolutions = () => {
                 setHabits={setHabits}
                 completions={completions}
                 setCompletions={setCompletions}
+                currentService={currentService}
               />
               <AnimatePresence>
                 {habits.length > 0 && (
@@ -229,8 +272,9 @@ const Resolutions = () => {
                       habits={habits}
                       completions={completions}
                       setCompletions={setCompletions}
+                      currentService={currentService}
                     />
-                    <RewardModule />
+                    <RewardModule currentService={currentService} />
                     <AffirmationsModule />
                     <DebugModule />
                   </motion.div>
@@ -244,7 +288,13 @@ const Resolutions = () => {
   );
 };
 
-const HabitsModule = ({ habits, setHabits, completions, setCompletions }) => {
+const HabitsModule = ({
+  habits,
+  setHabits,
+  completions,
+  setCompletions,
+  currentService,
+}) => {
   const initialModule = habits.length === 0 ? 'intro' : 'view';
   const [habitModuleState, setHabitModuleState] = React.useState(initialModule);
 
@@ -269,6 +319,7 @@ const HabitsModule = ({ habits, setHabits, completions, setCompletions }) => {
             setHabits={setHabits}
             completions={completions}
             setCompletions={setCompletions}
+            currentService={currentService}
           />
         )}
         {habitModuleState === 'view' && (
@@ -279,6 +330,7 @@ const HabitsModule = ({ habits, setHabits, completions, setCompletions }) => {
             setHabits={setHabits}
             completions={completions}
             setCompletions={setCompletions}
+            currentService={currentService}
           />
         )}
       </AnimatePresence>
@@ -353,6 +405,7 @@ const HabitsCreation = ({
   setHabits,
   completions,
   setCompletions,
+  currentService,
 }) => {
   const [identityText, setIdentityText] = React.useState('');
   const [loveText, setLoveText] = React.useState('');
@@ -371,8 +424,12 @@ const HabitsCreation = ({
       last_modified_ts: Date.now(),
     };
 
-    service.addHabit(newHabit, habits, setHabits);
-    service.createHabitCompletions(newHabit.id, completions, setCompletions);
+    currentService.addHabit(newHabit, habits, setHabits);
+    currentService.createHabitCompletions(
+      newHabit.id,
+      completions,
+      setCompletions
+    );
     setHabitModuleState('view');
   };
 
@@ -493,6 +550,7 @@ const HabitsView = ({
   setHabits,
   completions,
   setCompletions,
+  currentService,
 }) => {
   const [selectedDate, setSelectedDate] = React.useState(new Date());
 
@@ -563,12 +621,12 @@ const HabitsView = ({
   }, [selectedIndex, habits]);
 
   const handleSave = () => {
-    service.updateHabit(selectedHabit, habits, setHabits);
+    currentService.updateHabit(selectedHabit, habits, setHabits);
   };
 
   const handleDelete = () => {
     const habitId = habits[selectedIndex].id;
-    service.deleteHabit(habitId, habits, setHabits);
+    currentService.deleteHabit(habitId, habits, setHabits);
 
     const newIndex = Math.max(0, selectedIndex - 1);
     setSelectedIndex(newIndex);
@@ -586,7 +644,7 @@ const HabitsView = ({
 
   const primaryHabitHealth =
     habits.length > 0
-      ? service.calculateHabitHealth(habits[0], completions)
+      ? currentService.calculateHabitHealth(habits[0], completions)
       : 0;
 
   return (
@@ -663,7 +721,10 @@ const HabitsView = ({
                   <div className="habit-snippet-prompt">health</div>
                   <div className="habit-health-percentage">
                     <CountUpNumber
-                      value={service.calculateHabitHealth(habit, completions)}
+                      value={currentService.calculateHabitHealth(
+                        habit,
+                        completions
+                      )}
                     />
                   </div>
                 </div>
@@ -673,7 +734,7 @@ const HabitsView = ({
                   transition={{ duration: hoverFadeDuration }}
                   className="habit-completion-icon"
                   onClick={() =>
-                    service.toggleHabitCompletion(
+                    currentService.toggleHabitCompletion(
                       habit.id,
                       selectedDate,
                       completions,
@@ -811,7 +872,12 @@ const HabitTextInput = ({
   />
 );
 
-const CalendarModule = ({ habits, completions, setCompletions }) => {
+const CalendarModule = ({
+  habits,
+  completions,
+  setCompletions,
+  currentService,
+}) => {
   const year = new Date().getFullYear();
   const [openCalendars, setOpenCalendars] = React.useState(
     Object.fromEntries(habits.map((h) => [h.id, true]))
@@ -905,14 +971,16 @@ const CalendarModule = ({ habits, completions, setCompletions }) => {
                               onClick={() => {
                                 const date = new Date(year, index, day);
                                 const updatedCompletions =
-                                  service.toggleHabitCompletion(
+                                  currentService.toggleHabitCompletion(
                                     habit.id,
                                     date,
                                     completions,
                                     setCompletions
                                   );
                                 setCompletions(updatedCompletions);
-                                service.saveCompletions(updatedCompletions);
+                                currentService.saveCompletions(
+                                  updatedCompletions
+                                );
                               }}
                             />
                           );
@@ -930,7 +998,7 @@ const CalendarModule = ({ habits, completions, setCompletions }) => {
   );
 };
 
-const RewardModule = () => {
+const RewardModule = ({ currentService }) => {
   const [balance, setBalance] = React.useState(0);
   const [multiplier, setMultiplier] = React.useState(1);
   const [item, setItem] = React.useState('');
@@ -949,7 +1017,7 @@ const RewardModule = () => {
   const itemInputPlaceholder = 'a tank air halter top';
 
   React.useEffect(() => {
-    service.getRewardData().then((data) => {
+    currentService.getRewardData().then((data) => {
       setBalance(data.balance);
       setItem(data.item);
       setCost(data.cost);
@@ -957,7 +1025,7 @@ const RewardModule = () => {
   }, []);
 
   React.useEffect(() => {
-    service.saveRewardData({ balance, item, cost });
+    currentService.saveRewardData({ balance, item, cost });
   }, [balance, item, cost]);
 
   React.useEffect(() => {
@@ -1061,10 +1129,10 @@ const AffirmationsModule = () => {
   const AFFIRMATION_MAX_DURATION = 15000;
   const waves = [affirmationsWave0, affirmationsWave2, affirmationsWave1];
   const [affirmationsVolume, setAffirmationsVolume] = React.useState(
-    service.getAffirmationsVolume()
+    localService.getAffirmationsVolume()
   );
   const [backgroundRainVolume, setBackgroundRainVolume] = React.useState(
-    service.getBackgroundRainVolume()
+    localService.getBackgroundRainVolume()
   );
 
   const [isRecording, setIsRecording] = React.useState(false);
@@ -1089,7 +1157,7 @@ const AffirmationsModule = () => {
     mediaRecorder.onstop = async () => {
       const audioBlob = new Blob(chunks, { type: 'audio/webm' });
       const base64Url = await blobToBase64(audioBlob);
-      service.saveAffirmationsData(base64Url);
+      localService.saveAffirmationsData(base64Url);
       setAudioUrl(base64Url);
       stream.getTracks().forEach((track) => track.stop());
     };
@@ -1158,17 +1226,17 @@ const AffirmationsModule = () => {
     delay.connect(audioContext.destination);
     source.connect(audioContext.destination);
 
-    service.getAffirmationsData().then(setAudioUrl);
+    localService.getAffirmationsData().then(setAudioUrl);
   }, []);
 
   React.useEffect(() => {
     audioElementRef.current.volume = affirmationsVolume / 100;
-    service.saveAffirmationsVolume(affirmationsVolume);
+    localService.saveAffirmationsVolume(affirmationsVolume);
   }, [affirmationsVolume]);
 
   React.useEffect(() => {
     backgroundRainRef.current.volume = backgroundRainVolume / 100;
-    service.saveBackgroundRainVolume(backgroundRainVolume);
+    localService.saveBackgroundRainVolume(backgroundRainVolume);
   }, [backgroundRainVolume]);
 
   return (
@@ -1352,24 +1420,43 @@ const DebugModule = () => {
   );
 };
 
-const AccountModule = () => {
+const AccountModule = ({ user }) => {
+  const handleLogin = () => {
+    firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider());
+  };
+
+  const handleLogout = () => {
+    firebase.auth().signOut();
+  };
   return (
     <div className="section">
       <div className="section-title">account</div>
+      <div className="section-explanation">
+        settings and preferences - not really any besides login atm lol
+      </div>
       <div className="account-body">
         <p>
-          <b>data storage</b> <br />
-          all data is locally with web storage API OR synced in the cloud via
-          firebase/google auth via login
+          <div>
+            <b>google account - </b>{' '}
+            {user ? (
+              <>
+                {user.email} -{' '}
+                <span className="login-link" onClick={handleLogout}>
+                  logout
+                </span>
+              </>
+            ) : (
+              <span className="login-link" onClick={handleLogin}>
+                login
+              </span>
+            )}
+          </div>
+          current data storage method: {user ? 'cloud' : 'local'}
         </p>
         <p>
           <b>data storage</b> <br />
           all data is locally with web storage API OR synced in the cloud via
           firebase/google auth via login
-        </p>
-        <p>
-          <b>selected data sync method:</b> <br />
-          local
         </p>
         <p>
           <b>note</b> <br />

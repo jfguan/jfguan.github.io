@@ -81,9 +81,9 @@ body {
 
 .account-sync-marker {
   /* border: 1px solid var(--black); */
-  width: 9px;
-  margin-left: 3px;
-  margin-bottom: -1px;
+  width: 7px;
+  margin-left: 1px;
+  margin-bottom: -2px;
 }
 
 .info-option:last-child {
@@ -752,14 +752,7 @@ body {
   font-size: 12px;
 }
 
-.exercise-list-box {
-  /* border: 1px solid var(--black); */
-  grid-column: 1 / -1;
-
-  line-height: 2;
-}
-
-.exercise-list-box p {
-  font-size: 12px;
-  line-height: 1.2;
+.login-link {
+  font-weight: bold;
+  text-decoration: underline;
 }

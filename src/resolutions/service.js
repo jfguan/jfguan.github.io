@@ -1,3 +1,13 @@
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc,
+  onSnapshot,
+  updateDoc,
+  deleteField,
+} from 'firebase/firestore';
+
 const USE_CLOUD = false;
 const HABITS_DATA_KEY = 'resolutions_app_habits';
 const COMPLETIONS_DATA_KEY = 'resolutions_app_completions';
@@ -7,7 +17,7 @@ const AFFIRMATIONS_VOLUME_KEY = 'resolutions_app_affirmations_volume';
 const BACKGROUND_RAIN_VOLUME_KEY = 'resolutions_app_background_rain_volume';
 const MS_DAY = 86400000;
 
-const localService = {
+export const localService = {
   // HABITS DATA MODEL
   // id: crypto.randomUUID(),
   // identityText,
@@ -166,10 +176,124 @@ const localService = {
   },
 };
 
-// TODO Cloud implementaiton
-const cloudService = {
-  subscribeToHabits: (callback) => {
-    return () => {};
+// Cloud Service using Firestore with real-time subscriptions
+export const cloudService = {
+  unsubscribers: [],
+
+  init: (db, userId, callbacks) => {
+    cloudService.db = db;
+    cloudService.userId = userId;
+
+    // Subscribe to habits
+    const habitsUnsub = onSnapshot(
+      doc(db, 'users', userId, 'habits', 'data'),
+      (docSnap) => {
+        if (docSnap.exists()) {
+          callbacks.setHabits(docSnap.data().habits || []);
+        }
+      }
+    );
+    cloudService.unsubscribers.push(habitsUnsub);
+
+    // Subscribe to completions
+    const completionsUnsub = onSnapshot(
+      doc(db, 'users', userId, 'completions', 'data'),
+      (docSnap) => {
+        if (docSnap.exists()) {
+          callbacks.setCompletions(docSnap.data().completions || {});
+        }
+      }
+    );
+    cloudService.unsubscribers.push(completionsUnsub);
+  },
+
+  cleanup: () => {
+    cloudService.unsubscribers.forEach((unsub) => unsub());
+    cloudService.unsubscribers = [];
+  },
+
+  addHabit: async (newHabit, habits) => {
+    const updatedHabits = [newHabit, ...habits];
+    await setDoc(
+      doc(cloudService.db, 'users', cloudService.userId, 'habits', 'data'),
+      { habits: updatedHabits }
+    );
+  },
+
+  updateHabit: async (updatedHabit, habits) => {
+    const updatedHabits = habits.map((habit) =>
+      habit.id === updatedHabit.id ? updatedHabit : habit
+    );
+    await setDoc(
+      doc(cloudService.db, 'users', cloudService.userId, 'habits', 'data'),
+      { habits: updatedHabits }
+    );
+  },
+
+  deleteHabit: async (habitId, habits) => {
+    const updatedHabits = habits.filter((habit) => habit.id !== habitId);
+    await setDoc(
+      doc(cloudService.db, 'users', cloudService.userId, 'habits', 'data'),
+      { habits: updatedHabits }
+    );
+    return updatedHabits;
+  },
+
+  toggleHabitCompletion: async (habitId, date, completions) => {
+    const dateStr = date.toLocaleDateString('en-CA');
+    const isCompleted = completions[habitId]?.[dateStr];
+
+    await updateDoc(
+      doc(cloudService.db, 'users', cloudService.userId, 'completions', 'data'),
+      {
+        [`completions.${habitId}.${dateStr}`]: isCompleted
+          ? deleteField()
+          : true,
+      }
+    );
+  },
+
+  createHabitCompletions: async (habitId, completions) => {
+    const updatedCompletions = { ...completions };
+    updatedCompletions[habitId] = {};
+    await setDoc(
+      doc(cloudService.db, 'users', cloudService.userId, 'completions', 'data'),
+      { completions: updatedCompletions }
+    );
+  },
+
+  deleteHabitCompletions: async (habitId, completions) => {
+    const updatedCompletions = { ...completions };
+    delete updatedCompletions[habitId];
+    await setDoc(
+      doc(cloudService.db, 'users', cloudService.userId, 'completions', 'data'),
+      { completions: updatedCompletions }
+    );
+  },
+
+  calculateHabitHealth: (habit, completions) => {
+    return localService.calculateHabitHealth(habit, completions);
+  },
+
+  getRewardData: async () => {
+    const docRef = doc(
+      cloudService.db,
+      'users',
+      cloudService.userId,
+      'reward',
+      'data'
+    );
+    const docSnap = await getDoc(docRef);
+    return docSnap.exists()
+      ? docSnap.data()
+      : { balance: 0, item: '', cost: '' };
+  },
+
+  saveRewardData: async (rewardData) => {
+    await setDoc(
+      doc(cloudService.db, 'users', cloudService.userId, 'reward', 'data'),
+      rewardData
+    );
   },
 };
 
