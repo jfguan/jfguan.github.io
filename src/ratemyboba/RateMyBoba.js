@@ -1,8 +1,5 @@
-import '../SharedStyles.css';
 import './RateMyBoba.css';
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
 import boba_guys from './boba_pictures/boba_guys.png';
 import coco from './boba_pictures/coco.jpg';
 import debutea from './boba_pictures/debutea.webp';
@@ -16,7 +13,6 @@ import tiger_sugar from './boba_pictures/tiger_sugar.png';
 import wanpo from './boba_pictures/wanpo.svg';
 import yi_fang from './boba_pictures/yi_fang.jpeg';
 import xin_fu_tang from './boba_pictures/xin_fu_tang.png';
-import refreshIcon from './refresh.png';
 
 // Import the functions you need from the SDKs you need
 import { getFirestore } from 'firebase/firestore';
@@ -40,10 +36,7 @@ function RateMyBoba() {
   };
 
   // Initialize Firebase
-  // Check if firebase app is already initialized to avoid errors in strict mode
-  const app = !firebase.apps.length
-    ? firebase.initializeApp(firebaseConfig)
-    : firebase.app();
+  const app = firebase.initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
   const bobaShops = [
@@ -67,7 +60,7 @@ function RateMyBoba() {
   const [elo_scores, setEloScores] = useState(
     new Array(bobaShops.length).fill(1500)
   );
-  const [rankings, setRankings] = useState([]);
+  let rankingDivs = [];
 
   const retrieveElos = async () => {
     console.log('Retrieving Elos');
@@ -112,32 +105,38 @@ function RateMyBoba() {
     });
   };
 
-  const calculateRankings = () => {
-    const newRankings = elo_scores.map((elo, index) => ({
-      id: index,
-      elo: elo,
-      src: bobaShops[index],
-    }));
-    newRankings.sort((a, b) => b.elo - a.elo);
-    setRankings(newRankings);
+  const calculateRankingDivs = () => {
+    console.log('Calculating ranking divs');
+
+    const rankings = elo_scores.map((_, index) => index);
+    rankings.sort((a, b) => elo_scores[b] - elo_scores[a]);
+    // console.log(elo_scores)
+    // console.log(rankings)
+
+    let newRankingDivs = [];
+    for (let i = 0; i < bobaShops.length; i++) {
+      const id = rankings[i];
+      const src = bobaShops[id];
+      const elo = elo_scores[id];
+
+      newRankingDivs.push(<BobaListItem key={id} src={src} elo={elo} />);
+    }
+
+    rankingDivs = newRankingDivs;
   };
 
-  useEffect(() => {
-    calculateRankings();
-  }, [elo_scores]);
+  useEffect(async () => {
+    console.log('Component did mount!');
 
-  useEffect(() => {
-    const init = async () => {
-      console.log('Component did mount!');
-      await retrieveElos();
-      scrambleContestantIDs();
-    };
-    init();
+    await retrieveElos();
+    scrambleContestantIDs();
 
     return () => {
       console.log('Component will unmount!');
     };
   }, []);
+
+  calculateRankingDivs();
 
   const voteForLeftContestant = () => {
     console.log('Voted for left contestant');
@@ -184,8 +183,8 @@ function RateMyBoba() {
 
     var firstID = Math.floor(Math.random() * bobaShops.length);
     var secondID = Math.floor(Math.random() * bobaShops.length);
-    while (firstID === secondID) {
-      secondID = Math.floor(Math.random() * bobaShops.length);
+    if (firstID === secondID) {
+      secondID = (secondID + 1) % bobaShops.length;
     }
 
     retrieveElo(firstID);
@@ -224,134 +223,76 @@ function RateMyBoba() {
   };
 
   return (
-    <motion.div
-      className="rate-my-boba-app shared-app-container"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-    >
-      <div className="top-nav">
-        <div className="brand">
-          <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
-            <motion.div
-              className="logo"
-              whileHover={{ opacity: 0.7 }}
-              transition={{ duration: 0.2 }}
-            >
-              jfguan
-            </motion.div>
-          </Link>
-          <div className="logo-text">&nbsp;- rate my boba</div>
-        </div>
+    <div className="BobaBox">
+      <div className="BobaBox-title">Rate My Boba!</div>
+      <div className="BobaBox-body">
+        Click on the better boba shop in a versus showdown! Skip if you can't
+        decide. Each vote will determine the elo of each boba shop, and the
+        leaderboard will be updated accordingly. Higher scores is better,
+        according to the elo system. Please press sign in button to vote!
       </div>
-
-      <div className="rmb-container">
-        <div className="rmb-header">
-          <div className="rmb-title">showdown</div>
-          <div className="rmb-subtitle">
-            click the better boba shop. elo rating system.
-          </div>
-        </div>
-
-        {!isSignedIn && (
-          <div className="auth-container">
-            <StyledFirebaseAuth
-              uiConfig={uiConfig}
-              firebaseAuth={firebase.auth()}
-            />
-          </div>
-        )}
-
-        <div className="showdown-arena">
-          <ContestantCard
+      {!isSignedIn && (
+        <StyledFirebaseAuth
+          uiConfig={uiConfig}
+          firebaseAuth={firebase.auth()}
+        />
+      )}
+      <div className="BobaBox-showdown">
+        <div className="BobaBox-contestant" onClick={voteForLeftContestant}>
+          <img
             src={bobaShops[firstContestantID]}
-            elo={elo_scores[firstContestantID]}
-            onClick={voteForLeftContestant}
-            delay={0}
+            alt="Boba Shop 1"
+            className="contestant-image"
           />
-          <div className="versus-text">vs</div>
-          <ContestantCard
-            src={bobaShops[secondContestantID]}
-            elo={elo_scores[secondContestantID]}
-            onClick={voteForRightContestant}
-            delay={0.1}
-          />
-        </div>
-
-        <motion.button
-          className="skip-button"
-          onClick={scrambleContestantIDs}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          skip
-        </motion.button>
-
-        <div className="rankings-section">
-          <div className="rankings-header">
-            <div className="rmb-title">rankings</div>
-            <div className="BobaBox-refresh-box">
-              <motion.img
-                src={refreshIcon}
-                alt="Refresh icon"
-                onClick={retrieveElos}
-                whileHover={{ rotate: 180 }}
-                transition={{ duration: 0.5 }}
-              />
-            </div>
+          <div className="BobaBox-elo-rating">
+            Elo Rating: {elo_scores[firstContestantID]}
           </div>
-          <div className="rankings-list">
-            <AnimatePresence>
-              {rankings.map((item) => (
-                <BobaListItem
-                  key={item.id}
-                  src={item.src}
-                  elo={item.elo}
-                  rank={rankings.indexOf(item) + 1}
-                />
-              ))}
-            </AnimatePresence>
+        </div>
+        <div className="BobaBox-versus-box">VS</div>
+        <div className="BobaBox-contestant" onClick={voteForRightContestant}>
+          <img
+            src={bobaShops[secondContestantID]}
+            alt="Boba Shop 2"
+            className="contestant-image"
+          />
+          <div className="BobaBox-elo-rating">
+            Elo Rating: {elo_scores[secondContestantID]}
           </div>
         </div>
       </div>
-    </motion.div>
+      <div className="BobaBox-skip-section">
+        <div className="BobaBox-skip" onClick={scrambleContestantIDs}>
+          Skip
+        </div>
+      </div>
+      {/* <div className="BobaBox-reset-scores" onClick={resetElos}>
+                Reset Elos
+            </div> */}
+      <div className="BobaBox-rankings">
+        <div className="BobaBox-ranking-title">Rankings</div>
+        <div className="BobaBox-refresh-box">
+          <img
+            src={require('./refresh.png')}
+            alt="Refresh icon"
+            onClick={retrieveElos}
+          />
+        </div>
+      </div>
+      <div className="BobaBox-ranking-list">
+        <div>{rankingDivs}</div>
+      </div>
+    </div>
   );
 }
 
-const ContestantCard = ({ src, elo, onClick, delay }) => {
+const BobaListItem = ({ src, elo }) => {
   return (
-    <motion.div
-      className="contestant-card"
-      onClick={onClick}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay, duration: 0.5 }}
-      whileHover={{ scale: 1.02, borderColor: 'var(--green)' }}
-      whileTap={{ scale: 0.98 }}
-    >
-      <div className="contestant-image-container">
-        <img src={src} alt="Boba Shop" className="contestant-img" />
+    <div className="BobaBox-list-item">
+      <div className="BobaBox-picture-box">
+        <img src={src} alt="Boba Shop" className="item-image" />
       </div>
-      <div className="contestant-elo">{elo}</div>
-    </motion.div>
-  );
-};
-
-const BobaListItem = ({ src, elo, rank }) => {
-  return (
-    <motion.div
-      className="ranking-item"
-      layout
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
-      <div className="rank-number">{rank}</div>
-      <div className="ranking-image-box">
-        <img src={src} alt="Boba Shop" className="ranking-img" />
-      </div>
-      <div className="ranking-elo">{elo}</div>
-    </motion.div>
+      <div className="BobaBox-item-elo">Elo Rating: {elo}</div>
+    </div>
   );
 };
 

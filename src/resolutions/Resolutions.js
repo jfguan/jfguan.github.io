@@ -58,17 +58,35 @@ import affirmationsWave2 from './affirmations_wave_2.svg';
 import backgroundRainAudio from './background_rain.m4a';
 import landscape from './landscape.jpg';
 
+// Route constants
+const ROUTES = {
+  HOME: '/resolutions',
+  ACCOUNT: '/resolutions/account',
+};
+
+// Habit module constants
+const HABIT_MODULE_STATES = {
+  INTRO: 'intro',
+  CREATION: 'creation',
+  VIEW: 'view',
+};
+
+const DEFAULT_HABIT_DURATION = 90;
+const HABIT_HEALTH_THRESHOLD = 95;
+const MS_DAY = 86400000;
+const DATE_FORMAT_LOCALE = 'en-CA';
+const DURATION_INPUT_MAX_LENGTH_SHORT = 3;
+const DURATION_INPUT_MAX_LENGTH = 4;
+
 const Resolutions = () => {
   const location = useLocation();
   const navigate = useNavigate();
+
+  const [user, setUser] = React.useState(null);
+
   const [habits, setHabits] = React.useState(null);
   const [completions, setCompletions] = React.useState(null);
   const [rewardData, setRewardData] = React.useState(null);
-  const [user, setUser] = React.useState(null);
-
-  const setReward = (data) => {
-    setRewardData(data);
-  };
 
   // Service selection: cloudService when logged in, localService when logged out
   // cloudService/localService used for: habits, completions, rewards
@@ -83,7 +101,7 @@ const Resolutions = () => {
         cloudService.init(db, user.uid, {
           setHabits,
           setCompletions,
-          setReward,
+          setReward: setRewardData,
         });
       } else {
         // Logged out - cleanup and load from localStorage
@@ -144,7 +162,7 @@ const Resolutions = () => {
             className="logo"
             whileHover={{ opacity: hoverFadeOpacity }}
             transition={{ duration: hoverFadeDuration }}
-            onClick={() => navigate('/resolutions/')}
+            onClick={() => navigate(ROUTES.HOME)}
           >
             resolutions
           </motion.div>
@@ -162,7 +180,7 @@ const Resolutions = () => {
             className="info-option"
             whileHover={{ opacity: hoverFadeOpacity }}
             transition={{ duration: hoverFadeDuration }}
-            onClick={() => navigate('/resolutions/account')}
+            onClick={() => navigate(ROUTES.ACCOUNT)}
           >
             account
             <img
@@ -173,7 +191,7 @@ const Resolutions = () => {
         </div>
       </div>
       <AnimatePresence>
-        {location.pathname === '/resolutions' && habits.length > 0 && (
+        {location.pathname === ROUTES.HOME && habits.length > 0 && (
           <motion.div
             className="side-bar"
             variants={fadeInEnterDelay(moduleFadeDuration)}
@@ -205,7 +223,7 @@ const Resolutions = () => {
           transition={{ duration: moduleFadeDuration }}
           key={location.pathname}
         >
-          {location.pathname === '/resolutions/account' ? (
+          {location.pathname === ROUTES.ACCOUNT ? (
             <AccountModule user={user} />
           ) : (
             <>
@@ -254,7 +272,8 @@ const HabitsModule = ({
   setCompletions,
   currentService,
 }) => {
-  const initialModule = habits.length === 0 ? 'intro' : 'view';
+  const initialModule =
+    habits.length === 0 ? HABIT_MODULE_STATES.INTRO : HABIT_MODULE_STATES.VIEW;
   const [habitModuleState, setHabitModuleState] = React.useState(initialModule);
 
   return (
@@ -267,10 +286,10 @@ const HabitsModule = ({
         95%.
       </div>
       <AnimatePresence mode="wait">
-        {habitModuleState === 'intro' && (
+        {habitModuleState === HABIT_MODULE_STATES.INTRO && (
           <HabitsIntro key="intro" setHabitModuleState={setHabitModuleState} />
         )}
-        {habitModuleState === 'creation' && (
+        {habitModuleState === HABIT_MODULE_STATES.CREATION && (
           <HabitsCreation
             key="creation"
             setHabitModuleState={setHabitModuleState}
@@ -281,7 +300,7 @@ const HabitsModule = ({
             currentService={currentService}
           />
         )}
-        {habitModuleState === 'view' && (
+        {habitModuleState === HABIT_MODULE_STATES.VIEW && (
           <HabitsView
             key="view"
             setHabitModuleState={setHabitModuleState}
@@ -347,7 +366,7 @@ const HabitsIntro = ({ setHabitModuleState }) => {
               className="habits-button"
               whileHover={{ opacity: hoverFadeOpacity }}
               transition={{ duration: hoverFadeDuration }}
-              onClick={() => setHabitModuleState('creation')}
+              onClick={() => setHabitModuleState(HABIT_MODULE_STATES.CREATION)}
             >
               continue
             </motion.button>
@@ -357,6 +376,22 @@ const HabitsIntro = ({ setHabitModuleState }) => {
     </motion.div>
   );
 };
+
+const HabitTextInput = ({
+  placeholder = '',
+  maxLength = '60',
+  value,
+  onChange,
+}) => (
+  <textarea
+    className="habit-input"
+    placeholder={placeholder}
+    maxLength={maxLength}
+    value={value}
+    onChange={onChange}
+    rows="2"
+  />
+);
 
 const HabitsCreation = ({
   setHabitModuleState,
@@ -370,7 +405,9 @@ const HabitsCreation = ({
   const [loveText, setLoveText] = React.useState('');
   const [hateText, setHateText] = React.useState('');
   const [actionText, setActionText] = React.useState('');
-  const [duration, setDuration] = React.useState('90');
+  const [duration, setDuration] = React.useState(
+    String(DEFAULT_HABIT_DURATION)
+  );
 
   const handleCreate = () => {
     const newHabit = {
@@ -379,7 +416,7 @@ const HabitsCreation = ({
       loveText,
       hateText,
       actionText,
-      duration: parseInt(duration) || 90,
+      duration: parseInt(duration) || DEFAULT_HABIT_DURATION,
       last_modified_ts: Date.now(),
     };
 
@@ -389,7 +426,7 @@ const HabitsCreation = ({
       completions,
       setCompletions
     );
-    setHabitModuleState('view');
+    setHabitModuleState(HABIT_MODULE_STATES.VIEW);
   };
 
   return (
@@ -467,10 +504,10 @@ const HabitsCreation = ({
             <p className="habit-prompt">
               for
               <input
-                inputMode="numberic"
+                inputMode="numeric"
                 pattern="[0-9]*"
                 className="habit-days-input"
-                maxLength="3"
+                maxLength={DURATION_INPUT_MAX_LENGTH_SHORT}
                 value={duration}
                 onChange={(e) => setDuration(e.target.value)}
               />
@@ -483,7 +520,11 @@ const HabitsCreation = ({
               whileHover={{ opacity: hoverFadeOpacity }}
               transition={{ duration: hoverFadeDuration }}
               onClick={() =>
-                setHabitModuleState(habits.length > 0 ? 'view' : 'intro')
+                setHabitModuleState(
+                  habits.length > 0
+                    ? HABIT_MODULE_STATES.VIEW
+                    : HABIT_MODULE_STATES.INTRO
+                )
               }
             >
               back
@@ -560,7 +601,7 @@ const HabitsView = ({
   const monthRef = React.useRef(null);
   const yearRef = React.useRef(null);
 
-  const MS_DAY = 86400000;
+  // Modifying date with the arros
   const handlePreviousDay = () => {
     const newDate = new Date(selectedDate.getTime() - MS_DAY);
     setSelectedDate(newDate);
@@ -571,6 +612,7 @@ const HabitsView = ({
     setSelectedDate(newDate);
   };
 
+  // Modifying dates by typing
   const handleDateInputBlur = () => {
     const day = parseInt(dayRef.current?.value) || selectedDate.getDate();
     const month =
@@ -594,14 +636,15 @@ const HabitsView = ({
 
   // Update edit state when selected index changes
   React.useEffect(() => {
+    // Edge case with no habits left, set to blank to avoid null error
     if (habits.length === 0) {
-      setHabitModuleState('intro');
+      setHabitModuleState(HABIT_MODULE_STATES.INTRO);
       const blankHabit = {
         identityText: '',
         loveText: '',
         hateText: '',
         actionText: '',
-        duration: 0,
+        duration: DEFAULT_HABIT_DURATION,
       };
       setSelectedHabit(blankHabit);
     } else {
@@ -625,7 +668,7 @@ const HabitsView = ({
   const getHabitCompletionIcon = (habitId) => {
     const habitCompletions = (completions[habitId] ||= {});
 
-    const dateStr = selectedDate.toLocaleDateString('en-CA');
+    const dateStr = selectedDate.toLocaleDateString(DATE_FORMAT_LOCALE);
 
     const completed = habitCompletions[dateStr] || false;
 
@@ -735,10 +778,10 @@ const HabitsView = ({
               </div>
             ))}
           </div>
-          {primaryHabitHealth > 95 ? (
+          {primaryHabitHealth > HABIT_HEALTH_THRESHOLD ? (
             <motion.button
               className="habits-view-new-habit-button"
-              onClick={() => setHabitModuleState('creation')}
+              onClick={() => setHabitModuleState(HABIT_MODULE_STATES.CREATION)}
               whileHover={{ opacity: 0.8 }}
               transition={{ duration: hoverFadeDuration }}
             >
@@ -807,7 +850,7 @@ const HabitsView = ({
             <p className="habit-prompt">
               for
               <input
-                inputMode="numberic"
+                inputMode="numeric"
                 pattern="[0-9]*"
                 className="habit-days-input"
                 value={selectedHabit.duration}
@@ -817,7 +860,7 @@ const HabitsView = ({
                     duration: e.target.value,
                   })
                 }
-                maxLength="4"
+                maxLength={DURATION_INPUT_MAX_LENGTH}
               />
               days
             </p>
@@ -845,22 +888,6 @@ const HabitsView = ({
     </motion.div>
   );
 };
-
-const HabitTextInput = ({
-  placeholder = '',
-  maxLength = '60',
-  value,
-  onChange,
-}) => (
-  <textarea
-    className="habit-input"
-    placeholder={placeholder}
-    maxLength={maxLength}
-    value={value}
-    onChange={onChange}
-    rows="2"
-  />
-);
 
 // Calendar constants
 const MAX_DAYS_IN_MONTH = 31;
@@ -972,7 +999,7 @@ const CalendarModule = ({
                             year,
                             index,
                             day
-                          ).toLocaleDateString('en-CA');
+                          ).toLocaleDateString(DATE_FORMAT_LOCALE);
                           const isCompleted = completions[habit.id]?.[dateStr];
                           return (
                             <div
@@ -1003,6 +1030,10 @@ const CalendarModule = ({
   );
 };
 
+// Reward module constants
+const REWARD_SAVE_DEBOUNCE_MS = 2000;
+const REWARD_ANIMATION_DURATION = 0.3;
+
 const RewardModule = ({ currentService, initialRewardData }) => {
   const [balance, setBalance] = React.useState(initialRewardData.balance);
   const [multiplier, setMultiplier] = React.useState(1);
@@ -1030,7 +1061,7 @@ const RewardModule = ({ currentService, initialRewardData }) => {
   React.useEffect(() => {
     const timer = setTimeout(() => {
       currentService.saveRewardData({ balance, item, cost });
-    }, 2000);
+    }, REWARD_SAVE_DEBOUNCE_MS);
     return () => clearTimeout(timer);
   }, [balance, item, cost]);
 
@@ -1041,7 +1072,7 @@ const RewardModule = ({ currentService, initialRewardData }) => {
       }
     });
 
-    animate(balanceMotion, balance, { duration: 0.3 });
+    animate(balanceMotion, balance, { duration: REWARD_ANIMATION_DURATION });
     return unsubscribe;
   }, [balance, balanceDisplay, balanceMotion]);
 
@@ -1057,7 +1088,7 @@ const RewardModule = ({ currentService, initialRewardData }) => {
       <div className="section">
         <div className="section-title">treat yourself!</div>
         <div className="section-explanation">
-          for every success, give yourself a small reward. a random multipler
+          for every success, give yourself a small reward. a random multiplier
           x1-x7 is applied for a lil' bit of dopamine 🎉. save up and buy
           something guilt free, maybe something luxury that you can't justify
           otherwise.
@@ -1131,8 +1162,15 @@ const RewardModule = ({ currentService, initialRewardData }) => {
   );
 };
 
+// Affirmations module constants
+const AFFIRMATION_MAX_DURATION_MS = 15000;
+const AUDIO_DELAY_SECONDS = 0.1;
+const VOLUME_MAX = 100;
+const WAVE_ANIMATION_BASE_DURATION = 2.0;
+const WAVE_OPACITY_KEYFRAMES = [0.3, 1, 0.3];
+const WAVE_FADE_DURATION = 0.6;
+
 const AffirmationsModule = () => {
-  const AFFIRMATION_MAX_DURATION = 15000;
   const waves = [affirmationsWave0, affirmationsWave2, affirmationsWave1];
   const [affirmationsVolume, setAffirmationsVolume] = React.useState(
     localService.getAffirmationsVolume()
@@ -1176,7 +1214,7 @@ const AffirmationsModule = () => {
     setTimeout(() => {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
-    }, AFFIRMATION_MAX_DURATION);
+    }, AFFIRMATION_MAX_DURATION_MS);
   };
 
   const blobToBase64 = async (blob) =>
@@ -1222,26 +1260,32 @@ const AffirmationsModule = () => {
     audioElementRef.current.loop = true;
     backgroundRainRef.current.loop = true;
 
+    // Create audio context with delay effect for subtle echo
     const audioContext = new AudioContext();
     const source = audioContext.createMediaElementSource(
       audioElementRef.current
     );
-    const delay = audioContext.createDelay(0.1);
+    const delay = audioContext.createDelay(AUDIO_DELAY_SECONDS);
 
     source.connect(delay);
     delay.connect(audioContext.destination);
     source.connect(audioContext.destination);
 
     localService.getAffirmationsData().then(setAudioUrl);
+
+    // Cleanup audio context on unmount
+    return () => {
+      audioContext.close();
+    };
   }, []);
 
   React.useEffect(() => {
-    audioElementRef.current.volume = affirmationsVolume / 100;
+    audioElementRef.current.volume = affirmationsVolume / VOLUME_MAX;
     localService.saveAffirmationsVolume(affirmationsVolume);
   }, [affirmationsVolume]);
 
   React.useEffect(() => {
-    backgroundRainRef.current.volume = backgroundRainVolume / 100;
+    backgroundRainRef.current.volume = backgroundRainVolume / VOLUME_MAX;
     localService.saveBackgroundRainVolume(backgroundRainVolume);
   }, [backgroundRainVolume]);
 
@@ -1256,7 +1300,8 @@ const AffirmationsModule = () => {
           </a>{' '}
           and listen to them over and over until it becomes you. include the `I
           am/love/hate` statements and set the volume to be barely audible.
-          audio is stored locally, limited to 15 seconds to really focus on one
+          audio is stored locally, limited to{' '}
+          {AFFIRMATION_MAX_DURATION_MS / 1000} seconds to really focus on one
           habit at a time.
         </div>
         <div className="habits-image-container">
@@ -1272,10 +1317,17 @@ const AffirmationsModule = () => {
                       key={i}
                       src={wave}
                       initial={{ opacity: 0 }}
-                      animate={{ opacity: isPlaying ? [0.3, 1, 0.3] : 1 }}
+                      animate={{
+                        opacity: isPlaying ? WAVE_OPACITY_KEYFRAMES : 1,
+                      }}
                       exit={{ opacity: 0 }}
                       transition={
-                        isPlaying ? { duration: 2.0 + i, repeat: Infinity } : {}
+                        isPlaying
+                          ? {
+                              duration: WAVE_ANIMATION_BASE_DURATION + i,
+                              repeat: Infinity,
+                            }
+                          : {}
                       }
                     />
                   ))}
@@ -1291,7 +1343,7 @@ const AffirmationsModule = () => {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      transition={{ duration: 0.6 }}
+                      transition={{ duration: WAVE_FADE_DURATION }}
                     />
                   ))}
                 </>
@@ -1331,8 +1383,8 @@ const AffirmationsModule = () => {
             <div className="affirmation-volume-label">affirmations volume</div>
             <input
               type="range"
-              min="0"
-              max="100"
+              min={0}
+              max={VOLUME_MAX}
               value={affirmationsVolume}
               onChange={(e) => setAffirmationsVolume(e.target.value)}
             />
@@ -1341,8 +1393,8 @@ const AffirmationsModule = () => {
             </div>
             <input
               type="range"
-              min="0"
-              max="100"
+              min={0}
+              max={VOLUME_MAX}
               value={backgroundRainVolume}
               onChange={(e) => setBackgroundRainVolume(e.target.value)}
             />
@@ -1466,21 +1518,20 @@ const AccountModule = ({ user }) => {
       </div>
       <div className="account-body">
         <p>
-          <div>
-            <b>google account - </b>{' '}
-            {user ? (
-              <>
-                <span className="login-link" onClick={handleLogout}>
-                  logout
-                </span>{' '}
-                - {user.email}
-              </>
-            ) : (
-              <span className="login-link" onClick={handleLogin}>
-                login
-              </span>
-            )}
-          </div>
+          <b>google account - </b>{' '}
+          {user ? (
+            <>
+              <span className="login-link" onClick={handleLogout}>
+                logout
+              </span>{' '}
+              - {user.email}
+            </>
+          ) : (
+            <span className="login-link" onClick={handleLogin}>
+              login
+            </span>
+          )}
+          <br />
           current data storage method: {user ? 'cloud' : 'local'}
         </p>
         <p>
@@ -1496,10 +1547,10 @@ const AccountModule = ({ user }) => {
         </p>
         <p>
           <b>strict mode</b> <br />
-          the last created habit's health score must be over 95% before creating
-          a new habit. there are easy ways around this up to the user to find.
-          the app is opinionated based on my experiences, but people should be
-          able to do what they want.
+          the last created habit's health score must be over{' '}
+          {HABIT_HEALTH_THRESHOLD}% before creating a new habit. there are easy
+          ways around this up to the user to find. the app is opinionated based
+          on my experiences, but people should be able to do what they want.
         </p>
       </div>
     </div>
