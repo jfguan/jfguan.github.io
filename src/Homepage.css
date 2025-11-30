@@ -1,43 +1,70 @@
-.Homepage {
-  padding-left: 15vw;
-  padding-right: 18vw;
-  padding-top: 9vh;
-  height: 100vh;
-  text-align: left;
-  background-color: #f8edeb;
+.homepage-app {
+  min-height: 100vh;
+  background-color: var(--cream);
+  color: var(--black);
+  font-family: var(--font-mono);
+  display: flex;
+  justify-content: center;
+  padding: 8vh 20px;
 }
 
-.Homepage-title {
-  margin: auto;
+.homepage-container {
+  width: 100%;
+  max-width: 600px;
   display: flex;
-  align-items: center;
-  font-size: calc(10px + 2vmin);
-  font-weight: 800;
-  font-family: 'Helvetica Neue';
-  color: #22223b;
+  flex-direction: column;
 }
 
-.Homepage-subtitle {
-  margin: auto;
-  padding-top: 3vh;
-  display: flex;
-  align-items: center;
-  font-size: calc(10px + 1vmin);
-  font-weight: 800;
-  font-family: 'Helvetica Neue';
-  user-select: none; /* Standard syntax */
+.homepage-header {
+  margin-bottom: 60px;
 }
 
-.Homepage-body {
-  display: flex;
-  align-items: center;
-  font-size: calc(8px + 1vmin);
+.homepage-title {
+  font-family: var(--font-serif);
+  font-size: 32px;
+  font-weight: bold;
+  margin: 0;
+  margin-bottom: 8px;
 }
 
-.Homepage-link {
-  padding-top: 1vh;
+.homepage-subtitle {
+  font-size: 14px;
+  opacity: 0.7;
+  margin: 0;
+}
+
+.project-list {
   display: flex;
-  align-items: center;
-  font-size: calc(8px + 1vmin);
-  color: #22223b;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 60px;
+}
+
+.project-card {
+  padding: 16px;
+  border-left: 2px solid var(--black);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.project-title {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--black);
+  margin-bottom: 4px;
+}
+
+.project-description {
+  font-size: 14px;
+  color: var(--black);
+  opacity: 0.8;
+}
+
+.homepage-footer {
+  margin-top: auto;
+  font-size: 12px;
+  opacity: 0.5;
+  border-top: 1px solid var(--black);
+  padding-top: 16px;
 }

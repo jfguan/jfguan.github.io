@@ -1,7 +1,10 @@
+// Styles
 import './Resolutions.css';
 import './Resolutions.mobile.css';
+// React
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+// Third-party libraries
 import {
   motion,
   AnimatePresence,
@@ -9,6 +12,7 @@ import {
   useTransform,
   animate,
 } from 'framer-motion';
+// Local modules
 import {
   fadeIn,
   fadeInEnterDelay,
@@ -17,104 +21,42 @@ import {
   hoverFadeOpacity,
   moduleFadeDuration,
 } from './animations';
-import { service, localService, cloudService } from './service';
-import { initializeApp } from 'firebase/app';
 import {
-  getAuth,
+  localService,
+  cloudService,
+  auth,
+  db,
   GoogleAuthProvider,
   signInWithPopup,
   signOut,
   onAuthStateChanged,
-} from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
-import redCircleIcon from './red_circle.svg';
-import greenCircleIcon from './green_circle.svg';
-import flowers from './flowers.svg';
+} from './service';
+// Icons - UI controls
 import checkIcon from './check.svg';
 import greenCheckIcon from './green_check.svg';
 import squareIcon from './square.svg';
+import leftArrow from './left_arrow.svg';
+import rightArrow from './right_arrow.svg';
+import downArrow from './down_arrow.svg';
+// Icons - Status and navigation
+import redCircleIcon from './red_circle.svg';
+import greenCircleIcon from './green_circle.svg';
 import calendarIcon from './calendar.svg';
 import bagIcon from './bag.svg';
 import micIcon from './mic.svg';
 import micRedIcon from './mic_red.svg';
 import terminalIcon from './terminal.svg';
-import leftArrow from './left_arrow.svg';
-import rightArrow from './right_arrow.svg';
-import downArrow from './down_arrow.svg';
+import playIcon from './play.svg';
+import pauseIcon from './pause.svg';
+// Images and media
+import flowers from './flowers.svg';
 import catGettingTreat from './cat_getting_treat.png';
 import affirmationsHero from './affirmations_hero.svg';
 import affirmationsWave0 from './affirmations_wave_0.svg';
 import affirmationsWave1 from './affirmations_wave_1.svg';
 import affirmationsWave2 from './affirmations_wave_2.svg';
-import playIcon from './play.svg';
-import pauseIcon from './pause.svg';
 import backgroundRainAudio from './background_rain.m4a';
 import landscape from './landscape.jpg';
-
-// Calendar constants
-const MAX_DAYS_IN_MONTH = 31;
-const CALENDAR_ANIMATION_DURATION = 0.3;
-const ARROW_COLLAPSED_ROTATION = -90;
-const ARROW_EXPANDED_ROTATION = 0;
-const MONTHS = [
-  'jan',
-  'feb',
-  'mar',
-  'apr',
-  'may',
-  'jun',
-  'jul',
-  'aug',
-  'sep',
-  'oct',
-  'nov',
-  'dec',
-];
-
-const CountUpNumber = ({ value }) => {
-  const count = useMotionValue(0);
-  const rounded = useTransform(count, (v) => v.toFixed(2) + '%');
-  const color = useTransform(
-    count,
-    (v) => `color-mix(in srgb, #4B7E14 ${v}%, #4D4D42 ${100 - v}%)`
-  );
-
-  React.useEffect(() => {
-    const controls = animate(count, value, { duration: 0.3 });
-    return () => controls.stop();
-  }, [value, count]);
-
-  return <motion.span style={{ color }}>{rounded}</motion.span>;
-};
-
-// standard green, no color mix
-const CountUpGreen = ({ value, format = Math.round }) => {
-  const count = useMotionValue(0);
-  const displayed = useTransform(count, format);
-
-  React.useEffect(() => {
-    const controls = animate(count, value, { duration: 0.3 });
-    return () => controls.stop();
-  }, [value, count]);
-
-  return (
-    <motion.span style={{ color: 'var(--green)' }}>{displayed}</motion.span>
-  );
-};
-
-// Firebase configuration
-const firebaseConfig = {
-  apiKey: 'AIzaSyCzCe2TiOCupH84FxClAAVdEJp9BuWedFI',
-  authDomain: 'habitgambling.firebaseapp.com',
-  projectId: 'habitgambling',
-  storageBucket: 'habitgambling.appspot.com',
-  messagingSenderId: '60788841107',
-  appId: '1:60788841107:web:8affc98f8c54619fd40b66',
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
 
 const Resolutions = () => {
   const location = useLocation();
@@ -123,7 +65,6 @@ const Resolutions = () => {
   const [completions, setCompletions] = React.useState(null);
   const [rewardData, setRewardData] = React.useState(null);
   const [user, setUser] = React.useState(null);
-  const db = getFirestore(app);
 
   const setReward = (data) => {
     setRewardData(data);
@@ -562,6 +503,37 @@ const HabitsCreation = ({
   );
 };
 
+const CountUpHealthPercentage = ({ value }) => {
+  const count = useMotionValue(0);
+  const rounded = useTransform(count, (v) => v.toFixed(2) + '%');
+  const color = useTransform(
+    count,
+    (v) => `color-mix(in srgb, #4B7E14 ${v}%, #4D4D42 ${100 - v}%)`
+  );
+
+  React.useEffect(() => {
+    const controls = animate(count, value, { duration: 0.3 });
+    return () => controls.stop();
+  }, [value, count]);
+
+  return <motion.span style={{ color }}>{rounded}</motion.span>;
+};
+
+// standard green, no color mix
+const CountUpReward = ({ value, format = Math.round }) => {
+  const count = useMotionValue(0);
+  const displayed = useTransform(count, format);
+
+  React.useEffect(() => {
+    const controls = animate(count, value, { duration: 0.3 });
+    return () => controls.stop();
+  }, [value, count]);
+
+  return (
+    <motion.span style={{ color: 'var(--green)' }}>{displayed}</motion.span>
+  );
+};
+
 const HabitsView = ({
   setHabitModuleState,
   habits,
@@ -738,7 +710,7 @@ const HabitsView = ({
                 <div className="habit-health-box">
                   <div className="habit-snippet-prompt">health</div>
                   <div className="habit-health-percentage">
-                    <CountUpNumber
+                    <CountUpHealthPercentage
                       value={currentService.calculateHabitHealth(
                         habit,
                         completions
@@ -889,6 +861,26 @@ const HabitTextInput = ({
     rows="2"
   />
 );
+
+// Calendar constants
+const MAX_DAYS_IN_MONTH = 31;
+const CALENDAR_ANIMATION_DURATION = 0.3;
+const ARROW_COLLAPSED_ROTATION = -90;
+const ARROW_EXPANDED_ROTATION = 0;
+const MONTHS = [
+  'jan',
+  'feb',
+  'mar',
+  'apr',
+  'may',
+  'jun',
+  'jul',
+  'aug',
+  'sep',
+  'oct',
+  'nov',
+  'dec',
+];
 
 const CalendarModule = ({
   habits,
@@ -1093,7 +1085,7 @@ const RewardModule = ({ currentService, initialRewardData }) => {
             <div className="balance-caption">multiplier</div>
             <div className="balance-amount-box">
               x
-              <CountUpGreen value={multiplier} />
+              <CountUpReward value={multiplier} />
             </div>
           </div>
           <div className="item-box">

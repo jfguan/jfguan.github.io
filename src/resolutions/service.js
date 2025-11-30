@@ -1,12 +1,36 @@
+import { initializeApp } from 'firebase/app';
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+  onAuthStateChanged,
+} from 'firebase/auth';
 import {
   getFirestore,
   doc,
   setDoc,
   getDoc,
   onSnapshot,
-  updateDoc,
-  deleteField,
 } from 'firebase/firestore';
+
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: 'AIzaSyCzCe2TiOCupH84FxClAAVdEJp9BuWedFI',
+  authDomain: 'habitgambling.firebaseapp.com',
+  projectId: 'habitgambling',
+  storageBucket: 'habitgambling.appspot.com',
+  messagingSenderId: '60788841107',
+  appId: '1:60788841107:web:8affc98f8c54619fd40b66',
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+
+// Re-export Firebase auth utilities
+export { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged };
 
 const USE_CLOUD = false;
 const HABITS_DATA_KEY = 'resolutions_app_habits';
