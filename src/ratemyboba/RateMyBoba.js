@@ -15,15 +15,10 @@ import yi_fang from './boba_pictures/yi_fang.jpeg';
 import xin_fu_tang from './boba_pictures/xin_fu_tang.png';
 
 // Import the functions you need from the SDKs you need
+import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { collection, doc, setDoc, getDoc, getDocs } from 'firebase/firestore';
-
-import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-import * as firebaseui from 'firebaseui';
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
-
-// Your web app's Firebase configuration
+import { getAuth, onAuthStateChanged, signInAnonymously } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDS5-lTJeYqFETZQG3Qou6ibnyixaEbrA8',
@@ -34,8 +29,9 @@ const firebaseConfig = {
   appId: '1:285924454270:web:1ef689687066b04ba3cd2f',
 };
 // Initialize Firebase
-const boba_app = firebase.initializeApp(firebaseConfig);
+const boba_app = initializeApp(firebaseConfig, 'rate_my_boba');
 const db = getFirestore(boba_app);
+const auth = getAuth(boba_app);
 
 function RateMyBoba() {
   const bobaShops = [
@@ -199,26 +195,19 @@ function RateMyBoba() {
 
   // Listen to the Firebase Auth state and set the local state.
   useEffect(() => {
-    const unregisterAuthObserver = firebase
-      .auth()
-      .onAuthStateChanged((user) => {
-        setIsSignedIn(!!user);
-      });
-    return () => unregisterAuthObserver(); // Make sure we un-register Firebase observers when the component unmounts.
+    const unregisterAuthObserver = onAuthStateChanged(auth, (user) => {
+      setIsSignedIn(!!user);
+    });
+    return unregisterAuthObserver; // Make sure we un-register Firebase observers when the component unmounts.
   }, []);
 
-  const uiConfig = {
-    // Popup signin flow rather than redirect flow.
-    signInFlow: 'popup',
-    // We will display Google and Facebook as auth providers.
-    signInOptions: [firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID],
-    callbacks: {
-      // Avoid redirects after sign-in.
-      signInSuccessWithAuthResult: () => {
-        retrieveElos();
-        return false;
-      },
-    },
+  const handleSignIn = async () => {
+    try {
+      await signInAnonymously(auth);
+      await retrieveElos();
+    } catch (error) {
+      console.error('Sign in failed:', error);
+    }
   };
 
   return (
@@ -231,10 +220,9 @@ function RateMyBoba() {
         according to the elo system. Please press sign in button to vote!
       </div>
       {!isSignedIn && (
-        <StyledFirebaseAuth
-          uiConfig={uiConfig}
-          firebaseAuth={firebase.auth()}
-        />
+        <div style={{ textAlign: 'center', margin: '20px 0' }}>
+          <button onClick={handleSignIn}>Sign In Anonymously</button>
+        </div>
       )}
       <div className="BobaBox-showdown">
         <div className="BobaBox-contestant" onClick={voteForLeftContestant}>
