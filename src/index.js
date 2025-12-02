@@ -5,7 +5,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Homepage from './Homepage';
 import RateMyBoba from './ratemyboba/RateMyBoba';
 import Game from './Game';
-import HabitGambling from './habit_gambling/HabitGambling';
+
 import Resolutions from './resolutions/Resolutions';
 
 const router = createBrowserRouter([
@@ -21,10 +21,7 @@ const router = createBrowserRouter([
     path: '/ratemyboba',
     element: <RateMyBoba />,
   },
-  {
-    path: '/habitgambling',
-    element: <HabitGambling />,
-  },
+
   {
     path: '/resolutions',
     element: <Resolutions />,

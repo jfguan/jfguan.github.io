@@ -9,12 +9,3 @@ boba proj
         ✅ clean console.log
     ✅ Add auth to website
     ✅ deploy website
-
-gambling proj
-    ✅ fix display for mobile
-    ✅ add working js
-    ✅ add firebase
-    ✅ add auth
-    ❗ deploy website
-
-    ❗ add animations

@@ -31,10 +31,7 @@ function Homepage() {
         Structured in a similar style to Wordle, the game is timed and you have
         3 minutes to solve as many puzzles as you can.
       </div>
-      <div className="Homepage-body">
-        Earn money by completing my habits, with a random multiplier on each
-        reward
-      </div>
+
       <div className="Homepage-subtitle">
         <Link to="/resolutions" className="Homepage-link">
           Resolutions
