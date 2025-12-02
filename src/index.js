@@ -4,7 +4,7 @@ import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Homepage from './Homepage';
 import RateMyBoba from './ratemyboba/RateMyBoba';
-import Game from './Game';
+import Game from './24game/Game';
 
 import Resolutions from './resolutions/Resolutions';
 

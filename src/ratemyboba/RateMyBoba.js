@@ -25,20 +25,19 @@ import 'firebase/compat/auth';
 
 // Your web app's Firebase configuration
 
+const firebaseConfig = {
+  apiKey: 'AIzaSyDS5-lTJeYqFETZQG3Qou6ibnyixaEbrA8',
+  authDomain: 'ratemyboba-66460.firebaseapp.com',
+  projectId: 'ratemyboba-66460',
+  storageBucket: 'ratemyboba-66460.appspot.com',
+  messagingSenderId: '285924454270',
+  appId: '1:285924454270:web:1ef689687066b04ba3cd2f',
+};
+// Initialize Firebase
+const boba_app = firebase.initializeApp(firebaseConfig);
+const db = getFirestore(boba_app);
+
 function RateMyBoba() {
-  const firebaseConfig = {
-    apiKey: 'AIzaSyDS5-lTJeYqFETZQG3Qou6ibnyixaEbrA8',
-    authDomain: 'ratemyboba-66460.firebaseapp.com',
-    projectId: 'ratemyboba-66460',
-    storageBucket: 'ratemyboba-66460.appspot.com',
-    messagingSenderId: '285924454270',
-    appId: '1:285924454270:web:1ef689687066b04ba3cd2f',
-  };
-
-  // Initialize Firebase
-  const app = firebase.initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
   const bobaShops = [
     boba_guys,
     coco,
