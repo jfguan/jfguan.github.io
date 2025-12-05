@@ -49,6 +49,8 @@ import micRedIcon from './mic_red.svg';
 import terminalIcon from './terminal.svg';
 import playIcon from './play.svg';
 import pauseIcon from './pause.svg';
+import stopIcon from './stop.svg';
+import clockIcon from './clock.svg';
 // Images and media
 import flowers from './flowers.svg';
 import catGettingTreat from './cat_getting_treat.png';
@@ -58,7 +60,8 @@ import affirmationsWave1 from './affirmations_wave_1.svg';
 import affirmationsWave2 from './affirmations_wave_2.svg';
 import backgroundRainAudio from './background_rain.m4a';
 import landscape from './landscape.jpg';
-
+import abstractImage from './abstract.jpg';
+import bellAudio from './bells.wav';
 // Route constants
 const ROUTES = {
   HOME: '/resolutions',
@@ -144,6 +147,7 @@ const Resolutions = () => {
   const scrollableSections = [
     { id: 'habits', icon: checkIcon },
     { id: 'calendar', icon: calendarIcon },
+    { id: 'pomodoro', icon: clockIcon },
     { id: 'rewards', icon: bagIcon },
     { id: 'affirmations', icon: micIcon },
     { id: 'debug', icon: terminalIcon },
@@ -252,6 +256,7 @@ const Resolutions = () => {
                       setCompletions={setCompletions}
                       currentService={currentService}
                     />
+                    <PomodoroModule />
                     <RewardModule
                       currentService={currentService}
                       initialRewardData={rewardData}
@@ -1035,6 +1040,171 @@ const CalendarModule = ({
               </AnimatePresence>
             </div>
           ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Pomodoro Module
+const POMODORO_STATES = {
+  WORK: 'work',
+  BREAK: 'break',
+};
+
+const PomodoroModule = () => {
+  const [settings, setSettings] = React.useState(
+    localService.getPomodoroSettings()
+  );
+  const [timerState, setTimerState] = React.useState(POMODORO_STATES.WORK);
+  const [timeLeft, setTimeLeft] = React.useState(
+    settings.pomodoroDuration * 60
+  );
+  const [isRunning, setIsRunning] = React.useState(false);
+
+  const bellRef = React.useRef(new Audio(bellAudio));
+
+  React.useEffect(() => {
+    bellRef.current.volume = settings.volume / 100;
+  }, [settings.volume]);
+
+  React.useEffect(() => {
+    let interval = null;
+    if (isRunning && timeLeft > 0) {
+      interval = setInterval(() => {
+        setTimeLeft((prevTime) => prevTime - 1);
+      }, 1000);
+    } else if (timeLeft === 0) {
+      setIsRunning(false);
+      bellRef.current.play();
+      if (timerState === POMODORO_STATES.WORK) {
+        setTimerState(POMODORO_STATES.BREAK);
+        setTimeLeft(settings.breakDuration * 60);
+      } else {
+        setTimerState(POMODORO_STATES.WORK);
+        setTimeLeft(settings.pomodoroDuration * 60);
+      }
+    }
+    return () => clearInterval(interval);
+  }, [isRunning, timeLeft, timerState, settings]);
+
+  const toggleTimer = () => {
+    setIsRunning(!isRunning);
+  };
+
+  const resetTimer = () => {
+    setIsRunning(false);
+    if (timerState === POMODORO_STATES.WORK) {
+      setTimeLeft(settings.pomodoroDuration * 60);
+    } else {
+      setTimeLeft(settings.breakDuration * 60);
+    }
+  };
+
+  const handleSettingChange = (key, value) => {
+    const newSettings = { ...settings, [key]: value };
+    setSettings(newSettings);
+    localService.savePomodoroSettings(newSettings);
+
+    // Play bell when volume is adjusted
+    if (key === 'volume') {
+      bellRef.current.volume = value / 100;
+      bellRef.current.currentTime = 0;
+      bellRef.current.play();
+    }
+
+    // If timer is not running, update current time left immediately if relevant
+    if (!isRunning) {
+      if (key === 'pomodoroDuration' && timerState === POMODORO_STATES.WORK) {
+        setTimeLeft(value * 60);
+      } else if (
+        key === 'breakDuration' &&
+        timerState === POMODORO_STATES.BREAK
+      ) {
+        setTimeLeft(value * 60);
+      }
+    }
+  };
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+  };
+
+  return (
+    <div className="pomodoro" id="pomodoro">
+      <div className="section">
+        <div className="section-title">pomodoro</div>
+        <div className="section-explanation">
+          focus on a single task. during breaks, relax - don't look at your
+          phone.
+        </div>
+        <div className="habits-image-container">
+          <img src={abstractImage} className="pomodoro-image" />
+        </div>
+        <div className="pomodoro-box">
+          <div className="timer-box">
+            <div className="timer-display">{formatTime(timeLeft)}</div>
+            <div className="timer-controls">
+              <motion.img
+                src={isRunning ? pauseIcon : playIcon}
+                onClick={toggleTimer}
+                whileHover={{ opacity: hoverFadeOpacity }}
+                transition={{ duration: hoverFadeDuration }}
+                className="timer-control-icon"
+              />
+              <motion.img
+                src={stopIcon}
+                onClick={resetTimer}
+                whileHover={{ opacity: hoverFadeOpacity }}
+                transition={{ duration: hoverFadeDuration }}
+                className="timer-control-icon"
+              />
+            </div>
+          </div>
+          <div className="pomodoro-settings">
+            <div className="setting-row">
+              <label>work</label>
+              <input
+                type="text"
+                inputMode="numeric"
+                value={settings.pomodoroDuration}
+                onChange={(e) =>
+                  handleSettingChange(
+                    'pomodoroDuration',
+                    parseInt(e.target.value) || 0
+                  )
+                }
+              />
+            </div>
+            <div className="setting-row">
+              <label>break</label>
+              <input
+                type="text"
+                inputMode="numeric"
+                value={settings.breakDuration}
+                onChange={(e) =>
+                  handleSettingChange(
+                    'breakDuration',
+                    parseInt(e.target.value) || 0
+                  )
+                }
+              />
+            </div>
+            <div className="setting-row">
+              <label>reminder volume</label>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={settings.volume}
+                onChange={(e) =>
+                  handleSettingChange('volume', parseInt(e.target.value))
+                }
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>

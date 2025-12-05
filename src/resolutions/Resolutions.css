@@ -879,3 +879,147 @@ body {
   /* Typography */
   font-size: 14px;
 }
+
+/* POMODORO MODULE SECTION ------------------------------------- */
+.pomodoro-image {
+  /* Appearance */
+  border-radius: 8px;
+  width: 100%;
+}
+
+.pomodoro-box {
+  /* Layout */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 24px;
+
+  padding-top: 20%;
+  padding-left: 10%;
+  padding-right: 10%;
+
+  /* Appearance */
+  border: 4px solid var(--black);
+  border-radius: 8px;
+}
+
+.timer-box {
+  /* Layout */
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 30%;
+}
+
+.timer-display {
+  /* Typography */
+  font-size: 48px;
+  margin-right: 20px;
+  align-self: left;
+  letter-spacing: 3px;
+}
+
+.timer-state {
+  /* Typography */
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.timer-controls {
+  /* Layout */
+  margin-left: auto;
+  display: flex;
+  gap: 6px;
+}
+
+.timer-control-icon {
+  /* Layout */
+  width: 36px;
+
+  /* Interaction */
+  cursor: pointer;
+}
+
+.pomodoro-settings {
+  /* Layout */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.setting-row {
+  /* Layout */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  /* Typography */
+  font-size: 14px;
+}
+
+.setting-row:last-child {
+  /* Layout */
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.setting-row input[type='text'] {
+  /* Layout */
+  width: 2ch;
+
+  /* Typography */
+  text-align: center;
+  font-size: 14px;
+
+  /* Appearance */
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--black);
+}
+
+.setting-row input[type='text']:focus {
+  outline: none;
+  border-bottom-color: var(--green);
+}
+
+.setting-row input[type='range'] {
+  /* Layout */
+  width: 100%;
+  height: 2px;
+
+  margin-top: 10px;
+
+  /* Appearance */
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--black);
+  outline: none;
+}
+
+.setting-row input[type='range']::-webkit-slider-thumb {
+  /* Layout */
+  width: 2px;
+  height: 14px;
+
+  /* Appearance */
+  -webkit-appearance: none;
+  background: var(--black);
+
+  /* Interaction */
+  cursor: pointer;
+}
+
+.setting-row input[type='range']::-moz-range-thumb {
+  /* Layout */
+  width: 2px;
+  height: 14px;
+
+  /* Appearance */
+  background: var(--black);
+  border: none;
+
+  /* Interaction */
+  cursor: pointer;
+}

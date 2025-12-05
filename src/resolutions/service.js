@@ -39,6 +39,7 @@ const REWARD_DATA_KEY = 'resolutions_app_reward';
 const AFFIRMATIONS_DATA_KEY = 'resolutions_app_affirmations';
 const AFFIRMATIONS_VOLUME_KEY = 'resolutions_app_affirmations_volume';
 const BACKGROUND_RAIN_VOLUME_KEY = 'resolutions_app_background_rain_volume';
+const POMODORO_SETTINGS_KEY = 'resolutions_app_pomodoro_settings';
 export const MS_DAY = 86400000;
 
 export const localService = {
@@ -197,6 +198,21 @@ export const localService = {
 
   saveBackgroundRainVolume: (volume) => {
     localStorage.setItem(BACKGROUND_RAIN_VOLUME_KEY, volume.toString());
+  },
+
+  getPomodoroSettings: () => {
+    const saved = localStorage.getItem(POMODORO_SETTINGS_KEY);
+    return saved
+      ? JSON.parse(saved)
+      : {
+          pomodoroDuration: 25,
+          breakDuration: 5,
+          volume: 50,
+        };
+  },
+
+  savePomodoroSettings: (settings) => {
+    localStorage.setItem(POMODORO_SETTINGS_KEY, JSON.stringify(settings));
   },
 };
 
