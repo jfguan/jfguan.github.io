@@ -1074,19 +1074,12 @@ const PomodoroModule = () => {
       interval = setInterval(() => {
         setTimeLeft((prevTime) => prevTime - 1);
       }, 1000);
-    } else if (timeLeft === 0) {
+    } else if (timeLeft === 0 && isRunning) {
       setIsRunning(false);
       bellRef.current.play();
-      if (timerState === POMODORO_STATES.WORK) {
-        setTimerState(POMODORO_STATES.BREAK);
-        setTimeLeft(settings.breakDuration * 60);
-      } else {
-        setTimerState(POMODORO_STATES.WORK);
-        setTimeLeft(settings.pomodoroDuration * 60);
-      }
     }
     return () => clearInterval(interval);
-  }, [isRunning, timeLeft, timerState, settings]);
+  }, [isRunning, timeLeft]);
 
   const toggleTimer = () => {
     setIsRunning(!isRunning);
@@ -1095,6 +1088,16 @@ const PomodoroModule = () => {
   const resetTimer = () => {
     setIsRunning(false);
     if (timerState === POMODORO_STATES.WORK) {
+      setTimeLeft(settings.pomodoroDuration * 60);
+    } else {
+      setTimeLeft(settings.breakDuration * 60);
+    }
+  };
+
+  const handleStateChange = (newState) => {
+    setIsRunning(false);
+    setTimerState(newState);
+    if (newState === POMODORO_STATES.WORK) {
       setTimeLeft(settings.pomodoroDuration * 60);
     } else {
       setTimeLeft(settings.breakDuration * 60);
@@ -1165,7 +1168,12 @@ const PomodoroModule = () => {
           </div>
           <div className="pomodoro-settings">
             <div className="setting-row">
-              <label>work</label>
+              <label
+                onClick={() => handleStateChange(POMODORO_STATES.WORK)}
+                className={`state-label ${timerState === POMODORO_STATES.WORK ? 'active' : ''}`}
+              >
+                work
+              </label>
               <input
                 type="text"
                 inputMode="numeric"
@@ -1179,7 +1187,12 @@ const PomodoroModule = () => {
               />
             </div>
             <div className="setting-row">
-              <label>break</label>
+              <label
+                onClick={() => handleStateChange(POMODORO_STATES.BREAK)}
+                className={`state-label ${timerState === POMODORO_STATES.BREAK ? 'active' : ''}`}
+              >
+                break
+              </label>
               <input
                 type="text"
                 inputMode="numeric"

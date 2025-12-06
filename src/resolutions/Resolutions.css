@@ -965,6 +965,19 @@ body {
   gap: 8px;
 }
 
+.state-label {
+  /* Appearance */
+  text-decoration: underline;
+
+  /* Interaction */
+  cursor: pointer;
+}
+
+.state-label.active {
+  /* Typography */
+  font-weight: bold;
+}
+
 .setting-row input[type='text'] {
   /* Layout */
   width: 2ch;
