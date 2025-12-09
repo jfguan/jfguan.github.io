@@ -54,7 +54,7 @@ import clockIcon from './clock.svg';
 // Images and media
 import flowers from './flowers.svg';
 import catGettingTreat from './cat_getting_treat.png';
-import affirmationsHero from './affirmations_hero.svg';
+import affirmationsHero from './affirmations_hero.jpg';
 import affirmationsWave0 from './affirmations_wave_0.svg';
 import affirmationsWave1 from './affirmations_wave_1.svg';
 import affirmationsWave2 from './affirmations_wave_2.svg';
@@ -1063,23 +1063,56 @@ const PomodoroModule = () => {
   const [isRunning, setIsRunning] = React.useState(false);
 
   const bellRef = React.useRef(new Audio(bellAudio));
+  const endTimeRef = React.useRef(null);
 
   React.useEffect(() => {
     bellRef.current.volume = settings.volume / 100;
   }, [settings.volume]);
 
+  // Timer logic using Date.now() to prevent drift
   React.useEffect(() => {
     let interval = null;
-    if (isRunning && timeLeft > 0) {
+
+    if (isRunning) {
+      // If we just started (or resumed), calculate the target end time
+      if (!endTimeRef.current) {
+        endTimeRef.current = Date.now() + timeLeft * 1000;
+      }
+
       interval = setInterval(() => {
-        setTimeLeft((prevTime) => prevTime - 1);
-      }, 1000);
-    } else if (timeLeft === 0 && isRunning) {
-      setIsRunning(false);
-      bellRef.current.play();
+        const now = Date.now();
+        const diff = endTimeRef.current - now;
+        const secondsLeft = Math.ceil(diff / 1000);
+
+        if (secondsLeft <= 0) {
+          // Timer finished
+          setIsRunning(false);
+          endTimeRef.current = null;
+          bellRef.current.play();
+
+          // Reset to start duration
+          if (timerState === POMODORO_STATES.WORK) {
+            setTimeLeft(settings.pomodoroDuration * 60);
+          } else {
+            setTimeLeft(settings.breakDuration * 60);
+          }
+        } else {
+          setTimeLeft(secondsLeft);
+        }
+      }, 200); // Check more frequently than 1s to be responsive, though UI updates every sec
+    } else {
+      // When paused, we clear the endTimeRef so that when we resume,
+      // we recalculate it based on the current timeLeft
+      endTimeRef.current = null;
     }
+
     return () => clearInterval(interval);
-  }, [isRunning, timeLeft]);
+  }, [
+    isRunning,
+    timerState,
+    settings.pomodoroDuration,
+    settings.breakDuration,
+  ]); // Added dependencies for reset logic
 
   const toggleTimer = () => {
     setIsRunning(!isRunning);
@@ -1087,6 +1120,7 @@ const PomodoroModule = () => {
 
   const resetTimer = () => {
     setIsRunning(false);
+    endTimeRef.current = null;
     if (timerState === POMODORO_STATES.WORK) {
       setTimeLeft(settings.pomodoroDuration * 60);
     } else {
@@ -1096,6 +1130,7 @@ const PomodoroModule = () => {
 
   const handleStateChange = (newState) => {
     setIsRunning(false);
+    endTimeRef.current = null;
     setTimerState(newState);
     if (newState === POMODORO_STATES.WORK) {
       setTimeLeft(settings.pomodoroDuration * 60);

@@ -279,4 +279,20 @@
     padding-right: 10%;
     padding-bottom: 12%;
   }
+
+  /* POMODORO MODULE SECTION ------------------------------------- */
+  .pomodoro-box {
+    /* Layout */
+    margin-left: 0px;
+    margin-top: 5%;
+    padding-top: 10%;
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-bottom: 20%;
+  }
+
+  .timer-box {
+    /* Layout */
+    margin-bottom: 15%;
+  }
 }
