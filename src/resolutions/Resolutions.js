@@ -54,7 +54,7 @@ import clockIcon from './clock.svg';
 // Images and media
 import flowers from './flowers.svg';
 import catGettingTreat from './cat_getting_treat.png';
-import affirmationsHero from './affirmations_hero.jpg';
+import affirmationsHero from './affirmations_hero.svg';
 import affirmationsWave0 from './affirmations_wave_0.svg';
 import affirmationsWave1 from './affirmations_wave_1.svg';
 import affirmationsWave2 from './affirmations_wave_2.svg';
