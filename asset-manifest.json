@@ -1,8 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.a369f2c5.css",
-    "main.js": "/static/js/main.d3b555b8.js",
-    "static/media/affirmations_hero.jpg": "/static/media/affirmations_hero.9744c3fbb1c44e88057b.jpg",
+    "main.css": "/static/css/main.5e64b7b3.css",
+    "main.js": "/static/js/main.ce4036bc.js",
     "static/media/abstract.jpg": "/static/media/abstract.7ad25b5815f744ed8ce0.jpg",
     "static/media/flowers.svg": "/static/media/flowers.2e18c317aef9c32ccc8842e4a67f73d5.svg",
     "static/media/background_rain.m4a": "/static/media/background_rain.ee7c27257141f72394ea.m4a",
@@ -10,6 +9,7 @@
     "static/media/bells.wav": "/static/media/bells.a8aca034a9e5c8f93d1a.wav",
     "static/media/boba_guys.png": "/static/media/boba_guys.46974a8c68edc102983b.png",
     "static/media/landscape.jpg": "/static/media/landscape.e8bdc5d179937fa81afb.jpg",
+    "static/media/affirmations_hero.svg": "/static/media/affirmations_hero.a7f89b062f48c03506f09e858598acc3.svg",
     "static/media/onezo.webp": "/static/media/onezo.0e5c0b2a02cfd90f9553.webp",
     "static/media/xin_fu_tang.png": "/static/media/xin_fu_tang.91751e9c32d51bb58d8f.png",
     "static/media/wanpo.svg": "/static/media/wanpo.bf7147fece304fe5f3f18a504bd07f47.svg",
@@ -42,11 +42,11 @@
     "static/media/left_arrow.svg": "/static/media/left_arrow.44804ee12c3e20dcccca667e388b8469.svg",
     "static/media/right_arrow.svg": "/static/media/right_arrow.a18418bf2ab9fbb539939d7a8416dd82.svg",
     "static/media/down_arrow.svg": "/static/media/down_arrow.eb02a4044becf65876b7ab0b053ab212.svg",
-    "main.a369f2c5.css.map": "/static/css/main.a369f2c5.css.map",
-    "main.d3b555b8.js.map": "/static/js/main.d3b555b8.js.map"
+    "main.5e64b7b3.css.map": "/static/css/main.5e64b7b3.css.map",
+    "main.ce4036bc.js.map": "/static/js/main.ce4036bc.js.map"
   },
   "entrypoints": [
-    "static/css/main.a369f2c5.css",
-    "static/js/main.d3b555b8.js"
+    "static/css/main.5e64b7b3.css",
+    "static/js/main.ce4036bc.js"
   ]
 }
